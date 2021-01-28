@@ -49,7 +49,7 @@ export const Login = ({ navigation }) => {
                 )}
                 name="username"
                 rules={{ required: true }}
-                defaultValue="salmanaly" />
+                defaultValue="" />
             {errors.username && <Caption>This is required.</Caption>}
 
             <Controller
@@ -65,7 +65,7 @@ export const Login = ({ navigation }) => {
                 )}
                 name="password"
                 rules={{ required: true }}
-                defaultValue="11111111" />
+                defaultValue="" />
             {errors.password && <Caption>This is required.</Caption>}
 
             <Button
