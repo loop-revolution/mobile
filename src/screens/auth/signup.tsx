@@ -4,22 +4,22 @@ import { Headline, Caption, useTheme, Button, TextInput, Text } from 'react-nati
 import { useForm, Controller } from "react-hook-form"
 import { useMutation } from "urql"
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { LOGIN_MUTATION } from '../api/gql'
-import routes from '../navigation/routes'
+import { LOGIN_MUTATION } from '../../api/gql'
+import routes from '../../navigation/routes'
 
-type LoginResult = { login: { token: string } }
-type LoginRequest = { username: string; password: string }
+type SignupResult = { login: { token: string } }
+type SignupRequest = { username: string; password: string }
 
-export const Login = ({ navigation }) => {
+export const Signup = ({ navigation }) => {
     const theme = useTheme()
 
     const [isLoading, setLoading] = React.useState(false)
     const { control, handleSubmit, errors } = useForm()
-    const [loginResult, login] = useMutation<LoginResult, LoginRequest>(LOGIN_MUTATION)
+    const [signupResult, signup] = useMutation<SignupResult, SignupRequest>(LOGIN_MUTATION)
 
     const onSubmit = (data: LoginRequest) => {
         setLoading(true)
-        login(data)
+        signup(data)
             .then(async ({ data }) => {
                 setLoading(false)
                 if (data != undefined) {
@@ -33,10 +33,10 @@ export const Login = ({ navigation }) => {
     return (
         <ScrollView contentContainerStyle={[styles.scrollViewContent]}>
             <Headline style={styles.headline}>
-                Login
+                Signup
             </Headline>
             <Caption style={styles.caption}>
-                Please login to continue
+                Please signup to continue
             </Caption>
             <Controller
                 control={control}
@@ -74,9 +74,9 @@ export const Login = ({ navigation }) => {
                 mode="contained"
                 loading={isLoading}
                 labelStyle={{ color: 'white' }}>
-                Login
+                Signup
             </Button>
-            {loginResult.error && <Text>{loginResult.error.message.replace(/\[\w+\]/g, "")}</Text>}
+            {signupResult.error && <Text>{signupResult.error.message.replace(/\[\w+\]/g, "")}</Text>}
         </ScrollView>
     )
 }
