@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { useTheme } from 'react-native-paper'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -7,18 +7,26 @@ import { DrawerNavigator } from './drawerNavigator'
 import routes from './routes'
 import { DefaultNavigationTheme } from '../utils/theme'
 import { LoginNavigator } from './loginNavigator'
+import { View } from 'react-native'
 
 const Stack = createStackNavigator()
 
 export const RootNavigator = () => {
-    const theme = useTheme()
-    const token = AsyncStorage.getItem('token')
-    const initialRouteName = !token ? routes.HOME : routes.LOGIN
+    const [isLoggedIn, setLoggedIn] = useState(null)
+
+    AsyncStorage.getItem('token')
+        .then((value) => {
+            setLoggedIn(value !== null)
+        })
+
+    if(isLoggedIn === null) {
+        return <View />
+    }
 
     return (
         <NavigationContainer theme={DefaultNavigationTheme}>
             <Stack.Navigator
-                initialRouteName={initialRouteName}
+                initialRouteName={isLoggedIn ? routes.HOME : routes.LOGIN}
                 headerMode="none">
                 <Stack.Screen
                     name={routes.LOGIN}
