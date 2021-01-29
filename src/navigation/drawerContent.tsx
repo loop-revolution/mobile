@@ -1,15 +1,27 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { CommonActions, useNavigation } from '@react-navigation/core'
 import {
     DrawerContentComponentProps,
     DrawerContentScrollView,
     DrawerItem,
 } from '@react-navigation/drawer'
+import route from 'color-convert/route'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Caption, Drawer, Title } from 'react-native-paper'
 import Animated from 'react-native-reanimated'
+import routes from './routes'
 
 export function DrawerContent(props: DrawerContentComponentProps) {
+    const logout = async () => {
+        await AsyncStorage.removeItem('token')
+        props.navigation.reset({
+            index: 0,
+            routes: [{ name: routes.LOGIN }]
+       })
+    }
+
     return (
         <DrawerContentScrollView {...props}>
             <Animated.View
@@ -38,8 +50,8 @@ export function DrawerContent(props: DrawerContentComponentProps) {
                         icon={({ color, size }) => (
                             <MaterialCommunityIcons name="account-outline" color={color} size={size} />
                         )}
-                        label="Option 3"
-                        onPress={() => { }} />
+                        label="Logout"
+                        onPress={() => { logout() }} />
                 </Drawer.Section>
             </Animated.View>
         </DrawerContentScrollView>

@@ -1,6 +1,6 @@
-import React from 'react'
-import { ScrollView, StyleSheet } from 'react-native'
-import { Headline, Caption, useTheme, Button, TextInput, Text } from 'react-native-paper'
+import React, { useState } from 'react'
+import { ScrollView, StyleSheet, View } from 'react-native'
+import { Headline, Caption, Button, TextInput, Text } from 'react-native-paper'
 import { useForm, Controller } from "react-hook-form"
 import { useMutation } from "urql"
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -8,16 +8,41 @@ import { LOGIN_MUTATION } from '../../api/gql'
 import routes from '../../navigation/routes'
 import { globalStyles } from '../../utils/styles'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { getRules, InputType } from '../../utils/validation'
 
 type LoginResult = { login: { token: string } }
 type LoginRequest = { username: string; password: string }
 
 export const Login = ({ navigation }) => {
-    const theme = useTheme()
 
-    const [isLoading, setLoading] = React.useState(false)
+    const [isLoading, setLoading] = useState(false)
     const { control, handleSubmit, errors } = useForm()
     const [loginResult, login] = useMutation<LoginResult, LoginRequest>(LOGIN_MUTATION)
+
+    const textInput = (type: InputType, hasError: boolean, secureTextEntry: boolean = false) => {
+        const label = type === InputType.username ? 'Username or Email' : 'Password'
+
+        return (
+            <Controller
+                control={control}
+                render={({ onChange, value }) => (
+                    <View style={styles.inputText}>
+                        <TextInput
+                            mode='outlined'
+                            label={label}
+                            onChangeText={value => onChange(value)}
+                            value={value}
+                            secureTextEntry={secureTextEntry}
+                            error={hasError}
+                            autoCapitalize="none" />
+                        { hasError && <Caption style={styles.error}>This is required.</Caption>}
+                    </View>
+                )}
+                name={type}
+                rules={getRules(type)}
+                defaultValue="" />
+        )
+    }
 
     const onSubmit = (data: LoginRequest) => {
         setLoading(true)
@@ -35,53 +60,24 @@ export const Login = ({ navigation }) => {
     return (
         <ScrollView contentContainerStyle={[styles.scrollViewContent]}>
             <SafeAreaView>
-                <Headline style={styles.headline}>
-                    Login
-            </Headline>
-                <Caption style={styles.caption}>
-                    Please login to continue
-            </Caption>
-                <Controller
-                    control={control}
-                    render={({ onChange, value }) => (
-                        <TextInput
-                            mode='outlined'
-                            label='Username or Email'
-                            value={value}
-                            onChangeText={value => onChange(value)}
-                            error={errors.username} />
-                    )}
-                    name="username"
-                    rules={{ required: true }}
-                    defaultValue="salmanaly" />
-                {errors.username && <Caption style={styles.error}>This is required.</Caption>}
+                <Headline style={styles.headline}>Login</Headline>
+                <Caption style={styles.caption}>Please login to continue</Caption>
 
-                <Controller
-                    control={control}
-                    render={({ onChange, value }) => (
-                        <TextInput
-                            mode='outlined'
-                            label='Password'
-                            secureTextEntry={true}
-                            style={styles.passwordTextField}
-                            value={value}
-                            onChangeText={value => onChange(value)}
-                            error={errors.password} />
-                    )}
-                    name="password"
-                    rules={{ required: true }}
-                    defaultValue="11111111" />
-                {errors.password && <Caption style={styles.error}>This is required.</Caption>}
+                {textInput(InputType.username, errors.username)}
+                {textInput(InputType.password, errors.password, true)}
 
                 <Button
                     onPress={handleSubmit(onSubmit)}
-                    style={styles.button}
                     contentStyle={globalStyles.buttonContentStyle}
                     mode="contained"
                     loading={isLoading}
                     labelStyle={{ color: 'white' }}>
                     Login
-            </Button>
+                </Button>
+                <View style={styles.signupContainer}>
+                    <Text>Don't have an account?</Text>
+                    <Button onPress={() => { navigation.push(routes.SIGNUP) }}>Sign Up</Button>
+                </View>
                 {loginResult.error && <Text style={styles.error}>{loginResult.error.message.replace(/\[\w+\]/g, "")}</Text>}
             </SafeAreaView>
         </ScrollView>
@@ -94,7 +90,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
     },
     headline: {
-        marginTop: 10,
+        marginTop: 0,
     },
     caption: {
         marginBottom: 10,
@@ -102,10 +98,15 @@ const styles = StyleSheet.create({
     button: {
         marginTop: 20,
     },
-    passwordTextField: {
-        marginTop: 10
+    inputText: {
+        marginBottom: 20
     },
     error: {
-        color: '#DD3B2C'
-    }
+        color: '#DD3B2C',
+    },
+    signupContainer: {
+		justifyContent: 'center',
+		alignItems: 'center',
+		flexDirection: 'row'
+	},
 })

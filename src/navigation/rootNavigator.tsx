@@ -1,12 +1,12 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { useTheme } from 'react-native-paper'
-import { Login } from '../screens/auth/login'
 import { createStackNavigator } from '@react-navigation/stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { DrawerNavigator } from './drawerNavigator'
 import routes from './routes'
 import { DefaultNavigationTheme } from '../utils/theme'
+import { LoginNavigator } from './loginNavigator'
 
 const Stack = createStackNavigator()
 
@@ -22,7 +22,7 @@ export const RootNavigator = () => {
                 headerMode="none">
                 <Stack.Screen
                     name={routes.LOGIN}
-                    component={Login} />
+                    component={LoginNavigator} />
                 <Stack.Screen
                     name={routes.HOME}
                     component={DrawerNavigator} />

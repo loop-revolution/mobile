@@ -8,7 +8,7 @@ const Drawer = createDrawerNavigator()
 
 export const DrawerNavigator = () => {
     return (
-        <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+        <Drawer.Navigator drawerType="slide" drawerContent={props => <DrawerContent {...props} />}>
             <Drawer.Screen name={routes.HOME} component={HomeNavigator} />
         </Drawer.Navigator>)
 }
