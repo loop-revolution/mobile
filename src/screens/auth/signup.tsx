@@ -38,7 +38,7 @@ export const Signup = ({ navigation }) => {
                 )}
                 name={type}
                 rules={getRules(type)}
-                defaultValue="Sas@AS.com" />
+                defaultValue="" />
         )
     }
 
