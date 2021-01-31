@@ -49,7 +49,7 @@ export const Signup = ({ navigation }) => {
                 setLoading(false)
                 if (data != undefined) {
                     navigation.push(routes.VERIFY_EMAIL, {
-                        sessionCode: "",//data.signup.sessionCode,
+                        sessionCode: data.signup.sessionCode,
                         username: formData.username
                     })
                 }
