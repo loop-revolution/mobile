@@ -1,8 +1,8 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native'
-import { useTheme } from 'react-native-paper'
-
+import { getFocusedRouteNameFromRoute, useTheme } from '@react-navigation/native'
+import { Appbar } from 'react-native-paper'
+import { StyleSheet } from 'react-native'
 import routes from './routes'
 import { Login } from '../screens/auth/login'
 import { Signup } from '../screens/auth/signup'
@@ -14,7 +14,20 @@ export const LoginNavigator = () => {
     const theme = useTheme()
 
     return (
-        <Stack.Navigator initialRouteName={routes.LOGIN}>
+        <Stack.Navigator
+            initialRouteName={routes.LOGIN}
+            headerMode="screen"
+            screenOptions={{
+                header: ({ scene, previous, navigation }) => {
+                    const { options } = scene.descriptor
+                    return (
+                        <Appbar.Header theme={theme}>
+                            {previous ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
+                            <Appbar.Content title={options.headerTitle} titleStyle={styles.navBarTitle} />
+                        </Appbar.Header>
+                    )
+                }
+            }}>
             <Stack.Screen
                 name={routes.LOGIN}
                 component={Login}
@@ -39,3 +52,10 @@ export const LoginNavigator = () => {
         </Stack.Navigator>
     )
 }
+
+const styles = StyleSheet.create({
+    navBarTitle: {
+        fontSize: 18,
+        fontWeight: '500',
+    }
+})

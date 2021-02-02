@@ -14,7 +14,7 @@ export function createAPIClient() {
                 onError: async (error) => {
                     const isAuthError = error.graphQLErrors.some((e) => e.message.includes("[uar]"))
                     if (isAuthError) {
-                        // await AsyncStorage.removeItem("token")
+                        await AsyncStorage.removeItem("token")
                     }
                 },
             }),

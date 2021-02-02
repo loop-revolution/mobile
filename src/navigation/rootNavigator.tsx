@@ -21,7 +21,7 @@ export const RootNavigator = () => {
             setUserLoggedIn(value !== null)
         })
 
-    if(isLoggedIn === null) {
+    if (isLoggedIn === null) {
         return <View />
     }
 

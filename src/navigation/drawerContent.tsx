@@ -1,16 +1,14 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { CommonActions } from '@react-navigation/core'
 import {
     DrawerContentComponentProps,
     DrawerContentScrollView,
     DrawerItem,
 } from '@react-navigation/drawer'
 import { useTheme } from '@react-navigation/native'
-import route from 'color-convert/route'
 import React, { useContext } from 'react'
 import { StyleSheet, View, Image } from 'react-native'
-import { Caption, Divider, Drawer, Title, Text, useTheme as usePaperTheme, Button } from 'react-native-paper'
+import { Divider, Drawer, Text, useTheme as usePaperTheme, Button } from 'react-native-paper'
 import Animated from 'react-native-reanimated'
 import { UserContext } from '../context/userContext'
 import colors from '../utils/colors'
@@ -42,18 +40,10 @@ export function DrawerContent(props: DrawerContentComponentProps) {
                     </View>
                     <Divider style={styles.separator} />
                     <View style={styles.userInfoSection}>
-                        <Text style={styles.title}>{user ? user.username : 'Loading...'}</Text>
-                        {user && <Text style={styles.subtitle}>User ID: {user.id}</Text>}
+                        <Text style={styles.title}>{user ? user.displayName : 'Loading...'}</Text>
+                        {user && <Text style={styles.subtitle}>{user.username}</Text>}
                         {user && <Text style={styles.credits}>{user.credits} credits</Text>}
                         {user && <View>
-                            <Button
-                                style={styles.button}
-                                contentStyle={styles.buttonContent}
-                                labelStyle={styles.buttonLabel}
-                                onPress={() => { }}
-                                mode='outlined'>
-                                Add Credits
-                            </Button>
                             <Button
                                 style={styles.button}
                                 contentStyle={styles.buttonContent}
@@ -83,7 +73,7 @@ export function DrawerContent(props: DrawerContentComponentProps) {
                     <Divider style={styles.separator} />
                     <DrawerItem
                         icon={({ color, size }) => (
-                            <Image source={Images.help} />
+                            <MaterialCommunityIcons color={'#868686'} name="logout" size={20} />
                         )}
                         label="Logout"
                         labelStyle={styles.optionLabel}

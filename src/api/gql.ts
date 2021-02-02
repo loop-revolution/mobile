@@ -28,7 +28,8 @@ export const WHO_AM_I = gql`
 	query {
 		whoami {
 			id
-			username
+            username
+            displayName
 			credits
 		}
 	}
