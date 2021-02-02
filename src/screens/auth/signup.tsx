@@ -56,8 +56,6 @@ export const Signup = ({ navigation }) => {
             })
     }
 
-    console.log("errors.email:", errors.email)
-
     return (
         <ScrollView contentContainerStyle={[styles.scrollViewContent]}>
             <SafeAreaView>

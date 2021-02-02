@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
-import { useTheme } from 'react-native-paper'
 import { createStackNavigator } from '@react-navigation/stack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { DrawerNavigator } from './drawerNavigator'
@@ -8,15 +7,18 @@ import routes from './routes'
 import { DefaultNavigationTheme } from '../utils/theme'
 import { LoginNavigator } from './loginNavigator'
 import { View } from 'react-native'
+import { UserContext } from '../context/userContext'
 
 const Stack = createStackNavigator()
 
 export const RootNavigator = () => {
     const [isLoggedIn, setLoggedIn] = useState(null)
+    const { setUserLoggedIn } = useContext(UserContext)
 
     AsyncStorage.getItem('token')
         .then((value) => {
             setLoggedIn(value !== null)
+            setUserLoggedIn(value !== null)
         })
 
     if(isLoggedIn === null) {

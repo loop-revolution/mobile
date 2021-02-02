@@ -2,7 +2,7 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native'
 import routes from './routes'
-import { Home } from '../screens/home'
+import { TabNavigator } from './tabNavigator'
 
 const Stack = createStackNavigator()
 
@@ -13,7 +13,7 @@ export const HomeNavigator = () => {
             headerMode="screen" >
             <Stack.Screen
                 name={routes.HOME}
-                component={Home}
+                component={TabNavigator}
                 options={({ route }) => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home'
                     return { headerTitle: routeName }

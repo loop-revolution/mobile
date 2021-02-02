@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
 import { Headline, Caption, Button, TextInput, Text } from 'react-native-paper'
 import { useForm, Controller } from "react-hook-form"
@@ -9,6 +9,7 @@ import routes from '../../navigation/routes'
 import { globalStyles } from '../../utils/styles'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { getRules, InputType } from '../../utils/validation'
+import { UserContext } from '../../context/userContext'
 
 type VerifyEmailResult = { confirmEmail: { token: string } }
 type VerifyEmailRequest = { username: string; sessionCode: string; verificationCode: string }
@@ -18,6 +19,7 @@ export const VerifyEmail = ({ route, navigation }) => {
     const [isLoading, setLoading] = useState(false)
     const { control, handleSubmit, errors } = useForm()
     const [verifyEmailResult, verifyEmail] = useMutation<VerifyEmailResult, VerifyEmailRequest>(VERIFY_EMAIL_MUTATION)
+    const { setUserLoggedIn } = useContext(UserContext)
 
     const textInput = (type: InputType, hasError: boolean) => {
         return (
@@ -52,6 +54,7 @@ export const VerifyEmail = ({ route, navigation }) => {
                 if (data != undefined) {
                     const token = data.confirmEmail.token
                     await AsyncStorage.setItem('token', token)
+                    setUserLoggedIn(true)
                     navigation.replace(routes.HOME)
                 }
             })

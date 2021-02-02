@@ -1,3 +1,5 @@
+import { gql } from "urql"
+
 export const LOGIN_MUTATION = `
   mutation ($username: String!, $password: String!) {
     login(username: $username, password: $password) {
@@ -20,4 +22,14 @@ export const VERIFY_EMAIL_MUTATION = `
       token
     }
   }
+`
+
+export const WHO_AM_I = gql`
+	query {
+		whoami {
+			id
+			username
+			credits
+		}
+	}
 `

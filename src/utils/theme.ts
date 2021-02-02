@@ -1,14 +1,15 @@
 import { DefaultTheme as PaperTheme } from "react-native-paper"
-import { DefaultTheme as NavigationTheme } from '@react-navigation/native'
+import { DarkTheme as NavigationTheme } from '@react-navigation/native'
+import colors from "./colors"
 
 export const DefaultPaperTheme = {
     ...PaperTheme,
     colors: {
         ...PaperTheme.colors,
-        primary: '#466EFD',
-        accent: '#EE6546',
-        text: '#393939',
-        error: '#DD3B2C'
+        primary: colors.primary,
+        accent: colors.accent,
+        text: colors.text,
+        error: colors.error
     }
 }
 
@@ -16,7 +17,8 @@ export const DefaultNavigationTheme = {
     ...NavigationTheme,
     colors: {
         ...NavigationTheme.colors,
-        primary: '#2b2b2b',
-        text: '#393939',
+        primary: colors.navigationPrimary,
+        background: colors.background,
+        card: colors.navigationPrimary
     },
 }

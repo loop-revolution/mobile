@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
 import { Headline, Caption, Button, TextInput, Text } from 'react-native-paper'
 import { useForm, Controller } from "react-hook-form"
@@ -9,6 +9,7 @@ import routes from '../../navigation/routes'
 import { globalStyles } from '../../utils/styles'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { getRules, InputType } from '../../utils/validation'
+import { UserContext } from '../../context/userContext'
 
 type LoginResult = { login: { token: string } }
 type LoginRequest = { username: string; password: string }
@@ -18,6 +19,7 @@ export const Login = ({ navigation }) => {
     const [isLoading, setLoading] = useState(false)
     const { control, handleSubmit, errors } = useForm()
     const [loginResult, login] = useMutation<LoginResult, LoginRequest>(LOGIN_MUTATION)
+    const { setUserLoggedIn } = useContext(UserContext)
 
     const textInput = (type: InputType, hasError: boolean, secureTextEntry: boolean = false) => {
         const label = type === InputType.username ? 'Username or Email' : 'Password'
@@ -35,7 +37,7 @@ export const Login = ({ navigation }) => {
                             secureTextEntry={secureTextEntry}
                             error={hasError}
                             autoCapitalize="none" />
-                        { hasError && <Caption style={styles.error}>This is required.</Caption>}
+                        { hasError && <Caption style={styles.validationError}>This is required.</Caption>}
                     </View>
                 )}
                 name={type}
@@ -52,6 +54,7 @@ export const Login = ({ navigation }) => {
                 if (data != undefined) {
                     const token = data.login.token
                     await AsyncStorage.setItem('token', token)
+                    setUserLoggedIn(true)
                     navigation.replace(routes.HOME)
                 }
             })
@@ -78,7 +81,7 @@ export const Login = ({ navigation }) => {
                     <Text>Don't have an account?</Text>
                     <Button onPress={() => { navigation.push(routes.SIGNUP) }}>Sign Up</Button>
                 </View>
-                {loginResult.error && <Text style={styles.error}>{loginResult.error.message.replace(/\[\w+\]/g, "")}</Text>}
+                {loginResult.error && <Text style={styles.serverError}>{loginResult.error.message.replace(/\[\w+\]/g, "")}</Text>}
             </SafeAreaView>
         </ScrollView>
     )
@@ -101,8 +104,12 @@ const styles = StyleSheet.create({
     inputText: {
         marginBottom: 20
     },
-    error: {
+    validationError: {
         color: '#DD3B2C',
+    },
+    serverError: {
+        color: '#DD3B2C',
+        textAlign: 'center'
     },
     signupContainer: {
 		justifyContent: 'center',
