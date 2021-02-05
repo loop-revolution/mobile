@@ -5,6 +5,7 @@ import routes from './routes'
 import { TabNavigator } from './tabNavigator'
 import { Appbar } from 'react-native-paper'
 import { globalStyles } from '../utils/styles'
+import { CreateBlock } from '../screens/createBlock'
 
 const Stack = createStackNavigator()
 

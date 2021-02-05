@@ -45,3 +45,19 @@ export const USER_BLOCKS = gql`
 		}
 	}
 `
+
+export const BLOCK_TYPES = gql`
+	query {
+		blockTypes {
+			name
+			icon
+			desc
+		}
+	}
+`
+
+export const BLOCK_CREATION_DISPLAY = gql`
+	query($type: String!) {
+		blockCreationDisplay(type: $type)
+	}
+`

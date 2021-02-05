@@ -4,3 +4,9 @@ export type User = {
     displayName: string;
     credits: number;
 }
+
+export type BlockType = {
+    name: string;
+    icon: string;
+    desc: string;
+}

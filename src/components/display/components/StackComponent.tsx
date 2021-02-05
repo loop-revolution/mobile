@@ -27,8 +27,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     vertical: {
-        flexDirection: 'column',
-        flex: 1
+        flexDirection: 'column'
     },
     fit: {
         flex: 1,

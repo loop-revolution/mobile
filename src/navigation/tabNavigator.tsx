@@ -2,10 +2,15 @@ import React from 'react'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import { useTheme } from 'react-native-paper'
 import { Home } from '../screens/home'
+import { Create } from '../screens/create'
 import { Image } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { color } from 'react-native-reanimated'
 import Images from '../utils/images'
+import route from 'color-convert/route'
+import routes from './routes'
+import { CreateBlock } from '../screens/createBlock'
+import { CreateBlockNavigator } from './createBlockNavigator'
 
 const Tab = createMaterialBottomTabNavigator()
 
@@ -41,7 +46,7 @@ export const TabNavigator = () => {
                 }} />
             <Tab.Screen
                 name="Add"
-                component={Home}
+                component={CreateBlockNavigator}
                 options={{
                     tabBarIcon: ({ color }) => (
                         <Image source={Images.tabAdd} style={{ tintColor: color }} />

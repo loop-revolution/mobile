@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { InputArgs } from "display-api"
 import { Button, TextInput } from "react-native-paper"
 import { StyleSheet, View } from 'react-native'
