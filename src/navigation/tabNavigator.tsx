@@ -9,7 +9,6 @@ import { color } from 'react-native-reanimated'
 import Images from '../utils/images'
 import route from 'color-convert/route'
 import routes from './routes'
-import { CreateBlock } from '../screens/createBlock'
 import { CreateBlockNavigator } from './createBlockNavigator'
 
 const Tab = createMaterialBottomTabNavigator()
@@ -45,12 +44,12 @@ export const TabNavigator = () => {
                     ),
                 }} />
             <Tab.Screen
-                name="Add"
-                component={CreateBlockNavigator}
+                name="Create"
+                component={Create}
                 options={{
                     tabBarIcon: ({ color }) => (
                         <Image source={Images.tabAdd} style={{ tintColor: color }} />
-                    ),
+                    )
                 }} />
             <Tab.Screen
                 name="Notifications"
