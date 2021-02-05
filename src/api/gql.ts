@@ -34,3 +34,14 @@ export const WHO_AM_I = gql`
 		}
 	}
 `
+
+export const USER_BLOCKS = gql`
+	query($id: Int!) {
+		userById(id: $id) {
+			blocks {
+				id
+				embedDisplay
+			}
+		}
+	}
+`

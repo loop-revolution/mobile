@@ -18,6 +18,7 @@
     "@react-navigation/stack": "^5.2.7",
     "@urql/exchange-auth": "^0.1.2",
     "color": "^3.1.2",
+    "display-api": "^0.0.10",
     "expo": "^40.0.0",
     "graphql": "^15.5.0",
     "react": "16.13.1",
