@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { Headline, Caption, Button, TextInput, Text } from 'react-native-paper'
+import { Headline, Caption, Button, TextInput, Text, HelperText } from 'react-native-paper'
 import { useForm, Controller } from "react-hook-form"
 import { useMutation } from "urql"
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -34,7 +34,7 @@ export const VerifyEmail = ({ route, navigation }) => {
                             value={value}
                             error={hasError}
                             autoCapitalize="none" />
-                        { hasError && <Caption style={styles.error}>This is required.</Caption>}
+                        { hasError && <HelperText type="error">This is required.</HelperText>}
                     </View>
                 )}
                 name={type}
@@ -76,7 +76,7 @@ export const VerifyEmail = ({ route, navigation }) => {
                     labelStyle={{ color: 'white' }}>
                     Verify
                 </Button>
-                {verifyEmailResult.error && <Text style={styles.error}>{verifyEmailResult.error.message.replace(/\[\w+\]/g, "")}</Text>}
+                {verifyEmailResult.error && <Text style={globalStyles.error}>{verifyEmailResult.error.message.replace(/\[\w+\]/g, "")}</Text>}
             </SafeAreaView>
         </ScrollView>
     )
@@ -98,8 +98,5 @@ const styles = StyleSheet.create({
     },
     inputText: {
         marginBottom: 20
-    },
-    error: {
-        color: '#DD3B2C',
     },
 })

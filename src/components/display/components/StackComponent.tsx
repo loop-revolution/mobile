@@ -9,7 +9,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 export const StackComponent = ({ direction = 'vertical', items }: StackArgs) => {
 
     const content = items.map(({ component }) => (
-		<ComponentDelegate component={component} />
+		<ComponentDelegate component={component} key={JSON.stringify(component)} />
     ))
     
 	switch (direction) {

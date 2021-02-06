@@ -1,31 +1,49 @@
 import { CreationObject } from 'display-api'
-import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import React, { useState } from 'react'
+import { View, StyleSheet, Text } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import { ActivityIndicator, Button, Text } from 'react-native-paper'
+import { ActivityIndicator, Button } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useQuery } from 'urql'
-import { BLOCK_CREATION_DISPLAY } from '../api/gql'
+import { useMutation, useQuery } from 'urql'
+import { BLOCK_CREATION_DISPLAY, CREATE_BLOCK } from '../api/gql'
 import { ComponentDelegate } from '../components/display/ComponentDelegate'
+import { populateTemplate } from '../components/display/method'
 import colors from '../utils/colors'
 import { globalStyles } from '../utils/styles'
 
 
 export const CreateBlock = ({ route, navigation }) => {
 
-    type CreationDisplayResult = { blockCreationDisplay: string }
     type CreationDisplayRequest = { type: string }
+    type CreationDisplayResult = { blockCreationDisplay: string }
+    
+    type CreateBlockRequest = { type: string; input: string }
+    type CreateBlockResult = { createBlock: { id: number } }
 
+    const [isLoading, setLoading] = useState(false)
     const type = route.params.name
+
     const [displayResult] = useQuery<CreationDisplayResult, CreationDisplayRequest>({
         query: BLOCK_CREATION_DISPLAY,
         variables: { type },
     })
-
     const creationObject: CreationObject = displayResult.data?.blockCreationDisplay ? JSON.parse(displayResult.data.blockCreationDisplay) : null
 
-    const createBlock = async (template: string) => {
-		console.log('TODO Create Block: ', template)
+    let [createBlockResult, createBlock] = useMutation<CreateBlockResult, CreateBlockRequest>(CREATE_BLOCK)
+    if (createBlockResult.data?.createBlock?.id) {
+        navigation.pop()
+    } else if (createBlockResult.error) {
+        setLoading(false)
+    }
+
+    const createAction = () => {
+		const input = populateTemplate(creationObject.input_template)
+        const request: CreateBlockRequest = {
+            type,
+			input,
+        }
+        setLoading(true)
+        createBlock(request)
 	}
 
     return (
@@ -36,13 +54,15 @@ export const CreateBlock = ({ route, navigation }) => {
                     <ComponentDelegate component={creationObject.header_component} />
                     <ComponentDelegate component={creationObject.main_component} />
                     <Button
-                        onPress={() => createBlock(creationObject.input_template)}
+                        onPress={() => createAction()}
+                        loading={isLoading}
                         style={styles.button}
                         contentStyle={globalStyles.buttonContentStyle}
                         mode="contained"
                         labelStyle={{ color: 'white' }}>
                         Create Block
                     </Button>
+                    {createBlockResult.error && <Text style={globalStyles.error}>{createBlockResult.error.message.replace(/\[\w+\]/g, "")}</Text>}
                 </View>
             ) : (
                     <ActivityIndicator
@@ -72,13 +92,6 @@ const styles = StyleSheet.create({
     },
     inputText: {
         marginBottom: 20
-    },
-    validationError: {
-        color: '#DD3B2C',
-    },
-    serverError: {
-        color: '#DD3B2C',
-        textAlign: 'center'
     },
     signupContainer: {
 		justifyContent: 'center',

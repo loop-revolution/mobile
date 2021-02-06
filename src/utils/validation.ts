@@ -1,4 +1,5 @@
 export enum InputType {
+    displayName = 'displayName',
     username = 'username',
     password = 'password',
     email = 'email',
