@@ -77,3 +77,11 @@ export const BLOCK_METHOD_MUTATION = gql`
 		}
 	}
 `
+
+export const GET_BLOCK = gql`
+	query($id: Int!) {
+		blockById(id: $id) {
+			pageDisplay
+		}
+	}
+`
