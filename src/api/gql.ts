@@ -10,7 +10,7 @@ export const LOGIN_MUTATION = `
 
 export const SIGNUP_MUTATION = `
   mutation ($displayName: String!, $username: String!, $password: String!, $email: String!) {
-    signup($displayName: String!, username: $username, password: $password, email: $email) {
+    signup(displayName: $displayName, username: $username, password: $password, email: $email) {
         sessionCode
     }
   }
