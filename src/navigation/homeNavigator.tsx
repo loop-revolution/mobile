@@ -5,6 +5,7 @@ import routes from './routes'
 import { TabNavigator } from './tabNavigator'
 import { Appbar } from 'react-native-paper'
 import { globalStyles } from '../utils/styles'
+import { CreateBlock } from '../screens/createBlock'
 
 const Stack = createStackNavigator()
 
@@ -40,6 +41,13 @@ export const HomeNavigator = ({ navigation }) => {
                     return { headerTitle: routeName }
                 }}
             />
+            <Stack.Screen
+                name={routes.CREATE_BLOCK}
+                component={CreateBlock}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Create Block'
+                    return { headerTitle: routeName }
+                }} />
         </Stack.Navigator>
     )
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { Headline, Caption, useTheme, Button, TextInput, Text } from 'react-native-paper'
+import { Headline, Caption, useTheme, Button, TextInput, Text, HelperText } from 'react-native-paper'
 import { useForm, Controller } from "react-hook-form"
 import { useMutation } from "urql"
 import { SIGNUP_MUTATION } from '../../api/gql'
@@ -8,9 +8,10 @@ import routes from '../../navigation/routes'
 import { globalStyles } from '../../utils/styles'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { getRules, InputType } from '../../utils/validation'
+import lodash from 'lodash'
 
 type SignupResult = { signup: { sessionCode: string } }
-type SignupRequest = { username: string; password: string; email: string }
+type SignupRequest = { displayName: string, username: string; password: string; email: string }
 
 export const Signup = ({ navigation }) => {
 
@@ -19,7 +20,7 @@ export const Signup = ({ navigation }) => {
     const [signupResult, signup] = useMutation<SignupResult, SignupRequest>(SIGNUP_MUTATION)
 
     const textInput = (type: InputType, hasError: boolean, secureTextEntry: boolean = false) => {
-        const label = type === InputType.username ? 'Username' : type === InputType.password ? 'Password' : 'Email'
+        const label: string = lodash.startCase(type)
         return (
             <Controller
                 control={control}
@@ -33,7 +34,7 @@ export const Signup = ({ navigation }) => {
                             secureTextEntry={secureTextEntry}
                             error={hasError}
                             autoCapitalize="none" />
-                        { hasError && <Caption style={styles.error}>This is required.</Caption>}
+                        { hasError && <HelperText type="error">This is required.</HelperText>}
                     </View>
                 )}
                 name={type}
@@ -62,6 +63,7 @@ export const Signup = ({ navigation }) => {
                 <Headline style={styles.headline}>Sign Up</Headline>
                 <Caption style={styles.caption}>Please register to continue</Caption>
 
+                {textInput(InputType.displayName, errors.displayName)}
                 {textInput(InputType.username, errors.username)}
                 {textInput(InputType.password, errors.password, true)}
                 {textInput(InputType.email, errors.email)}
@@ -75,7 +77,7 @@ export const Signup = ({ navigation }) => {
                     labelStyle={{ color: 'white' }}>
                     Sign Up
                 </Button>
-                {signupResult.error && <Text style={styles.error}>{signupResult.error.message.replace(/\[\w+\]/g, "")}</Text>}
+                {signupResult.error && <Text style={globalStyles.error}>{signupResult.error.message.replace(/\[\w+\]/g, "")}</Text>}
             </SafeAreaView>
         </ScrollView>
     )
@@ -98,7 +100,4 @@ const styles = StyleSheet.create({
     inputText: {
         marginTop: 10
     },
-    error: {
-        color: '#DD3B2C'
-    }
 })

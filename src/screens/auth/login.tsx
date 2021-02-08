@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { Headline, Caption, Button, TextInput, Text } from 'react-native-paper'
+import { Headline, Caption, Button, TextInput, Text, HelperText } from 'react-native-paper'
 import { useForm, Controller } from "react-hook-form"
 import { useMutation } from "urql"
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -10,6 +10,7 @@ import { globalStyles } from '../../utils/styles'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { getRules, InputType } from '../../utils/validation'
 import { UserContext } from '../../context/userContext'
+import lodash from 'lodash'
 
 type LoginResult = { login: { token: string } }
 type LoginRequest = { username: string; password: string }
@@ -22,7 +23,7 @@ export const Login = ({ navigation }) => {
     const { setUserLoggedIn } = useContext(UserContext)
 
     const textInput = (type: InputType, hasError: boolean, secureTextEntry: boolean = false) => {
-        const label = type === InputType.username ? 'Username or Email' : 'Password'
+        const label: string = lodash.startCase(type)
 
         return (
             <Controller
@@ -37,7 +38,7 @@ export const Login = ({ navigation }) => {
                             secureTextEntry={secureTextEntry}
                             error={hasError}
                             autoCapitalize="none" />
-                        { hasError && <Caption style={styles.validationError}>This is required.</Caption>}
+                        { hasError && <HelperText type="error">This is required.</HelperText>}
                     </View>
                 )}
                 name={type}
@@ -104,16 +105,13 @@ const styles = StyleSheet.create({
     inputText: {
         marginBottom: 20
     },
-    validationError: {
-        color: '#DD3B2C',
-    },
     serverError: {
         color: '#DD3B2C',
         textAlign: 'center'
     },
     signupContainer: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		flexDirection: 'row'
-	},
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row'
+    },
 })

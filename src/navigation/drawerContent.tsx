@@ -8,6 +8,7 @@ import {
 import { useTheme } from '@react-navigation/native'
 import React, { useContext } from 'react'
 import { StyleSheet, View, Image } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Divider, Drawer, Text, useTheme as usePaperTheme, Button } from 'react-native-paper'
 import Animated from 'react-native-reanimated'
 import { UserContext } from '../context/userContext'
@@ -16,8 +17,6 @@ import Images from '../utils/images'
 import routes from './routes'
 
 export function DrawerContent(props: DrawerContentComponentProps) {
-    const theme = useTheme()
-    const paperTheme = usePaperTheme()
 
     const { user, setUserLoggedIn } = useContext(UserContext)
 
@@ -34,10 +33,10 @@ export function DrawerContent(props: DrawerContentComponentProps) {
         <DrawerContentScrollView {...props}>
             <Animated.View style={styles.drawerContent}>
                 <Drawer.Section>
-                    <View style={styles.logoSection}>
+                    <TouchableOpacity onPress={() => { props.navigation.closeDrawer() }} style={styles.logoSection}>
                         <Image style={styles.logoIcon} source={Images.logoIcon} />
                         <Image source={Images.logoText} />
-                    </View>
+                    </TouchableOpacity>
                     <Divider style={styles.separator} />
                     <View style={styles.userInfoSection}>
                         <Text style={styles.title}>{user ? user.displayName : 'Loading...'}</Text>
