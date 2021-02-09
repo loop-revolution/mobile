@@ -85,3 +85,11 @@ export const GET_BLOCK = gql`
 		}
 	}
 `
+export const USER_SEARCH = gql`
+	query($query: String!) {
+		searchUsers(query: $query) {
+			displayName
+			username
+		}
+	}
+`

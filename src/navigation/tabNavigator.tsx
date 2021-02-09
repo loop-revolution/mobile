@@ -10,6 +10,7 @@ import Images from '../utils/images'
 import route from 'color-convert/route'
 import routes from './routes'
 import { CreateBlockNavigator } from './createBlockNavigator'
+import { Search } from '../screens/search'
 
 const Tab = createMaterialBottomTabNavigator()
 
@@ -37,7 +38,7 @@ export const TabNavigator = () => {
                 }} />
             <Tab.Screen
                 name="Search"
-                component={Home}
+                component={Search}
                 options={{
                     tabBarIcon: ({ color }) => (
                         <Image source={Images.tabSearch} style={{ tintColor: color }} />

@@ -4,7 +4,7 @@ import { Card, IconButton } from "react-native-paper"
 import colors from '../../../utils/colors'
 import { ComponentDelegate } from '../ComponentDelegate'
 import { StyleSheet, View } from 'react-native'
-import { getComponentIcon } from '../../../utils/componentIcon'
+import { getComponentIcon } from '../../../utils/utils'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import routes from '../../../navigation/routes'
 import { useNavigation } from '@react-navigation/native';
