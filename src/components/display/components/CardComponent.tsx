@@ -1,32 +1,35 @@
 import React from 'react'
 import { CardArgs } from "display-api"
-import { Avatar, Card, IconButton, Text, Title } from "react-native-paper"
+import { Card, IconButton } from "react-native-paper"
 import colors from '../../../utils/colors'
 import { ComponentDelegate } from '../ComponentDelegate'
 import { StyleSheet, View } from 'react-native'
 import { getComponentIcon } from '../../../utils/componentIcon'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import routes from '../../../navigation/routes'
+import { useNavigation } from '@react-navigation/native';
 
 export const CardComponent = ({ header, color, content }: CardArgs) => {
 
+    const navigation = useNavigation();
     color = color || colors.primary
     const LeftContent = () => <MaterialCommunityIcons color={color} name={getComponentIcon(header)} size={25} />
-    const RightContent = () => (
+    const RightContent = (content: any) => (
         <View style={styles().titleOptions}>
-            <IconButton color={color} icon='dots-horizontal' />
+            <IconButton color={color} icon='dots-horizontal' onPress={() => { navigation.navigate(routes.BLOCK_PAGE, {blockId: header.block_id}) }} />
             <IconButton color={color} icon='chevron-down' />
         </View>
     )
 
     return (
-        <Card style={styles(color).cardContainer} >
+        <Card style={styles(color).cardContainer}>
             {header ? (
                 <Card.Title
                     style={styles().header}
                     titleStyle={styles().title}
                     title={header.title}
                     left={LeftContent}
-                    right={RightContent} />
+                    right={() => RightContent(content)} />
             ) : null}
             <Card.Content style={styles().cardContent}>
                 <ComponentDelegate component={content} />
@@ -47,7 +50,7 @@ const styles = (color = colors.primary) => StyleSheet.create({
         borderRadius: 5
     },
     header: {
-        borderBottomColor: '#EBEAF5', 
+        borderBottomColor: '#EBEAF5',
         borderBottomWidth: 1,
         minHeight: 50
     },

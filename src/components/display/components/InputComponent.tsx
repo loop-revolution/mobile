@@ -1,14 +1,26 @@
-import React, { useState } from 'react'
-import { InputArgs } from "display-api"
+import React, { useEffect, useState } from 'react'
+import { InputArgs, MethodObject } from "display-api"
 import { Button, TextInput } from "react-native-paper"
 import { StyleSheet, Text, View } from 'react-native'
 import { globalStyles } from '../../../utils/styles'
-import { blockMethod, setMethodVariable } from '../method'
+import { populateTemplate, setMethodVariable } from '../method'
+import { BLOCK_METHOD_MUTATION } from '../../../api/gql'
+import { useMutation } from 'urql'
 
 export const InputComponent = ({ initial_value, name, label, type, confirm_cancel }: InputArgs) => {
 
     const [value, setValue] = useState<string>(initial_value)
     const [error, setError] = useState<string>(null)
+    const [isLoading, setLoading] = useState(false)
+    const [blockMethodResponse, blockMethod] = useMutation<BlockMethodResponse, BlockMethodRequest>(BLOCK_METHOD_MUTATION)
+
+    type BlockMethodResponse = { blockMethod: { id: number } }
+    type BlockMethodRequest = {
+        type: string
+        blockId: number
+        methodName: string
+        args: string
+    }
 
     const onChange = (value: string) => {
         setValue(value)
@@ -16,15 +28,30 @@ export const InputComponent = ({ initial_value, name, label, type, confirm_cance
     }
 
     const onConfirm = async () => {
-        const res = await blockMethod(confirm_cancel.on_confirm.method)
-        if (res.error) {
-            setError(res.error.message.replace(/\[\w+\]/g, ""))
+        const method: MethodObject = confirm_cancel.on_confirm.method
+        const args = populateTemplate(method.arg_template)
+        const request: BlockMethodRequest = {
+            type: method.type,
+            blockId: parseInt(method.block_id),
+            methodName: method.method_name,
+            args,
         }
+        setLoading(true)
+        blockMethod(request)
     }
 
     const onCancel = () => {
         setValue(initial_value)
     }
+
+    useEffect(() => {
+        if (blockMethodResponse.data?.blockMethod?.id) {
+            setLoading(false)
+        } else if (blockMethodResponse.error) {
+            setLoading(false)
+            setError(blockMethodResponse.error.message.replace(/\[\w+\]/g, ""))
+        }
+    }, [blockMethodResponse])
 
     return (
         <View>
@@ -40,18 +67,22 @@ export const InputComponent = ({ initial_value, name, label, type, confirm_cance
             {confirm_cancel?.enabled && value !== initial_value &&
                 <View style={styles.buttonsContainer}>
                     <Button
-                        onPress={() => onConfirm()}
+                        onPress={onConfirm}
+                        loading={isLoading}
                         contentStyle={globalStyles.buttonContentStyle}
                         mode="contained"
+                        icon="check"
                         labelStyle={{ color: 'white' }}>
-                        Confirm Change
+                        Confirm
                     </Button>
                     <Button
-                        onPress={() => onCancel()}
+                        onPress={onCancel}
                         contentStyle={globalStyles.buttonContentStyle}
+                        style={styles.button}
                         mode="contained"
+                        icon="close"
                         labelStyle={{ color: 'white' }}>
-                        Cancel Change
+                        Cancel
                     </Button>
                 </View>}
             {error && <Text style={globalStyles.error}>{error}</Text>}
@@ -62,7 +93,11 @@ export const InputComponent = ({ initial_value, name, label, type, confirm_cance
 const styles = StyleSheet.create({
     buttonsContainer: {
         flexDirection: 'row',
-        margin: 10
+        marginVertical: 10,
+        justifyContent: 'flex-end',
+    },
+    button: {
+        marginLeft: 10
     },
     input: {
         marginTop: 10

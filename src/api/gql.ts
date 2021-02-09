@@ -10,7 +10,7 @@ export const LOGIN_MUTATION = `
 
 export const SIGNUP_MUTATION = `
   mutation ($displayName: String!, $username: String!, $password: String!, $email: String!) {
-    signup($displayName: String!, username: $username, password: $password, email: $email) {
+    signup(displayName: $displayName, username: $username, password: $password, email: $email) {
         sessionCode
     }
   }
@@ -74,6 +74,14 @@ export const BLOCK_METHOD_MUTATION = gql`
 	mutation($type: String!, $blockId: Int!, $methodName: String!, $args: String!) {
 		blockMethod(type: $type, blockId: $blockId, methodName: $methodName, args: $args) {
 			id
+		}
+	}
+`
+
+export const GET_BLOCK = gql`
+	query($id: Int!) {
+		blockById(id: $id) {
+			pageDisplay
 		}
 	}
 `

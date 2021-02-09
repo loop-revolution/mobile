@@ -6,6 +6,7 @@ import { TabNavigator } from './tabNavigator'
 import { Appbar } from 'react-native-paper'
 import { globalStyles } from '../utils/styles'
 import { CreateBlock } from '../screens/createBlock'
+import { BlockPage } from '../screens/blockPage'
 
 const Stack = createStackNavigator()
 
@@ -46,6 +47,13 @@ export const HomeNavigator = ({ navigation }) => {
                 component={CreateBlock}
                 options={({ route }) => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? 'Create Block'
+                    return { headerTitle: routeName }
+                }} />
+            <Stack.Screen
+                name={routes.BLOCK_PAGE}
+                component={BlockPage}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Block Page'
                     return { headerTitle: routeName }
                 }} />
         </Stack.Navigator>
