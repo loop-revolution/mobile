@@ -11,7 +11,6 @@ import { populateTemplate } from '../components/display/method'
 import colors from '../utils/colors'
 import { globalStyles } from '../utils/styles'
 
-
 export const CreateBlock = ({ route, navigation }) => {
 
     type CreationDisplayRequest = { type: string }

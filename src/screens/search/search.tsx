@@ -1,39 +1,43 @@
 import React, { useEffect, useState } from 'react'
-import { View, StyleSheet, Dimensions } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
-import { Avatar, Divider, List, Searchbar, Text } from 'react-native-paper'
+import { View, StyleSheet } from 'react-native'
+import { Searchbar, Text } from 'react-native-paper'
 import { useQuery } from 'urql'
-import { USER_SEARCH } from '../api/gql'
-import { User } from '../api/types'
-import colors from '../utils/colors'
-import { getInitials, textToColor } from '../utils/utils'
+import { BLOCK_SEARCH, USER_SEARCH } from '../../api/gql'
+import { User, BlockCrumbs } from '../../api/types'
+import colors from '../../utils/colors'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
-import { globalStyles } from '../utils/styles'
-import { useTheme } from '@react-navigation/native'
+import { UsersList } from './usersList'
+import { BlocksList } from './blocksList'
 
 export const Search = () => {
+
+    type BlockQueryResults = { searchBlocks: Array<BlockCrumbs> }
+    type BlockQueryRequest = { query: string }
+
+    type UserQueryResults = { searchUsers: Array<User> }
+    type UserQueryRequest = { query: string }
+
     const [searchQuery, setSearchQuery] = useState(null)
     const [shouldFetch, setFetch] = useState(false)
+    const [blocksLoading, setBlocksLoading] = useState(false)
+    const [usersLoading, setUsersLoading] = useState(false)
     const [index, setIndex] = useState(1)
     const [routes] = useState([
         { key: 'blocks', title: 'Blocks' },
         { key: 'people', title: 'People' },
     ])
-    
-    const theme = useTheme()
-    let timeout: any
-
-    type UsersList = Array<User>
-    type UserQueryResults = { searchUsers: UsersList }
-    type UserQueryRequest = { query: string }
-
     let [userResult, getUsers] = useQuery<UserQueryResults, UserQueryRequest>({
         query: USER_SEARCH,
         variables: { query: searchQuery },
         pause: !searchQuery || !shouldFetch
     })
-    const searchUsers = userResult.data?.searchUsers
+    let [blockResult, getBlocks] = useQuery<BlockQueryResults, BlockQueryRequest>({
+        query: BLOCK_SEARCH,
+        variables: { query: searchQuery },
+        pause: !searchQuery || !shouldFetch
+    })
 
+    let timeout: any
     const onChangeSearch = (query: string) => {
         setSearchQuery(query)
         setFetch(false)
@@ -43,46 +47,26 @@ export const Search = () => {
 
         timeout = setTimeout(function () {
             setFetch(true)
-        }, 500)
+        }, 300)
     }
 
     useEffect(() => {
         if (shouldFetch) {
+            setUsersLoading(true)
+            setBlocksLoading(true)
             getUsers()
+            getBlocks()
         }
     }, [shouldFetch])
 
-    const renderPeopleItem = ({ item }: { item: User }) => {
-        const displayName = item.displayName ? item.displayName : item.username
-        const color = textToColor(displayName)
-        return (
-            <>
-                <List.Item
-                    title={displayName}
-                    titleStyle={styles().title}
-                    description={'@' + item.username}
-                    descriptionStyle={styles().description}
-                    left={() => <Avatar.Text size={40} style={styles(color).avatar} label={getInitials(displayName)} />} />
-                <Divider />
-            </>
-        )
-    }
-
-    const renderPeopleList = () => (
-        <View style={globalStyles.flex1}>
-            {searchUsers ?
-                <FlatList
-                    style={styles().flatList}
-                    data={searchUsers}
-                    renderItem={renderPeopleItem}
-                    keyExtractor={(item) => item.username} /> : null}
-        </View>
-    )
-
-    const renderBlocksList = () => (
-        <View style={globalStyles.flex1}>
-        </View>
-    )
+    useEffect(() => {
+        if (blockResult.data?.searchBlocks) {
+            setBlocksLoading(false)
+        }
+        if (userResult.data?.searchUsers) {
+            setUsersLoading(false)
+        }
+    }, [blockResult, userResult])
 
     const renderTabBar = (props: any) => (
         <View style={styles().tabBarContainer}>
@@ -90,7 +74,7 @@ export const Search = () => {
                 {...props}
                 renderLabel={({ route, focused }) => (
                     <Text style={focused ? styles().selectedTabLabel : styles().unselectedTabLabel}>
-                        {route.title + (searchUsers?.length ? ` (${searchUsers?.length}) ` : '')}
+                        {route.title}
                     </Text>
                 )}
                 indicatorStyle={styles().indicator}
@@ -99,8 +83,14 @@ export const Search = () => {
     )
 
     const renderScene = SceneMap({
-        blocks: renderBlocksList,
-        people: renderPeopleList,
+        blocks: () => BlocksList({
+            blocks: blockResult.data?.searchBlocks,
+            loading: blocksLoading
+        }),
+        people: () => UsersList({
+            users: userResult.data?.searchUsers,
+            loading: usersLoading
+        }),
     })
 
     return (
@@ -123,27 +113,14 @@ export const Search = () => {
     )
 }
 
-const styles = (color = colors.primary) => StyleSheet.create({
+const styles = () => StyleSheet.create({
     viewContainer: {
         flex: 1,
         backgroundColor: 'white'
     },
-    activityIndicator: {
-        flex: 1
-    },
-    flatList: {
-        margin: 5
-    },
-    avatar: {
-        backgroundColor: color,
-    },
     title: {
         fontSize: 16,
         fontWeight: '600',
-    },
-    description: {
-        fontSize: 12,
-        fontWeight: '400',
     },
     selectedTabLabel: {
         color: colors.text,

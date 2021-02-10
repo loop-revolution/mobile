@@ -93,3 +93,12 @@ export const USER_SEARCH = gql`
 		}
 	}
 `
+
+export const BLOCK_SEARCH = gql`
+	query($query: String!) {
+		searchBlocks(query: $query) {
+			blockId
+			name
+		}
+	}
+`
