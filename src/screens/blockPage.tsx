@@ -13,7 +13,6 @@ import { ComponentDelegate } from "../components/display/ComponentDelegate"
 
 export const BlockPage = ({ route, navigation }) => {
 
-    console.log(route.params)
     type BlockResult = { blockById: { pageDisplay: string } }
     type BlockRequest = { id: number }
 
