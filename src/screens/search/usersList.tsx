@@ -6,7 +6,7 @@ import { globalStyles } from '../../utils/styles'
 import { User } from '../../api/types'
 import colors from '../../utils/colors'
 
-export const UsersList = ({ users, loading }: { users: Array<User>, loading: boolean }) => {
+export const UsersList = ({ users, loading, selectUser = null }: { users: Array<User>, loading: boolean, selectUser: Function }) => {
 
     const renderUsersItem = ({ item }: { item: User }) => {
         const displayName = item.displayName ? item.displayName : item.username
@@ -18,6 +18,7 @@ export const UsersList = ({ users, loading }: { users: Array<User>, loading: boo
                     titleStyle={styles().title}
                     description={'@' + item.username}
                     descriptionStyle={styles().description}
+                    onPress={() => { selectUser ? selectUser(item) : null /* TODO */ }}
                     left={() => <Avatar.Text
                         size={40}
                         style={styles(color).avatar}
