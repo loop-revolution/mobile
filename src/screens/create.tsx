@@ -9,7 +9,7 @@ import { BLOCK_TYPES } from '../api/gql'
 import { BlockType } from '../api/types'
 import routes from '../navigation/routes'
 import colors from '../utils/colors'
-import { getComponentIcon } from '../utils/componentIcon'
+import { getComponentIcon } from '../utils/utils'
 
 
 export const Create = ({ navigation }) => {

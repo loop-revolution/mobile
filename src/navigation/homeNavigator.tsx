@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { getFocusedRouteNameFromRoute, useTheme } from '@react-navigation/native'
 import routes from './routes'
@@ -7,6 +7,7 @@ import { Appbar } from 'react-native-paper'
 import { globalStyles } from '../utils/styles'
 import { CreateBlock } from '../screens/createBlock'
 import { BlockPage } from '../screens/blockPage'
+import { BreadcrumbHeader } from '../components/breadcrumbHeader'
 
 const Stack = createStackNavigator()
 
@@ -24,12 +25,13 @@ export const HomeNavigator = ({ navigation }) => {
             screenOptions={{
                 header: ({ scene, previous, navigation }) => {
                     const { options } = scene.descriptor
+                    const isCustomTitle = typeof (options.headerTitle) === 'function'
                     return (
                         <Appbar.Header theme={theme}>
                             {previous ?
                                 <Appbar.BackAction onPress={navigation.goBack} /> :
                                 <Appbar.Action icon="menu" onPress={openDrawer} />}
-                            <Appbar.Content title={options.headerTitle} titleStyle={globalStyles.navBarTitle} />
+                            <Appbar.Content title={isCustomTitle ? options.headerTitle() : options.headerTitle} titleStyle={globalStyles.navBarTitle} />
                         </Appbar.Header>
                     )
                 }
@@ -40,8 +42,7 @@ export const HomeNavigator = ({ navigation }) => {
                 options={({ route }) => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home'
                     return { headerTitle: routeName }
-                }}
-            />
+                }} />
             <Stack.Screen
                 name={routes.CREATE_BLOCK}
                 component={CreateBlock}
@@ -51,11 +52,7 @@ export const HomeNavigator = ({ navigation }) => {
                 }} />
             <Stack.Screen
                 name={routes.BLOCK_PAGE}
-                component={BlockPage}
-                options={({ route }) => {
-                    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Block Page'
-                    return { headerTitle: routeName }
-                }} />
+                component={BlockPage} />
         </Stack.Navigator>
     )
 }

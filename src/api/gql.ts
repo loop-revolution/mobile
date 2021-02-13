@@ -82,6 +82,27 @@ export const GET_BLOCK = gql`
 	query($id: Int!) {
 		blockById(id: $id) {
 			pageDisplay
+			breadcrumb {
+				name
+				blockId
+			}
+		}
+	}
+`
+export const USER_SEARCH = gql`
+	query($query: String!) {
+		searchUsers(query: $query) {
+			displayName
+			username
+		}
+	}
+`
+
+export const BLOCK_SEARCH = gql`
+	query($query: String!) {
+		searchBlocks(query: $query) {
+			blockId
+			name
 		}
 	}
 `

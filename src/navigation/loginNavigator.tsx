@@ -31,24 +31,15 @@ export const LoginNavigator = () => {
             <Stack.Screen
                 name={routes.LOGIN}
                 component={Login}
-                options={({ route }) => {
-                    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Login'
-                    return { headerTitle: routeName }
-                }} />
+                options={{ headerTitle: 'Login' }} />
             <Stack.Screen
                 name={routes.SIGNUP}
                 component={Signup}
-                options={({ route }) => {
-                    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Signup'
-                    return { headerTitle: routeName }
-                }} />
+                options={{ headerTitle: 'Signup' }} />
             <Stack.Screen
                 name={routes.VERIFY_EMAIL}
                 component={VerifyEmail}
-                options={({ route }) => {
-                    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Verify Email'
-                    return { headerTitle: routeName }
-                }} />
+                options={{ headerTitle: 'Verify Email' }} />
         </Stack.Navigator>
     )
 }
