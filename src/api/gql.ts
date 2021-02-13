@@ -82,6 +82,10 @@ export const GET_BLOCK = gql`
 	query($id: Int!) {
 		blockById(id: $id) {
 			pageDisplay
+			breadcrumb {
+				name
+				blockId
+			}
 		}
 	}
 `
