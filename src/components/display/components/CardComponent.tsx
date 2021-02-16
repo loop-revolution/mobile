@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { CardArgs } from "display-api"
-import { Card, IconButton } from "react-native-paper"
+import { Card, IconButton, List } from "react-native-paper"
 import colors from '../../../utils/colors'
 import { ComponentDelegate } from '../ComponentDelegate'
 import { StyleSheet, View } from 'react-native'
@@ -10,6 +10,8 @@ import routes from '../../../navigation/routes'
 import { useNavigation } from '@react-navigation/native';
 
 export const CardComponent = ({ header, color, content }: CardArgs) => {
+
+    const [isExpanded, setExpended] = useState(false)
 
     const navigation = useNavigation();
     color = color || colors.primary
@@ -24,23 +26,34 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
     return (
         <Card style={styles(color).cardContainer}>
             {header ? (
-                <Card.Title
+                <List.Accordion
                     style={styles().header}
                     titleStyle={styles().title}
                     title={header.title}
                     left={LeftContent}
-                    right={() => RightContent(content)} />
-            ) : null}
-            <Card.Content style={styles().cardContent}>
-                <ComponentDelegate component={content} />
-            </Card.Content>
+                    expanded={isExpanded}
+                    onPress={() => {
+                        //TODO: Temporary solution, there is a PR active to configure the 
+                        //right item for this library.
+                        if (isExpanded) {
+                            navigation.navigate(routes.BLOCK_PAGE, {blockId: header.block_id})
+                        }
+                        setExpended(!isExpanded)
+                    }}>
+                    <Card.Content style={styles().cardContent}>
+                        <ComponentDelegate component={content} />
+                    </Card.Content>
+                </List.Accordion>
+            ) : <Card.Content style={styles().cardContent}>
+                    <ComponentDelegate component={content} />
+                </Card.Content>}
         </Card>
     )
 }
 
 const styles = (color = colors.primary) => StyleSheet.create({
     cardContainer: {
-        marginHorizontal: 10,
+        marginHorizontal: 5,
         marginVertical: 5,
         elevation: 0,
         borderColor: '#D7DADE',
@@ -52,10 +65,12 @@ const styles = (color = colors.primary) => StyleSheet.create({
     header: {
         borderBottomColor: '#EBEAF5',
         borderBottomWidth: 1,
-        minHeight: 50
+        minHeight: 50,
     },
     cardContent: {
-        marginTop: 15
+        padding: 5,
+        paddingLeft: 5,
+        paddingRight: 5
     },
     title: {
         fontSize: 14,

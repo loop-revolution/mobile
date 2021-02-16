@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     flatList: {
-        paddingTop: 5
+        paddingTop: 5,
+        marginHorizontal: 5
     }
 })

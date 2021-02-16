@@ -9,16 +9,17 @@ export const TextComponent = ({ text, color, preset }: TextArgs) => {
     color = color || colors.text
 
     if (preset === "Heading") {
-        return <Title style={styles({ color }).headline}>{text}</Title>
+        return <Title style={styles(color).headline}>{text}</Title>
     }
-    return <Text style={styles({ color }).text}>{text}</Text>
+    return <Text style={styles(color).text}>{text}</Text>
 }
 
-const styles = ({ color }) => StyleSheet.create({
+const styles = (color = colors.text) => StyleSheet.create({
     headline: {
         color: color,
     },
     text: {
+        padding: 10,
         color: color,
         fontSize: 13,
         fontWeight: '400',
