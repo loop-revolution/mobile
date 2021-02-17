@@ -31,8 +31,8 @@ export const textToColor = function (text: string) {
     const s = 60
     var hash = 0
     for (var i = 0; i < text.length; i++) {
-      hash = text.charCodeAt(i) + ((hash << 5) - hash)
+        hash = text.charCodeAt(i) + ((hash << 5) - hash)
     }
     var h = hash % 360
-    return 'hsl('+h+', '+s+'%, '+l+'%)';
-  }
+    return 'hsl(' + h + ', ' + s + '%, ' + l + '%)';
+}
