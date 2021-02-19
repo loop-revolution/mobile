@@ -106,3 +106,13 @@ export const BLOCK_SEARCH = gql`
 		}
 	}
 `
+
+export const NOTIFICATIONS = gql`
+	query {
+		notifications {
+			name
+			description
+			time
+		}
+	}
+`
