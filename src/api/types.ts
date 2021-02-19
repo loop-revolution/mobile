@@ -3,6 +3,7 @@ export type User = {
     username: string;
     displayName: string;
     credits: number;
+    root: Block
 }
 
 export type Crumb = { blockId: number, name: string }
@@ -12,4 +13,10 @@ export type BlockType = {
     name: string;
     icon: string;
     desc: string;
+}
+
+export type Block = { 
+    id: number
+    pageDisplay: string
+    breadcrumb: BlockCrumbs
 }

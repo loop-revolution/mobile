@@ -27,6 +27,9 @@ export const VERIFY_EMAIL_MUTATION = `
 export const WHO_AM_I = gql`
 	query {
 		whoami {
+			root {
+				id
+			}
 			id
             username
             displayName
