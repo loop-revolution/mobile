@@ -116,3 +116,11 @@ export const NOTIFICATIONS = gql`
 		}
 	}
 `
+
+export const ADD_EXPO_TOKEN = gql`
+    mutation($token: String!) {
+        addExpoTokens(token: $token) {
+            id
+        }
+    }
+`

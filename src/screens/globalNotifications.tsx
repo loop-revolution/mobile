@@ -6,7 +6,7 @@ import { NOTIFICATIONS } from '../api/gql'
 import { Notification } from '../api/types'
 import colors from '../utils/colors'
 import { globalStyles } from '../utils/styles'
-
+import { formatDate } from '../utils/utils'
 
 export const GlobalNotifications = () => {
     const [refreshing, setRefreshing] = useState(false);
@@ -33,13 +33,12 @@ export const GlobalNotifications = () => {
     }
 
     const renderNotificatonItem = ({ item }: { item: Notification }) => {
-
         return (
             <>
                 <View style={styles.notification}>
                     <Text style={styles.notificationTitle}>{item.name}</Text>
                     <Text style={styles.notificationSubTitle}>{item.description}</Text>
-                    {item.time && <Caption>{item.time}</Caption>}
+                    {item.time && <Caption>{formatDate(item.time)}</Caption>}
                 </View>
                 <Divider />
             </>
