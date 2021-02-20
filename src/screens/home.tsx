@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import { ActivityIndicator } from 'react-native-paper'
+import { ActivityIndicator, Portal } from 'react-native-paper'
 import { useQuery } from 'urql'
 import { USER_BLOCKS } from '../api/gql'
 import { ComponentDelegate } from '../components/display/ComponentDelegate'
