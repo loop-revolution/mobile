@@ -7,12 +7,18 @@ import { DefaultPaperTheme } from './utils/theme'
 import { StatusBar } from 'react-native'
 import { UserContext } from './context/userContext'
 import { User } from './api/types';
-import { WHO_AM_I } from './api/gql'
+import { ADD_EXPO_TOKEN, WHO_AM_I } from './api/gql'
+import { registerForPushNotificationsAsync } from './utils/helper'
 
 export const Main = () => {
 
     const [user, setStateUser] = useState<User>(null)
     const [isLoggedIn, setLoggedIn] = useState<boolean>(false)
+    const [pushToken, setPushToken] = useState<string>(null)
+    
+    useEffect(() => {
+        registerForPushNotificationsAsync().then(token => setPushToken(token))
+    }, [])
 
     useEffect(() => {
         async function getUser() {
@@ -28,11 +34,23 @@ export const Main = () => {
         }
     }, [isLoggedIn])
 
+    function addExpoToken() {
+        type AddExpoTokenQueryResult = { addExpoTokens: { id: String } }
+        type AddExpoTokenQueryRequest = { token: String }
+        client.mutation<AddExpoTokenQueryResult, AddExpoTokenQueryRequest>(
+            ADD_EXPO_TOKEN,
+            { token: pushToken }).toPromise()
+    }
+
     // Setting the user logged in state in the UserContext
-    const setUserLoggedIn = (isUserLoggedIn: boolean) => {
+    const setUserLoggedIn = (isUserLoggedIn: boolean, addPushToken: boolean = false) => {
         setLoggedIn(isUserLoggedIn)
         if (isUserLoggedIn === false) {
             setStateUser(null)
+        }
+
+        if (addPushToken && pushToken && isUserLoggedIn) {
+            addExpoToken()
         }
     }
 

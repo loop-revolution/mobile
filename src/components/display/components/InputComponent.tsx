@@ -7,10 +7,11 @@ import { populateTemplate, setMethodVariable } from '../method'
 import { BLOCK_METHOD_MUTATION } from '../../../api/gql'
 import { useMutation } from 'urql'
 
-export const InputComponent = ({ initial_value, name, label, type, confirm_cancel }: InputArgs) => {
+export const InputComponent = ({ initial_value, name, label, type, mask, confirm_cancel }: InputArgs) => {
 
     const [value, setValue] = useState<string>(initial_value)
     const [error, setError] = useState<string>(null)
+    const [isFocused, setFocused] = useState<boolean>(false)
     const [isLoading, setLoading] = useState(false)
     const [blockMethodResponse, blockMethod] = useMutation<BlockMethodResponse, BlockMethodRequest>(BLOCK_METHOD_MUTATION)
 
@@ -63,7 +64,10 @@ export const InputComponent = ({ initial_value, name, label, type, confirm_cance
                 placeholder={label}
                 onChangeText={value => onChange(value)}
                 value={value}
-                autoCapitalize="none" />
+                theme={!isFocused && mask ? { colors: { placeholder: 'transparent', background: 'transparent' } } : undefined}
+                autoCapitalize="none"
+                onFocus={() => { setFocused(true) }}
+                onBlur={() => { setFocused(false) }} />
             {confirm_cancel?.enabled && value !== initial_value &&
                 <View style={styles.buttonsContainer}>
                     <Button

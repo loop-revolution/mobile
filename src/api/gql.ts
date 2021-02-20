@@ -106,3 +106,21 @@ export const BLOCK_SEARCH = gql`
 		}
 	}
 `
+
+export const NOTIFICATIONS = gql`
+	query {
+		notifications {
+			name
+			description
+			time
+		}
+	}
+`
+
+export const ADD_EXPO_TOKEN = gql`
+    mutation($token: String!) {
+        addExpoTokens(token: $token) {
+            id
+        }
+    }
+`
