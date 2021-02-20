@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useMemo, forwardRef, useImperativeHandle } from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, Share } from 'react-native'
 import BottomSheet, { BottomSheetScrollView, BottomSheetBackgroundProps, BottomSheetBackdropProps, BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 import { MenuComponent } from 'display-api/lib/components/menu'
 import colors from '../utils/colors'
@@ -24,6 +24,13 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 
     const handleClose = useCallback(() => {
         sheetRef.current?.close()
+    }, [])
+
+    const handleShare = useCallback(() => {
+        sheetRef.current?.close()
+        Share.share({
+            message: `https://app.loop.page/b/${menu.block_id}`
+        })
     }, [])
 
     const renderItem = useCallback(
@@ -83,8 +90,13 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
                     {menu.permissions &&
                         renderItem(
                             'Permissions',
-                            handleClose)
+                            handleClose,
+                            menu.permissions?.full + menu.permissions.edit + menu.permissions?.view)
                     }
+                    {renderItem(
+                        'Share',
+                        handleShare,
+                    )}
                 </BottomSheetScrollView>
             </BottomSheet>
         </Portal>
