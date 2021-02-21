@@ -19,7 +19,6 @@ export async function registerForPushNotificationsAsync() {
       if (finalStatus !== 'granted') {
         return;
       }
-      console.log("finalStatus", finalStatus)
   
       // Get the token that uniquely identifies this device
       token =  (await Notifications.getExpoPushTokenAsync()).data

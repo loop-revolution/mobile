@@ -6,5 +6,6 @@ export default {
     error: '#DD3B2C',
     navigationPrimary: '#272C2F',
     background: '#ECEEF0',
-    white: '#fff'
+    white: '#fff',
+    starring: '#FFCA7A'
 }

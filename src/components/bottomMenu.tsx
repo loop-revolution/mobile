@@ -5,8 +5,19 @@ import { MenuComponent } from 'display-api/lib/components/menu'
 import colors from '../utils/colors'
 import { Divider, Portal, TouchableRipple } from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { useMutation } from 'urql'
+import { SET_NOTIFS, SET_STARRED } from '../api/gql'
 
 export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) => {
+
+    type StarredResult = { setStarred: { id: number, starred: boolean } }
+    type StarredRequest = { blockId: number; starred: boolean }
+    const [starredResult, setStarred] = useMutation<StarredResult, StarredRequest>(SET_STARRED)
+
+    type NotifsResult = { setNotifs: { id: number, notifEnabled: boolean } }
+    type NotifsRequest = { blockId: number; enabled: boolean }
+    const [notifsResult, setNotifs] = useMutation<NotifsResult, NotifsRequest>(SET_NOTIFS)
+
 
     // hooks
     const sheetRef = useRef<BottomSheet>(null)
@@ -33,6 +44,16 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
         })
     }, [])
 
+    const handleStarring = () => {
+        const request: StarredRequest = { blockId: menu.block_id, starred: !menu.star_button.starred }
+        setStarred(request)
+    }
+
+    const handleNotifs = () => {
+        const request: NotifsRequest = { blockId: menu.block_id, enabled: !menu.notifications_enabled }
+        setNotifs(request)
+    }
+
     const renderItem = useCallback(
         (title, onClick, subtitle?, icon?) => (
             <TouchableRipple onPress={onClick}>
@@ -40,7 +61,7 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
                     <View key={title} style={styles.itemContainer}>
                         <Text style={styles.itemTitle}>{title}</Text>
                         <View style={styles.itemRightView}>
-                            {icon != null ? <MaterialCommunityIcons style={styles.icon} name={icon} color={colors.white} size={20} /> : null}
+                            {icon != null ? <MaterialCommunityIcons name={icon} color={colors.starring} size={20} /> : null}
                             {subtitle != null ? <Text style={styles.itemSubtitle}>{subtitle}</Text> : null}
                         </View>
                     </View>
@@ -71,14 +92,13 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
                     {menu.star_button &&
                         renderItem(
                             menu.star_button.starred ? 'Unstar' : 'Star',
-                            handleClose,
+                            handleStarring,
                             menu.star_button.count,
                             menu.star_button.starred ? 'star' : 'star-outline')
                     }
-                    {menu.notifications_enabled &&
-                        renderItem(
+                    {renderItem(
                             menu.notifications_enabled ? 'Disable Notification' : 'Enable Notification',
-                            handleClose,
+                            handleNotifs,
                             null,
                             menu.notifications_enabled ? 'bell' : 'bell-off')
                     }
@@ -126,14 +146,11 @@ const styles = StyleSheet.create({
         color: colors.white,
         opacity: 0.5,
         fontSize: 16,
-        fontWeight: '400'
+        fontWeight: '400',
+        marginLeft: 10,
     },
     itemRightView: {
         flexDirection: 'row',
-        alignItems: 'center'
-    },
-    icon: {
-        marginHorizontal: 10,
     },
     separator: {
         backgroundColor: '#404040'

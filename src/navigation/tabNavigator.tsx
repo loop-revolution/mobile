@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import { useTheme } from 'react-native-paper'
-import { Home } from '../screens/home'
 import { Create } from '../screens/create'
 import { Image } from 'react-native'
 import Images from '../utils/images'
 import { Search } from '../screens/search/search'
+import { BlockPage } from '../screens/blockPage'
 import { GlobalNotifications } from '../screens/globalNotifications'
 
 const Tab = createMaterialBottomTabNavigator()
@@ -26,7 +26,7 @@ export const TabNavigator = () => {
             sceneAnimationEnabled={false}>
             <Tab.Screen
                 name="Home"
-                component={Home}
+                component={BlockPage}
                 options={{
                     tabBarIcon: ({ color }) => (
                         <Image source={Images.tabHome} style={{ tintColor: color }} />

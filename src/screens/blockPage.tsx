@@ -1,28 +1,29 @@
-import { View, StyleSheet, Text } from "react-native"
-import React, { useRef } from 'react'
+import { View, StyleSheet } from "react-native"
+import React, { useContext, useRef } from 'react'
 import { useQuery } from "urql"
 import { GET_BLOCK } from "../api/gql"
 import { DisplayObject } from "display-api"
-import { ActivityIndicator, Title, Portal, Modal, IconButton, Appbar } from "react-native-paper"
+import { ActivityIndicator, Title, Appbar, Subheading } from "react-native-paper"
 import { globalStyles } from "../utils/styles"
 import colors from "../utils/colors"
 import { ScrollView } from "react-native-gesture-handler"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { ComponentDelegate } from "../components/display/ComponentDelegate"
 import { BreadcrumbHeader } from "../components/breadcrumbHeader"
-import { BlockCrumbs } from "../api/types"
+import { Block, BlockCrumbs } from "../api/types"
 import { BreadcrumbList } from "../components/breadcrumbList"
 import { BlocksList } from "./search/blocksList"
+import { UserContext } from "../context/userContext"
 import { BottomMenu } from "../components/bottomMenu"
 
 
 export const BlockPage = ({ route, navigation }) => {
 
-    type BlockResult = { blockById: { pageDisplay: string, breadcrumb: BlockCrumbs } }
+    type BlockResult = { blockById:  Block}
     type BlockRequest = { id: number }
+    const { user } = useContext(UserContext)
 
-    const blockId: number = Number(route.params.blockId)
-
+    const blockId: number = route.params?.blockId ? Number(route.params.blockId) : user?.root?.id
     const [blockResponse] = useQuery<BlockResult, BlockRequest>({
         query: GET_BLOCK,
         variables: { id: blockId }
@@ -68,6 +69,8 @@ export const BlockPage = ({ route, navigation }) => {
                             <ComponentDelegate component={display.display} />
                             {display && <BottomMenu ref={menuRef} menu={display.meta?.page?.menu} />}
                         </View>
+                    ) : user && !blockId ? (
+                        <Subheading style={styles.subheading}>No Blocks Found! Go ahead and create one from the bottom menu.</Subheading>
                     ) : (
                             <ActivityIndicator
                                 {...null}
@@ -92,6 +95,9 @@ export const BlockPage = ({ route, navigation }) => {
 const styles = StyleSheet.create({
     scrollViewContent: {
         flex: 1,
-        paddingHorizontal: 30,
+        marginHorizontal: 5
+    },
+    subheading: {
+        textAlign: 'center'
     }
 })

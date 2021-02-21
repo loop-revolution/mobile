@@ -1,8 +1,10 @@
-export type User = {
+
+export type User = { 
     id: number
     username: string
     displayName: string
     credits: number
+    root: Block
 }
 
 export type Crumb = {
@@ -16,6 +18,12 @@ export type BlockType = {
     name: string
     icon: string
     desc: string
+}
+
+export type Block = { 
+    id: number
+    pageDisplay: string
+    breadcrumb: BlockCrumbs
 }
 
 export type Notification = {
