@@ -54,7 +54,7 @@ export const VerifyEmail = ({ route, navigation }) => {
                 if (data != undefined) {
                     const token = data.confirmEmail.token
                     await AsyncStorage.setItem('token', token)
-                    setUserLoggedIn(true)
+                    setUserLoggedIn(true, true)
                     navigation.replace(routes.HOME)
                 }
             })

@@ -1,9 +1,9 @@
 import { View, StyleSheet } from "react-native"
-import React, { useContext } from 'react'
+import React, { useContext, useRef } from 'react'
 import { useQuery } from "urql"
 import { GET_BLOCK } from "../api/gql"
 import { DisplayObject } from "display-api"
-import { ActivityIndicator, Title, Portal, Modal, Subheading } from "react-native-paper"
+import { ActivityIndicator, Title, Appbar, Subheading } from "react-native-paper"
 import { globalStyles } from "../utils/styles"
 import colors from "../utils/colors"
 import { ScrollView } from "react-native-gesture-handler"
@@ -14,6 +14,7 @@ import { Block, BlockCrumbs } from "../api/types"
 import { BreadcrumbList } from "../components/breadcrumbList"
 import { BlocksList } from "./search/blocksList"
 import { UserContext } from "../context/userContext"
+import { BottomMenu } from "../components/bottomMenu"
 
 
 export const BlockPage = ({ route, navigation }) => {
@@ -27,6 +28,8 @@ export const BlockPage = ({ route, navigation }) => {
         query: GET_BLOCK,
         variables: { id: blockId }
     })
+
+    let menuRef = useRef(null)
 
     let display: DisplayObject
     let block = blockResponse.data?.blockById
@@ -42,11 +45,20 @@ export const BlockPage = ({ route, navigation }) => {
                     {...props}
                     navigation={navigation}
                     route={route}
-                    title={display?.meta.page.header} />
-            )
+                    title={display?.meta?.page?.header} />
+            ),
+            headerRight: () => {
+                if (display?.meta?.page?.menu) {
+                    return <Appbar.Action
+                        icon='dots-horizontal'
+                        onPress={() => { menuRef.current?.handleOpen() }} />
+                } else {
+                    return null
+                }
+            }
         })
-    }, [navigation, display]);
-    
+    }, [navigation, display])
+
     return (
         <View style={globalStyles.flex1}>
             <ScrollView contentContainerStyle={[styles.scrollViewContent]}>
@@ -55,6 +67,7 @@ export const BlockPage = ({ route, navigation }) => {
                         <View>
                             {display.meta.page.header ? <Title>{display.meta.page.header}</Title> : null}
                             <ComponentDelegate component={display.display} />
+                            {display && <BottomMenu ref={menuRef} menu={display.meta?.page?.menu} />}
                         </View>
                     ) : user && !blockId ? (
                         <Subheading style={styles.subheading}>No Blocks Found! Go ahead and create one from the bottom menu.</Subheading>
@@ -67,6 +80,7 @@ export const BlockPage = ({ route, navigation }) => {
                     }
                 </SafeAreaView>
             </ScrollView>
+
             {block?.breadcrumb && (
                 <BreadcrumbList
                     navigation={navigation}
@@ -81,7 +95,7 @@ export const BlockPage = ({ route, navigation }) => {
 const styles = StyleSheet.create({
     scrollViewContent: {
         flex: 1,
-        paddingHorizontal: 30,
+        marginHorizontal: 5
     },
     subheading: {
         textAlign: 'center'

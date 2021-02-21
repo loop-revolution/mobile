@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export const getComponentIcon = ({ icon }: { icon?: any }) => {
     switch (icon) {
         case "Folder":
@@ -31,8 +33,16 @@ export const textToColor = function (text: string) {
     const s = 60
     var hash = 0
     for (var i = 0; i < text.length; i++) {
-      hash = text.charCodeAt(i) + ((hash << 5) - hash)
+        hash = text.charCodeAt(i) + ((hash << 5) - hash)
     }
     var h = hash % 360
-    return 'hsl('+h+', '+s+'%, '+l+'%)';
-  }
+    return 'hsl(' + h + ', ' + s + '%, ' + l + '%)';
+}
+
+export function formatDate(dateStr: string) {
+    let date = moment(dateStr);
+    if (moment().diff(date, 'days') >= 2) {
+        return date.fromNow() // 2 days ago etc
+    }
+    return date.calendar().split(' ')[0] + ', at ' + date.format("hh:mm a")
+}

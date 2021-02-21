@@ -109,3 +109,39 @@ export const BLOCK_SEARCH = gql`
 		}
 	}
 `
+
+export const NOTIFICATIONS = gql`
+	query {
+		notifications {
+			name
+			description
+			time
+		}
+	}
+`
+
+export const ADD_EXPO_TOKEN = gql`
+    mutation($token: String!) {
+        addExpoTokens(token: $token) {
+            id
+        }
+    }
+`
+
+export const SET_STARRED = gql`
+	mutation($blockId: Int!, $starred: Boolean!) {
+		setStarred(blockId: $blockId, starred: $starred) {
+			id
+			starred
+		}
+	}
+`
+
+export const SET_NOTIFS = gql`
+mutation($blockId: Int!, $enabled: Boolean!) {
+	setNotifs(blockId: $blockId, enabled: $enabled) {
+		id
+		notifEnabled
+	}
+}
+`

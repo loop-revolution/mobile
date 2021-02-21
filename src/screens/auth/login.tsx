@@ -55,7 +55,7 @@ export const Login = ({ navigation }) => {
                 if (data != undefined) {
                     const token = data.login.token
                     await AsyncStorage.setItem('token', token)
-                    setUserLoggedIn(true)
+                    setUserLoggedIn(true, true)
                     navigation.replace(routes.HOME)
                 }
             })
