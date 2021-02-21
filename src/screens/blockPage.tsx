@@ -1,9 +1,9 @@
-import { View, StyleSheet } from "react-native"
-import React from 'react'
+import { View, StyleSheet, Text } from "react-native"
+import React, { useRef } from 'react'
 import { useQuery } from "urql"
 import { GET_BLOCK } from "../api/gql"
 import { DisplayObject } from "display-api"
-import { ActivityIndicator, Title, Portal, Modal } from "react-native-paper"
+import { ActivityIndicator, Title, Portal, Modal, IconButton, Appbar } from "react-native-paper"
 import { globalStyles } from "../utils/styles"
 import colors from "../utils/colors"
 import { ScrollView } from "react-native-gesture-handler"
@@ -13,6 +13,7 @@ import { BreadcrumbHeader } from "../components/breadcrumbHeader"
 import { BlockCrumbs } from "../api/types"
 import { BreadcrumbList } from "../components/breadcrumbList"
 import { BlocksList } from "./search/blocksList"
+import { BottomMenu } from "../components/bottomMenu"
 
 
 export const BlockPage = ({ route, navigation }) => {
@@ -26,6 +27,8 @@ export const BlockPage = ({ route, navigation }) => {
         query: GET_BLOCK,
         variables: { id: blockId }
     })
+
+    let menuRef = useRef(null)
 
     let display: DisplayObject
     let block = blockResponse.data?.blockById
@@ -41,11 +44,20 @@ export const BlockPage = ({ route, navigation }) => {
                     {...props}
                     navigation={navigation}
                     route={route}
-                    title={display?.meta.page.header} />
-            )
+                    title={display?.meta?.page?.header} />
+            ),
+            headerRight: () => {
+                if (display?.meta?.page?.menu) {
+                    return <Appbar.Action
+                        icon='dots-horizontal'
+                        onPress={() => { menuRef.current?.handleOpen() }} />
+                } else {
+                    return null
+                }
+            }
         })
-    }, [navigation, display]);
-    
+    }, [navigation, display])
+
     return (
         <View style={globalStyles.flex1}>
             <ScrollView contentContainerStyle={[styles.scrollViewContent]}>
@@ -54,6 +66,7 @@ export const BlockPage = ({ route, navigation }) => {
                         <View>
                             {display.meta.page.header ? <Title>{display.meta.page.header}</Title> : null}
                             <ComponentDelegate component={display.display} />
+                            {display && <BottomMenu ref={menuRef} menu={display.meta?.page?.menu} />}
                         </View>
                     ) : (
                             <ActivityIndicator
@@ -64,6 +77,7 @@ export const BlockPage = ({ route, navigation }) => {
                     }
                 </SafeAreaView>
             </ScrollView>
+
             {block?.breadcrumb && (
                 <BreadcrumbList
                     navigation={navigation}

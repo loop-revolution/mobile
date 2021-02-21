@@ -32,6 +32,7 @@ export const HomeNavigator = ({ navigation }) => {
                                 <Appbar.BackAction onPress={navigation.goBack} /> :
                                 <Appbar.Action icon="menu" onPress={openDrawer} />}
                             <Appbar.Content title={isCustomTitle ? options.headerTitle() : options.headerTitle} titleStyle={globalStyles.navBarTitle} />
+                            {options.headerRight && options.headerRight()}
                         </Appbar.Header>
                     )
                 }
