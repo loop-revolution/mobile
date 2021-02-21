@@ -82,11 +82,6 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
                             null,
                             menu.notifications_enabled ? 'bell' : 'bell-off')
                     }
-                    {menu.delete &&
-                        renderItem(
-                            'Delete',
-                            handleClose)
-                    }
                     {menu.permissions &&
                         renderItem(
                             'Permissions',
