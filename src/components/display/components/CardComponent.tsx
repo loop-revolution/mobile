@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { CardArgs } from "display-api"
 import { Card, IconButton, List } from "react-native-paper"
 import colors from '../../../utils/colors'
@@ -8,10 +8,13 @@ import { getComponentIcon } from '../../../utils/utils'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import routes from '../../../navigation/routes'
 import { useNavigation } from '@react-navigation/native';
+import { BottomMenu } from '../../bottomMenu'
 
 export const CardComponent = ({ header, color, content }: CardArgs) => {
 
     const [isExpanded, setExpended] = useState(false)
+
+    let menuRef = useRef(null)
 
     const navigation = useNavigation();
     color = color || colors.primary
@@ -36,7 +39,8 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
                         //TODO: Temporary solution, there is a PR active to configure the 
                         //right item for this library.
                         if (isExpanded) {
-                            navigation.navigate(routes.BLOCK_PAGE, {blockId: header.block_id})
+                            menuRef.current?.handleOpen()
+                            // navigation.navigate(routes.BLOCK_PAGE, {blockId: header.block_id})
                         }
                         setExpended(!isExpanded)
                     }}>
@@ -47,6 +51,7 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
             ) : <Card.Content style={styles().cardContent}>
                     <ComponentDelegate component={content} />
                 </Card.Content>}
+                {header && <BottomMenu ref={menuRef} menu={header.menu} />}
         </Card>
     )
 }

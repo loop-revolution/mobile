@@ -7,8 +7,13 @@ import { Divider, Portal, TouchableRipple } from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useMutation } from 'urql'
 import { SET_NOTIFS, SET_STARRED } from '../api/gql'
+import { useNavigation } from '@react-navigation/native'
+import routes from '../navigation/routes'
+import { SearchMode } from '../api/types'
 
 export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) => {
+
+    const navigation = useNavigation();
 
     type StarredResult = { setStarred: { id: number, starred: boolean } }
     type StarredRequest = { blockId: number; starred: boolean }
@@ -38,7 +43,7 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
     }, [])
 
     const handleShare = useCallback(() => {
-        sheetRef.current?.close()
+        handleClose()
         Share.share({
             message: `https://app.loop.page/b/${menu.block_id}`
         })
@@ -52,6 +57,11 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
     const handleNotifs = () => {
         const request: NotifsRequest = { blockId: menu.block_id, enabled: !menu.notifications_enabled }
         setNotifs(request)
+    }
+
+    const handleAddBlock = () => {
+        handleClose()
+        navigation.navigate(routes.SEARCH, {mode: SearchMode.Block})
     }
 
     const renderItem = useCallback(
@@ -111,6 +121,10 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
                     {renderItem(
                         'Share',
                         handleShare,
+                    )}
+                    {renderItem(
+                        'Add Block',
+                        handleAddBlock,
                     )}
                 </BottomSheetScrollView>
             </BottomSheet>

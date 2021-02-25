@@ -9,4 +9,5 @@ export default {
     CREATE_BLOCK: 'CREATE_BLOCK',
     CREATE: 'CREATE',
     BLOCK_PAGE: 'BLOCK_PAGE',
+    SEARCH: 'SEARCH',
 }

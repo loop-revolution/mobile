@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Searchbar, Text } from 'react-native-paper'
-import { useQuery } from 'urql'
+import { stringifyVariables, useQuery } from 'urql'
 import { BLOCK_SEARCH, USER_SEARCH } from '../../api/gql'
-import { User, BlockCrumbs } from '../../api/types'
+import { User, BlockCrumbs, SearchMode } from '../../api/types'
 import colors from '../../utils/colors'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
 import { UsersList } from './usersList'
 import { BlocksList } from './blocksList'
 
-export const Search = () => {
+export const Search = ({ route, navigation }) => {
 
     type BlockQueryResults = { searchBlocks: Array<BlockCrumbs> }
     type BlockQueryRequest = { query: string }
@@ -26,6 +26,9 @@ export const Search = () => {
         { key: 'blocks', title: 'Blocks' },
         { key: 'people', title: 'People' },
     ])
+
+    const searchMode: SearchMode = route.params?.mode
+
     let [userResult, getUsers] = useQuery<UserQueryResults, UserQueryRequest>({
         query: USER_SEARCH,
         variables: { query: searchQuery },
@@ -104,11 +107,17 @@ export const Search = () => {
                     onChangeText={onChangeSearch}
                     value={searchQuery} />
             </View>
-            <TabView
-                renderTabBar={renderTabBar}
-                navigationState={{ index, routes }}
-                renderScene={renderScene}
-                onIndexChange={setIndex} />
+            {searchMode == SearchMode.Block ?
+                <BlocksList blocks={blockResult.data?.searchBlocks} loading={blocksLoading} />
+                : searchMode == SearchMode.User ?
+                    <UsersList users={userResult.data?.searchUsers} loading={usersLoading} />
+                    : <TabView
+                        renderTabBar={renderTabBar}
+                        navigationState={{ index, routes }}
+                        renderScene={renderScene}
+                        onIndexChange={setIndex} />
+            }
+
         </View>
     )
 }

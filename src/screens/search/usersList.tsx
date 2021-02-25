@@ -6,7 +6,7 @@ import { globalStyles } from '../../utils/styles'
 import { User } from '../../api/types'
 import colors from '../../utils/colors'
 
-export const UsersList = ({ users, loading, selectUser = null }: { users: Array<User>, loading: boolean, selectUser: Function }) => {
+export const UsersList = ({ users, loading, selectUser = null }: { users: Array<User>, loading: boolean, selectUser?: Function }) => {
 
     const renderUsersItem = ({ item }: { item: User }) => {
         const displayName = item.displayName ? item.displayName : item.username

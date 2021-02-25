@@ -9,7 +9,7 @@ import colors from '../../utils/colors'
 import routes from '../../navigation/routes'
 import { useNavigation } from '@react-navigation/native';
 
-export const BlocksList = ({ blocks, loading, selectBlock = null }: { blocks: Array<BlockCrumbs>, loading: boolean, selectBlock: Function }) => {
+export const BlocksList = ({ blocks, loading, selectBlock = null }: { blocks: Array<BlockCrumbs>, loading: boolean, selectBlock?: Function }) => {
 
     const navigation = useNavigation();
 
