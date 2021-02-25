@@ -8,6 +8,7 @@ import { globalStyles } from '../utils/styles'
 import { CreateBlock } from '../screens/createBlock'
 import { BlockPage } from '../screens/blockPage'
 import { BreadcrumbHeader } from '../components/breadcrumbHeader'
+import { Profile } from '../screens/profile'
 
 const Stack = createStackNavigator()
 
@@ -54,6 +55,13 @@ export const HomeNavigator = ({ navigation }) => {
             <Stack.Screen
                 name={routes.BLOCK_PAGE}
                 component={BlockPage} />
+            <Stack.Screen
+                name={routes.PROFILE}
+                component={Profile}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Profile'
+                    return { headerTitle: routeName }
+                }} />
         </Stack.Navigator>
     )
 }
