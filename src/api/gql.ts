@@ -95,6 +95,7 @@ export const GET_BLOCK = gql`
 export const USER_SEARCH = gql`
 	query($query: String!) {
 		searchUsers(query: $query) {
+            id
 			displayName
 			username
 		}
@@ -144,4 +145,20 @@ mutation($blockId: Int!, $enabled: Boolean!) {
 		notifEnabled
 	}
 }
+`
+
+export const USER_PROFILE = gql`
+	query($id: Int!) {
+		userById(id: $id) {
+			id,
+            username,
+            displayName,
+            credits,
+            featured {
+                id
+                pageDisplay
+                embedDisplay
+            }
+		}
+	}
 `

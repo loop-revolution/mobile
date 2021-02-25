@@ -5,6 +5,7 @@ export type User = {
     displayName: string
     credits: number
     root: Block
+    featured: Block
 }
 
 export type Crumb = {
@@ -23,6 +24,7 @@ export type BlockType = {
 export type Block = { 
     id: number
     pageDisplay: string
+    embedDisplay: string
     breadcrumb: BlockCrumbs
 }
 
