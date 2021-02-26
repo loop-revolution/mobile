@@ -6,7 +6,7 @@ import colors from '../utils/colors'
 import { Divider, Portal, TouchableRipple } from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useMutation } from 'urql'
-import { SET_NOTIFS, SET_STARRED } from '../api/gql'
+import { SET_NOTIFS, SET_STARRED, UPDATE_VISIBILITY } from '../api/gql'
 
 export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) => {
 
@@ -18,6 +18,9 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
     type NotifsRequest = { blockId: number; enabled: boolean }
     const [notifsResult, setNotifs] = useMutation<NotifsResult, NotifsRequest>(SET_NOTIFS)
 
+    type VisibilityResult = { updateVisibility: { id: number, public: boolean } }
+    type VisibilityRequest = { blockId: number; public: boolean }
+    const [visibilityResult, setVisibility] = useMutation<VisibilityResult, VisibilityRequest>(UPDATE_VISIBILITY)
 
     // hooks
     const sheetRef = useRef<BottomSheet>(null)
@@ -52,6 +55,11 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
     const handleNotifs = () => {
         const request: NotifsRequest = { blockId: menu.block_id, enabled: !menu.notifications_enabled }
         setNotifs(request)
+    }
+
+    const handlePermissions = () => {
+        const request: VisibilityRequest = { blockId: menu.block_id, public: !menu.permissions?.public }
+        setVisibility(request)
     }
 
     const renderItem = useCallback(
@@ -105,8 +113,8 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
                     {menu.permissions &&
                         renderItem(
                             'Permissions',
-                            handleClose,
-                            menu.permissions?.full + menu.permissions.edit + menu.permissions?.view)
+                            handlePermissions,
+                            `${menu.permissions?.public ? 'Public' : 'Private'} (${menu.permissions?.full + menu.permissions?.edit + menu.permissions?.view})`)
                     }
                     {renderItem(
                         'Share',

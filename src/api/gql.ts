@@ -139,12 +139,21 @@ export const SET_STARRED = gql`
 `
 
 export const SET_NOTIFS = gql`
-mutation($blockId: Int!, $enabled: Boolean!) {
-	setNotifs(blockId: $blockId, enabled: $enabled) {
-		id
-		notifEnabled
-	}
-}
+    mutation($blockId: Int!, $enabled: Boolean!) {
+        setNotifs(blockId: $blockId, enabled: $enabled) {
+            id
+            notifEnabled
+        }
+    }
+`
+
+export const UPDATE_VISIBILITY = gql`
+    mutation($blockId: Int!, $public: Boolean!) {
+        updateVisibility(blockId: $blockId, public: $public) {
+            id
+            public
+        }
+    }
 `
 
 export const USER_PROFILE = gql`
@@ -163,4 +172,14 @@ export const USER_PROFILE = gql`
             }
 		}
 	}
+`
+
+export const UPDATE_DISPLAY_NAME = gql`
+    mutation($newDisplayName: String!) {
+        updateDisplayName(newDisplayName: $newDisplayName) {
+            id
+            username
+            displayName
+        }
+    }
 `

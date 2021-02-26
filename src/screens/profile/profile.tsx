@@ -1,16 +1,17 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import React, { useContext, useImperativeHandle } from 'react'
-import { View, FlatList, StyleSheet } from 'react-native'
+import React, { useContext } from 'react'
+import { View, StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import { ActivityIndicator, Avatar, Button, Caption, Card, Text, Title } from 'react-native-paper'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { useQuery } from 'urql'
-import { USER_PROFILE } from '../api/gql'
-import { Block, User } from '../api/types'
-import { ComponentDelegate } from '../components/display/ComponentDelegate'
-import { UserContext } from '../context/userContext'
-import colors from '../utils/colors'
-import { globalStyles } from '../utils/styles'
+import { ActivityIndicator, Avatar, Button, Caption, Card, Text } from 'react-native-paper'
+import { useMutation, useQuery } from 'urql'
+import { SET_STARRED, USER_PROFILE } from '../../api/gql'
+import { Block, User } from '../../api/types'
+import { ComponentDelegate } from '../../components/display/ComponentDelegate'
+import { UserContext } from '../../context/userContext'
+import routes from '../../navigation/routes'
+import colors from '../../utils/colors'
+import Images from '../../utils/images'
+import { globalStyles } from '../../utils/styles'
 
 export const Profile = ({ route, navigation }) => {
 
@@ -18,15 +19,20 @@ export const Profile = ({ route, navigation }) => {
 
     type UserProfileRequest = { id: number }
     type UserProfileResult = { userById: User }
+    type StarredResult = { setStarred: { id: number, starred: boolean } }
+    type StarredRequest = { blockId: number; starred: boolean }
+
+    const [starredResult, setStarred] = useMutation<StarredResult, StarredRequest>(SET_STARRED)
     const [profileResponse] = useQuery<UserProfileResult, UserProfileRequest>({
         query: USER_PROFILE,
         variables: { id: route.params?.userId },
     })
+
     const user = profileResponse.data?.userById
 
     if (!user) {
         return <ActivityIndicator
-            {...0}
+            {...null}
             style={globalStyles.flex1}
             color={colors.primary} />
     }
@@ -65,15 +71,27 @@ export const Profile = ({ route, navigation }) => {
 
         const starCount = user?.featured.starCount ?? 0
         return (
-            <View style={styles.starContainer}>
-                <MaterialCommunityIcons
-                    name={user?.featured.starred ? 'star' : 'star-outline'}
-                    color={colors.starring}
-                    size={25} />
-                <Caption style={styles.caption}> {starCount} {starCount === 1 ? 'star' : 'stars'}</Caption>
-            </View>
+            <Button
+                mode="text"
+                compact
+                color={colors.starring}
+                style={styles.editButton}
+                uppercase={false}
+                onPress={() => handleStarring()}>
+                <View style={styles.starContainer}>
+                    <MaterialCommunityIcons
+                        name={user?.featured.starred ? 'star' : 'star-outline'}
+                        color={colors.starring}
+                        size={25} />
+                    <Caption style={styles.caption}> {starCount} {starCount === 1 ? 'star ' : 'stars '}</Caption>
+                </View>
+            </Button>
         )
+    }
 
+    const handleStarring = () => {
+        const request: StarredRequest = { blockId: user.featured.id, starred: !user.featured.starred }
+        setStarred(request)
     }
 
     return (
@@ -81,7 +99,7 @@ export const Profile = ({ route, navigation }) => {
             <ScrollView bounces={false}>
                 <Card>
                     <Card.Content style={styles.profileHeader}>
-                        <Avatar.Image style={styles.profilePhoto} size={100} source={require('../../assets/avatar.jpg')} />
+                        <Avatar.Image style={styles.profilePhoto} size={100} source={Images.avatar} />
                         <View style={styles.userInfo}>
                             {user && <Text style={styles.username}>@{user.username}</Text>}
                             {user && <Caption style={styles.caption}>{user.displayName ?? user.username}</Caption>}
@@ -93,9 +111,9 @@ export const Profile = ({ route, navigation }) => {
                                     compact
                                     style={styles.editButton}
                                     uppercase={false}
-                                    onPress={() => console.log('Pressed')}>
+                                    onPress={() => { navigation.push(routes.EDIT_PROFILE, { user }) }}>
                                     Edit Profile
-                        </Button>
+                                </Button>
                             }
                         </View>
                     </Card.Content>
@@ -130,7 +148,8 @@ const styles = StyleSheet.create({
     },
     caption: {
         fontSize: 14,
-        fontWeight: '400'
+        fontWeight: '400',
+        lineHeight: 25,
     },
     featuredBlockTitle: {
         fontSize: 18,
@@ -143,7 +162,8 @@ const styles = StyleSheet.create({
     },
     editButton: {
         marginLeft: -12,
-        marginTop: 10
+        marginTop: -8,
+        flexWrap: 'wrap'
     },
     blockContainer: {
         marginHorizontal: 5
