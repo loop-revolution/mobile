@@ -1,3 +1,4 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import React, { useContext, useImperativeHandle } from 'react'
 import { View, FlatList, StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -33,10 +34,12 @@ export const Profile = ({ route, navigation }) => {
     const renderFeaturedBlock = () => {
         const featuredBlock: Block = user?.featured
         if (featuredBlock) {
-            return <View style={styles.blockContainer}>
-                <Text style={styles.featuredBlockTitle}>Featured Block</Text>
-                <ComponentDelegate component={JSON.parse(user?.featured?.embedDisplay)} />
-            </View>
+            return (
+                <View style={styles.blockContainer}>
+                    <Text style={styles.featuredBlockTitle}>Featured Block</Text>
+                    <ComponentDelegate component={JSON.parse(user?.featured?.embedDisplay)} />
+                </View>
+            )
         } else if (currentUser.user.id === user.id) {
             return (
                 <>
@@ -55,15 +58,34 @@ export const Profile = ({ route, navigation }) => {
         }
     }
 
+    const renderStarredItem = () => {
+        if (!user?.featured) {
+            return null
+        }
+
+        const starCount = user?.featured.starCount ?? 0
+        return (
+            <View style={styles.starContainer}>
+                <MaterialCommunityIcons
+                    name={user?.featured.starred ? 'star' : 'star-outline'}
+                    color={colors.starring}
+                    size={25} />
+                <Caption style={styles.caption}> {starCount} {starCount === 1 ? 'star' : 'stars'}</Caption>
+            </View>
+        )
+
+    }
+
     return (
         <View style={globalStyles.flex1}>
             <ScrollView bounces={false}>
                 <Card>
                     <Card.Content style={styles.profileHeader}>
-                        <Avatar.Image size={100} source={require('../../assets/avatar.jpg')} />
+                        <Avatar.Image style={styles.profilePhoto} size={100} source={require('../../assets/avatar.jpg')} />
                         <View style={styles.userInfo}>
-                            {user && <Text style={styles.username}>{user.username}</Text>}
-                            {user && <Caption style={styles.displayName}>{user.displayName ?? user.username}</Caption>}
+                            {user && <Text style={styles.username}>@{user.username}</Text>}
+                            {user && <Caption style={styles.caption}>{user.displayName ?? user.username}</Caption>}
+                            {renderStarredItem()}
                             {currentUser.user.id === user.id &&
                                 <Button
                                     icon="pencil"
@@ -99,12 +121,15 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         justifyContent: 'center'
     },
+    profilePhoto: {
+        alignSelf: 'center'
+    },
     username: {
         fontSize: 22,
         fontWeight: '500'
     },
-    displayName: {
-        fontSize: 16,
+    caption: {
+        fontSize: 14,
         fontWeight: '400'
     },
     featuredBlockTitle: {
@@ -117,9 +142,14 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     editButton: {
-        marginLeft: -12
+        marginLeft: -12,
+        marginTop: 10
     },
     blockContainer: {
         marginHorizontal: 5
+    },
+    starContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
     }
 })

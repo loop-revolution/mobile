@@ -26,6 +26,8 @@ export type Block = {
     pageDisplay: string
     embedDisplay: string
     breadcrumb: BlockCrumbs
+    starred: boolean
+    starCount: number
 }
 
 export type Notification = {

@@ -158,6 +158,8 @@ export const USER_PROFILE = gql`
                 id
                 pageDisplay
                 embedDisplay
+                starred
+                starCount
             }
 		}
 	}
