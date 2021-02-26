@@ -14,7 +14,7 @@ import { Block, BlockCrumbs } from "../api/types"
 import { BreadcrumbList } from "../components/breadcrumbList"
 import { BlocksList } from "./search/blocksList"
 import { UserContext } from "../context/userContext"
-import { BottomMenu } from "../components/bottomMenu"
+import { BottomMenu } from "../components/blockMenu/bottomMenu"
 
 
 export const BlockPage = ({ route, navigation }) => {

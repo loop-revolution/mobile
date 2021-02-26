@@ -10,6 +10,7 @@ import { BlockPage } from '../screens/blockPage'
 import { BreadcrumbHeader } from '../components/breadcrumbHeader'
 import { Profile } from '../screens/profile/profile'
 import { EditProfile } from '../screens/profile/editProfile'
+import { Permissions } from '../components/blockMenu/permissions'
 
 const Stack = createStackNavigator()
 
@@ -61,6 +62,10 @@ export const HomeNavigator = ({ navigation }) => {
                 name={routes.EDIT_PROFILE}
                 component={EditProfile}
                 options={{ headerTitle: 'Edit Profile' }} />
+            <Stack.Screen
+                name={routes.BLOCK_PERMISSIONS}
+                component={Permissions}
+                options={{ headerTitle: 'Permissions' }} />
         </Stack.Navigator>
     )
 }
