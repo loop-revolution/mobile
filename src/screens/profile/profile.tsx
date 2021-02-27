@@ -101,8 +101,8 @@ export const Profile = ({ route, navigation }) => {
                     <Card.Content style={styles.profileHeader}>
                         <Avatar.Image style={styles.profilePhoto} size={100} source={Images.avatar} />
                         <View style={styles.userInfo}>
-                            {user && <Text style={styles.username}>@{user.username}</Text>}
-                            {user && <Caption style={styles.caption}>{user.displayName ?? user.username}</Caption>}
+                            {user && <Text style={styles.username}>{user.displayName ?? user.username}</Text>}
+                            {user && <Caption style={styles.caption}>@{user.username}</Caption>}
                             {renderStarredItem()}
                             {currentUser.user.id === user.id &&
                                 <Button
