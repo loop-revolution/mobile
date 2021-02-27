@@ -11,6 +11,9 @@ const Images = {
     logoText: require('../../assets/drawer/logo_text.png'),
     help: require('../../assets/drawer/help_drawer.png'),
     settings: require('../../assets/drawer/settings_drawer.png'),
+
+    //profile
+    avatar: require('../../assets/avatar.jpg')
 }
 
 export default Images

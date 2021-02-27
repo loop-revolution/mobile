@@ -5,9 +5,12 @@ import { getInitials, textToColor } from '../../utils/utils'
 import { globalStyles } from '../../utils/styles'
 import { User } from '../../api/types'
 import colors from '../../utils/colors'
+import { useNavigation } from '@react-navigation/native'
+import routes from '../../navigation/routes'
 
 export const UsersList = ({ users, loading, selectUser = null }: { users: Array<User>, loading: boolean, selectUser: Function }) => {
 
+    const navigation = useNavigation()
     const renderUsersItem = ({ item }: { item: User }) => {
         const displayName = item.displayName ? item.displayName : item.username
         const color = textToColor(displayName)
@@ -18,7 +21,7 @@ export const UsersList = ({ users, loading, selectUser = null }: { users: Array<
                     titleStyle={styles().title}
                     description={'@' + item.username}
                     descriptionStyle={styles().description}
-                    onPress={() => { selectUser ? selectUser(item) : null /* TODO */ }}
+                    onPress={() => { selectUser ? selectUser(item) : navigation.navigate(routes.PROFILE, { userId: item.id }) }}
                     left={() => <Avatar.Text
                         size={40}
                         style={styles(color).avatar}

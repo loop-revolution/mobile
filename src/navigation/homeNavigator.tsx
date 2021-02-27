@@ -8,6 +8,9 @@ import { globalStyles } from '../utils/styles'
 import { CreateBlock } from '../screens/createBlock'
 import { BlockPage } from '../screens/blockPage'
 import { BreadcrumbHeader } from '../components/breadcrumbHeader'
+import { Profile } from '../screens/profile/profile'
+import { EditProfile } from '../screens/profile/editProfile'
+import { Permissions } from '../components/blockMenu/permissions'
 
 const Stack = createStackNavigator()
 
@@ -47,13 +50,22 @@ export const HomeNavigator = ({ navigation }) => {
             <Stack.Screen
                 name={routes.CREATE_BLOCK}
                 component={CreateBlock}
-                options={({ route }) => {
-                    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Create Block'
-                    return { headerTitle: routeName }
-                }} />
+                options={{ headerTitle: 'Create Block' }} />
             <Stack.Screen
                 name={routes.BLOCK_PAGE}
                 component={BlockPage} />
+            <Stack.Screen
+                name={routes.PROFILE}
+                component={Profile}
+                options={{ headerTitle: 'Profile' }} />
+            <Stack.Screen
+                name={routes.EDIT_PROFILE}
+                component={EditProfile}
+                options={{ headerTitle: 'Edit Profile' }} />
+            <Stack.Screen
+                name={routes.BLOCK_PERMISSIONS}
+                component={Permissions}
+                options={{ headerTitle: 'Permissions' }} />
         </Stack.Navigator>
     )
 }

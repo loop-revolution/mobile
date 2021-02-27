@@ -2,11 +2,13 @@ import React, { useCallback, useRef, useMemo, forwardRef, useImperativeHandle } 
 import { StyleSheet, View, Text, Share } from 'react-native'
 import BottomSheet, { BottomSheetScrollView, BottomSheetBackgroundProps, BottomSheetBackdropProps, BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 import { MenuComponent } from 'display-api/lib/components/menu'
-import colors from '../utils/colors'
+import colors from '../../utils/colors'
 import { Divider, Portal, TouchableRipple } from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useMutation } from 'urql'
-import { SET_NOTIFS, SET_STARRED } from '../api/gql'
+import { SET_NOTIFS, SET_STARRED, UPDATE_VISIBILITY } from '../../api/gql'
+import { useNavigation } from '@react-navigation/native'
+import routes from '../../navigation/routes'
 
 export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) => {
 
@@ -18,9 +20,10 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
     type NotifsRequest = { blockId: number; enabled: boolean }
     const [notifsResult, setNotifs] = useMutation<NotifsResult, NotifsRequest>(SET_NOTIFS)
 
-
     // hooks
     const sheetRef = useRef<BottomSheet>(null)
+    const navigation = useNavigation()
+
     const snapPoints = useMemo(() => ['0%', '80%'], [])
 
     const handleSheetChange = useCallback(index => {
@@ -38,7 +41,7 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
     }, [])
 
     const handleShare = useCallback(() => {
-        sheetRef.current?.close()
+        handleClose()
         Share.share({
             message: `https://app.loop.page/b/${menu.block_id}`
         })
@@ -52,6 +55,11 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
     const handleNotifs = () => {
         const request: NotifsRequest = { blockId: menu.block_id, enabled: !menu.notifications_enabled }
         setNotifs(request)
+    }
+
+    const handlePermissions = () => {
+        handleClose()
+        navigation.navigate(routes.BLOCK_PERMISSIONS, { menu })
     }
 
     const renderItem = useCallback(
@@ -97,16 +105,16 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
                             menu.star_button.starred ? 'star' : 'star-outline')
                     }
                     {renderItem(
-                            menu.notifications_enabled ? 'Disable Notification' : 'Enable Notification',
-                            handleNotifs,
-                            null,
-                            menu.notifications_enabled ? 'bell' : 'bell-off')
+                        menu.notifications_enabled ? 'Disable Notification' : 'Enable Notification',
+                        handleNotifs,
+                        null,
+                        menu.notifications_enabled ? 'bell' : 'bell-off')
                     }
                     {menu.permissions &&
                         renderItem(
                             'Permissions',
-                            handleClose,
-                            menu.permissions?.full + menu.permissions.edit + menu.permissions?.view)
+                            handlePermissions,
+                            menu.permissions?.full + menu.permissions?.edit + menu.permissions?.view)
                     }
                     {renderItem(
                         'Share',
