@@ -9,7 +9,7 @@ import colors from '../../utils/colors'
 import routes from '../../navigation/routes'
 import { useNavigation } from '@react-navigation/native';
 
-export const BlocksList = ({ blocks, loading, selectBlock = null }: { blocks: Array<BlockCrumbs>, loading: boolean, selectBlock: Function }) => {
+export const BlocksList = ({ blocks, loading, selectBlock = null }: { blocks: Array<BlockCrumbs>, loading: boolean, selectBlock?: Function }) => {
 
     const navigation = useNavigation();
 
@@ -25,7 +25,7 @@ export const BlocksList = ({ blocks, loading, selectBlock = null }: { blocks: Ar
                 <List.Item
                     title={displayName}
                     titleStyle={styles.title}
-                    onPress={() => { selectBlock ? selectBlock(lastItem) : navigation.navigate(routes.BLOCK_PAGE, { blockId: lastItem.blockId }) }}
+                    onPress={() => { selectBlock ? selectBlock(lastItem.blockId.toString()) : navigation.navigate(routes.BLOCK_PAGE, { blockId: lastItem.blockId }) }}
                     left={() => <MaterialCommunityIcons color={color} name={'folder-outline'} size={25} />} />
                 <Divider />
             </>

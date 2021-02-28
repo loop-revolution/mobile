@@ -8,7 +8,7 @@ import colors from '../../utils/colors'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../navigation/routes'
 
-export const UsersList = ({ users, loading, selectUser = null }: { users: Array<User>, loading: boolean, selectUser: Function }) => {
+export const UsersList = ({ users, loading, selectUser = null }: { users: Array<User>, loading: boolean, selectUser?: Function }) => {
 
     const navigation = useNavigation()
     const renderUsersItem = ({ item }: { item: User }) => {
@@ -21,7 +21,7 @@ export const UsersList = ({ users, loading, selectUser = null }: { users: Array<
                     titleStyle={styles().title}
                     description={'@' + item.username}
                     descriptionStyle={styles().description}
-                    onPress={() => { selectUser ? selectUser(item) : navigation.navigate(routes.PROFILE, { userId: item.id }) }}
+                    onPress={() => { selectUser ? selectUser(item.id.toString()) : navigation.navigate(routes.PROFILE, { userId: item.id }) }}
                     left={() => <Avatar.Text
                         size={40}
                         style={styles(color).avatar}

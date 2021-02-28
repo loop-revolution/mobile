@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Searchbar, Text } from 'react-native-paper'
-import { useQuery } from 'urql'
+import { stringifyVariables, useQuery } from 'urql'
 import { BLOCK_SEARCH, USER_SEARCH } from '../../api/gql'
 import { User, BlockCrumbs } from '../../api/types'
 import colors from '../../utils/colors'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
 import { UsersList } from './usersList'
 import { BlocksList } from './blocksList'
+import { SearchComponent } from 'display-api/lib/components/search'
+import { blockMethod, setMethodVariable } from '../../components/display/method'
+import { MethodObject } from 'display-api'
 
-export const Search = () => {
+export const Search = ({ route, navigation }) => {
 
     type BlockQueryResults = { searchBlocks: Array<BlockCrumbs> }
     type BlockQueryRequest = { query: string }
@@ -26,6 +29,7 @@ export const Search = () => {
         { key: 'blocks', title: 'Blocks' },
         { key: 'people', title: 'People' },
     ])
+
     let [userResult, getUsers] = useQuery<UserQueryResults, UserQueryRequest>({
         query: USER_SEARCH,
         variables: { query: searchQuery },
@@ -36,6 +40,14 @@ export const Search = () => {
         variables: { query: searchQuery },
         pause: !searchQuery || !shouldFetch
     })
+
+    const searchComponent: SearchComponent = route.params?.searchComponent
+
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: (props: any) => (searchComponent?.action_text ?? 'Search')
+        })
+    }, [navigation])
 
     let timeout: any
     const onChangeSearch = (query: string) => {
@@ -67,6 +79,40 @@ export const Search = () => {
             setUsersLoading(false)
         }
     }, [blockResult, userResult])
+
+    useEffect(() => {
+        return () => {
+            onCancel()
+        }
+    }, [])
+
+    // This will be called when the user or block
+    // is selected from the search component
+    const onSelect = async (id: string) => {
+        console.log("onSelect ID:", id)
+        if (searchComponent?.then) {
+            searchComponent?.name && setMethodVariable(searchComponent?.name, id)
+            const response = await blockMethod(searchComponent?.then?.method)
+            if (response.error) {
+                //TODO: handle error
+                console.log(response.error)
+                navigation.pop()
+            } else {
+                navigation.pop()
+            }
+        }
+    }
+
+    const onCancel = async () => {
+        console.log("Cancel called")
+        if (searchComponent?.cancel) {
+            const response = await blockMethod(searchComponent?.cancel?.method)
+            if (response.error) {
+                //TODO: handle error
+                console.log(response.error)
+            }
+        }
+    }
 
     const renderTabBar = (props: any) => (
         <View style={styles().tabBarContainer}>
@@ -104,11 +150,22 @@ export const Search = () => {
                     onChangeText={onChangeSearch}
                     value={searchQuery} />
             </View>
-            <TabView
-                renderTabBar={renderTabBar}
-                navigationState={{ index, routes }}
-                renderScene={renderScene}
-                onIndexChange={setIndex} />
+            {searchComponent?.type === 'Block' ?
+                <BlocksList
+                    blocks={blockResult.data?.searchBlocks}
+                    loading={blocksLoading}
+                    selectBlock={searchComponent?.then ? onSelect : undefined} />
+                : searchComponent?.type === 'User' ?
+                    <UsersList
+                        users={userResult.data?.searchUsers}
+                        loading={usersLoading}
+                        selectUser={searchComponent?.then ? onSelect : undefined} />
+                    : <TabView
+                        renderTabBar={renderTabBar}
+                        navigationState={{ index, routes }}
+                        renderScene={renderScene}
+                        onIndexChange={setIndex} />
+            }
         </View>
     )
 }

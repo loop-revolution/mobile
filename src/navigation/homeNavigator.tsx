@@ -8,6 +8,7 @@ import { globalStyles } from '../utils/styles'
 import { CreateBlock } from '../screens/createBlock'
 import { BlockPage } from '../screens/blockPage'
 import { BreadcrumbHeader } from '../components/breadcrumbHeader'
+import { Search } from '../screens/search/search'
 import { Profile } from '../screens/profile/profile'
 import { EditProfile } from '../screens/profile/editProfile'
 import { Permissions } from '../components/blockMenu/permissions'
@@ -54,6 +55,13 @@ export const HomeNavigator = ({ navigation }) => {
             <Stack.Screen
                 name={routes.BLOCK_PAGE}
                 component={BlockPage} />
+            <Stack.Screen
+                name={routes.SEARCH}
+                component={Search}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Search'
+                    return { headerTitle: routeName }
+                }} />
             <Stack.Screen
                 name={routes.PROFILE}
                 component={Profile}

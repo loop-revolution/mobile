@@ -6,8 +6,9 @@ import colors from '../../utils/colors'
 import { Divider, Portal, TouchableRipple } from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useMutation } from 'urql'
-import { SET_NOTIFS, SET_STARRED, UPDATE_VISIBILITY } from '../../api/gql'
 import { useNavigation } from '@react-navigation/native'
+import { SearchComponent } from 'display-api/lib/components/search'
+import { SET_NOTIFS, SET_STARRED } from '../../api/gql'
 import routes from '../../navigation/routes'
 
 export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) => {

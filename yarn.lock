@@ -3042,10 +3042,10 @@ destroy@~1.0.4:
   resolved "https://registry.npmjs.org/destroy/-/destroy-1.0.4.tgz"
   integrity sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=
 
-display-api@^0.1.0:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/display-api/-/display-api-0.1.6.tgz#0ec9e8eef9807ce70025ffcb6c4cae1076fbd869"
-  integrity sha512-JQ9OJXzYjplz+rf2rQl9Wl0ToWd6sokcW1ygf9XI19SAgn3ERCSw4MAN4ileeyLWRGF2SssiwmrsR9bQtza8hg==
+display-api@^0.1.12:
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/display-api/-/display-api-0.1.12.tgz#ac417863a544a374a0f49ab1ecb51783556506ad"
+  integrity sha512-D20TMdzwn/3xyecQ5wur1fCHvL3ppQgbt2WELKbXW4apcVueQcAtnmwevezSjfEWAigWEYYxAMCDKSKFHYUrEQ==
 
 doctrine@1.5.0:
   version "1.5.0"

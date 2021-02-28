@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { InputArgs, MethodObject } from "display-api"
+import React, { useState } from 'react'
+import { InputArgs } from "display-api"
 import { Button, TextInput } from "react-native-paper"
 import { StyleSheet, Text, View } from 'react-native'
 import { globalStyles } from '../../../utils/styles'
-import { populateTemplate, setMethodVariable } from '../method'
-import { BLOCK_METHOD_MUTATION } from '../../../api/gql'
-import { useMutation } from 'urql'
+import { blockMethod, setMethodVariable } from '../method'
 
 export const InputComponent = ({ initial_value, name, label, type, mask, confirm_cancel }: InputArgs) => {
 
@@ -13,15 +11,6 @@ export const InputComponent = ({ initial_value, name, label, type, mask, confirm
     const [error, setError] = useState<string>(null)
     const [isFocused, setFocused] = useState<boolean>(false)
     const [isLoading, setLoading] = useState(false)
-    const [blockMethodResponse, blockMethod] = useMutation<BlockMethodResponse, BlockMethodRequest>(BLOCK_METHOD_MUTATION)
-
-    type BlockMethodResponse = { blockMethod: { id: number } }
-    type BlockMethodRequest = {
-        type: string
-        blockId: number
-        methodName: string
-        args: string
-    }
 
     const onChange = (value: string) => {
         setValue(value)
@@ -29,30 +18,17 @@ export const InputComponent = ({ initial_value, name, label, type, mask, confirm
     }
 
     const onConfirm = async () => {
-        const method: MethodObject = confirm_cancel.on_confirm.method
-        const args = populateTemplate(method.arg_template)
-        const request: BlockMethodRequest = {
-            type: method.type,
-            blockId: parseInt(method.block_id),
-            methodName: method.method_name,
-            args,
-        }
         setLoading(true)
-        blockMethod(request)
+        const response = await blockMethod(confirm_cancel.on_confirm.method)
+        setLoading(false)
+        if (response.error) {
+            setError(response.error.message.replace(/\[\w+\]/g, ""))
+        }
     }
 
     const onCancel = () => {
         setValue(initial_value)
     }
-
-    useEffect(() => {
-        if (blockMethodResponse.data?.blockMethod?.id) {
-            setLoading(false)
-        } else if (blockMethodResponse.error) {
-            setLoading(false)
-            setError(blockMethodResponse.error.message.replace(/\[\w+\]/g, ""))
-        }
-    }, [blockMethodResponse])
 
     return (
         <View>

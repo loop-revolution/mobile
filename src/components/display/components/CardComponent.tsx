@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { CardArgs } from "display-api"
 import { Card, IconButton, List } from "react-native-paper"
 import colors from '../../../utils/colors'
@@ -7,11 +7,14 @@ import { StyleSheet, View } from 'react-native'
 import { getComponentIcon } from '../../../utils/utils'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import routes from '../../../navigation/routes'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native'
+import { BottomMenu } from '../../blockMenu/bottomMenu'
 
 export const CardComponent = ({ header, color, content }: CardArgs) => {
 
     const [isExpanded, setExpended] = useState(false)
+
+    let menuRef = useRef(null)
 
     const navigation = useNavigation();
     color = color || colors.primary
@@ -47,6 +50,7 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
             ) : <Card.Content style={styles().cardContent}>
                     <ComponentDelegate component={content} />
                 </Card.Content>}
+            {header.menu && <BottomMenu ref={menuRef} menu={header.menu} />}
         </Card>
     )
 }

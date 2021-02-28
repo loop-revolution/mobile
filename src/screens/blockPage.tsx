@@ -65,9 +65,9 @@ export const BlockPage = ({ route, navigation }) => {
                 <SafeAreaView>
                     {display ? (
                         <View>
-                            {display.meta.page.header ? <Title>{display.meta.page.header}</Title> : null}
+                            {display.meta?.page?.header ? <Title>{display.meta?.page?.header}</Title> : null}
                             <ComponentDelegate component={display.display} />
-                            {display && <BottomMenu ref={menuRef} menu={display.meta?.page?.menu} />}
+                            {display.meta?.page?.menu && <BottomMenu ref={menuRef} menu={display.meta?.page?.menu} />}
                         </View>
                     ) : user && !blockId ? (
                         <Subheading style={styles.subheading}>No Blocks Found! Go ahead and create one from the bottom menu.</Subheading>

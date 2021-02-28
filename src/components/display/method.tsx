@@ -1,5 +1,6 @@
 import { MethodObject } from "display-api"
 import { useClient } from "urql"
+import { client } from "../../api/client"
 import { BLOCK_METHOD_MUTATION } from "../../api/gql"
 
 declare global {
@@ -39,4 +40,26 @@ export const populateTemplate = (template: string) => {
 		})
 	}
 	return input
+}
+
+type BlockMethodReturn = { blockMethod: { id: number } }
+type BlockMethodVars = {
+	type: string
+	blockId: number
+	methodName: string
+	args: string
+}
+
+export const blockMethod = async (method: MethodObject) => {
+    let args: string = null
+    if (method.arg_template) {
+        args = populateTemplate(method.arg_template)
+    }
+	const response = await client.mutation<BlockMethodReturn, BlockMethodVars>(BLOCK_METHOD_MUTATION, {
+			type: method.type,
+			blockId: parseInt(method.block_id),
+			methodName: method.method_name,
+			args,
+		}).toPromise()
+	return response
 }
