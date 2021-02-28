@@ -7,7 +7,7 @@ import { NavigationHelpersContext } from "@react-navigation/native"
 export let client: Client
 export function createAPIClient() {
     client = createClient({
-        url: "https://api.loop.page",
+        url: "https://api-pr-151.onrender.com/",
         exchanges: [
             dedupExchange,
             cacheExchange,

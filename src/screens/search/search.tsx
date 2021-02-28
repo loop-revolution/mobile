@@ -86,9 +86,9 @@ export const Search = ({ route, navigation }) => {
         console.log("onSelect ID:", id)
         if (searchComponent?.then) {
             searchComponent?.name && setMethodVariable(searchComponent?.name, id)
-            const method: MethodObject = searchComponent.then.method
-            const response = await blockMethod(searchComponent.then.method)
+            const response = await blockMethod(searchComponent?.then?.method)
             if (response.error) {
+                //TODO: handle error
                 console.log(response.error)
             }
         }

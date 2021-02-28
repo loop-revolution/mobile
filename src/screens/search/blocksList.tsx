@@ -25,7 +25,7 @@ export const BlocksList = ({ blocks, loading, selectBlock = null }: { blocks: Ar
                 <List.Item
                     title={displayName}
                     titleStyle={styles.title}
-                    onPress={() => { selectBlock ? selectBlock(lastItem.blockId) : navigation.navigate(routes.BLOCK_PAGE, { blockId: lastItem.blockId }) }}
+                    onPress={() => { selectBlock ? selectBlock(lastItem.blockId.toString()) : navigation.navigate(routes.BLOCK_PAGE, { blockId: lastItem.blockId }) }}
                     left={() => <MaterialCommunityIcons color={color} name={'folder-outline'} size={25} />} />
                 <Divider />
             </>
