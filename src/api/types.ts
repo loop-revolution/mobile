@@ -1,9 +1,3 @@
-export enum SearchMode {
-    Block,
-    User,
-    All,
-  }
-
 export type User = { 
     id: number
     username: string

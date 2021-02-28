@@ -18,7 +18,7 @@ export const UsersList = ({ users, loading, selectUser = null }: { users: Array<
                     titleStyle={styles().title}
                     description={'@' + item.username}
                     descriptionStyle={styles().description}
-                    onPress={() => { selectUser ? selectUser(item) : null /* TODO */ }}
+                    onPress={() => { selectUser ? selectUser(item.id) : null /* TODO */ }}
                     left={() => <Avatar.Text
                         size={40}
                         style={styles(color).avatar}

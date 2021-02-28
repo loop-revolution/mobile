@@ -1,11 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { cacheExchange, createClient, dedupExchange, errorExchange, fetchExchange } from "urql"
+import { cacheExchange, Client, createClient, dedupExchange, errorExchange, fetchExchange } from "urql"
 import { authExchange } from "@urql/exchange-auth"
 import { AuthState, addAuthToOperation, getAuth, willAuthError, didAuthError } from "./auth"
 import { NavigationHelpersContext } from "@react-navigation/native"
 
+export let client: Client
 export function createAPIClient() {
-    return createClient({
+    client = createClient({
         url: "https://api.loop.page",
         exchanges: [
             dedupExchange,
@@ -27,4 +28,5 @@ export function createAPIClient() {
             fetchExchange,
         ],
     })
+    return client
 }

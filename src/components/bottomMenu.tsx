@@ -10,6 +10,7 @@ import { SET_NOTIFS, SET_STARRED } from '../api/gql'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../navigation/routes'
 import { SearchMode } from '../api/types'
+import { SearchComponent } from 'display-api/lib/components/search'
 
 export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) => {
 
@@ -22,7 +23,6 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
     type NotifsResult = { setNotifs: { id: number, notifEnabled: boolean } }
     type NotifsRequest = { blockId: number; enabled: boolean }
     const [notifsResult, setNotifs] = useMutation<NotifsResult, NotifsRequest>(SET_NOTIFS)
-
 
     // hooks
     const sheetRef = useRef<BottomSheet>(null)
@@ -61,7 +61,15 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 
     const handleAddBlock = () => {
         handleClose()
-        navigation.navigate(routes.SEARCH, {mode: SearchMode.Block})
+
+        // TODO: This is a dummy searchComponent object and will be
+        // replaced by the one coming from the API
+        const searchComponent: SearchComponent = { 
+            cid: 'search', 
+            type: 'Block',
+            action_text: 'Select Block'
+        }
+        navigation.navigate(routes.SEARCH, { searchComponent })
     }
 
     const renderItem = useCallback(
@@ -99,6 +107,10 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
                 snapPoints={snapPoints}
                 onChange={handleSheetChange}>
                 <BottomSheetScrollView>
+                    {renderItem(
+                        'Add Block',
+                        handleAddBlock,
+                    )}
                     {menu.star_button &&
                         renderItem(
                             menu.star_button.starred ? 'Unstar' : 'Star',
@@ -107,10 +119,10 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
                             menu.star_button.starred ? 'star' : 'star-outline')
                     }
                     {renderItem(
-                            menu.notifications_enabled ? 'Disable Notification' : 'Enable Notification',
-                            handleNotifs,
-                            null,
-                            menu.notifications_enabled ? 'bell' : 'bell-off')
+                        menu.notifications_enabled ? 'Disable Notification' : 'Enable Notification',
+                        handleNotifs,
+                        null,
+                        menu.notifications_enabled ? 'bell' : 'bell-off')
                     }
                     {menu.permissions &&
                         renderItem(
@@ -121,10 +133,6 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
                     {renderItem(
                         'Share',
                         handleShare,
-                    )}
-                    {renderItem(
-                        'Add Block',
-                        handleAddBlock,
                     )}
                 </BottomSheetScrollView>
             </BottomSheet>
