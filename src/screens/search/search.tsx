@@ -9,7 +9,7 @@ import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
 import { UsersList } from './usersList'
 import { BlocksList } from './blocksList'
 import { SearchComponent } from 'display-api/lib/components/search'
-import { blockMethod, populateTemplate, setMethodVariable } from '../../components/display/method'
+import { blockMethod, setMethodVariable } from '../../components/display/method'
 import { MethodObject } from 'display-api'
 
 export const Search = ({ route, navigation }) => {
@@ -90,6 +90,9 @@ export const Search = ({ route, navigation }) => {
             if (response.error) {
                 //TODO: handle error
                 console.log(response.error)
+                navigation.pop()
+            } else {
+                navigation.pop()
             }
         }
     }
