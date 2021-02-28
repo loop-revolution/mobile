@@ -80,6 +80,12 @@ export const Search = ({ route, navigation }) => {
         }
     }, [blockResult, userResult])
 
+    useEffect(() => {
+        return () => {
+            onCancel()
+        }
+    }, [])
+
     // This will be called when the user or block
     // is selected from the search component
     const onSelect = async (id: string) => {
@@ -93,6 +99,17 @@ export const Search = ({ route, navigation }) => {
                 navigation.pop()
             } else {
                 navigation.pop()
+            }
+        }
+    }
+
+    const onCancel = async () => {
+        console.log("Cancel called")
+        if (searchComponent?.cancel) {
+            const response = await blockMethod(searchComponent?.cancel?.method)
+            if (response.error) {
+                //TODO: handle error
+                console.log(response.error)
             }
         }
     }

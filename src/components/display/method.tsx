@@ -51,7 +51,10 @@ type BlockMethodVars = {
 }
 
 export const blockMethod = async (method: MethodObject) => {
-	const args = populateTemplate(method.arg_template)
+    let args: string = null
+    if (method.arg_template) {
+        args = populateTemplate(method.arg_template)
+    }
 	const response = await client.mutation<BlockMethodReturn, BlockMethodVars>(BLOCK_METHOD_MUTATION, {
 			type: method.type,
 			blockId: parseInt(method.block_id),
