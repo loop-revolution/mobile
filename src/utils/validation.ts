@@ -8,6 +8,8 @@ export enum InputType {
 
 export const getRules = (type: InputType) => {
     switch (type) {
+        case InputType.displayName:
+            return { required: true }
         case InputType.username:
             return { required: true }
         case InputType.password:

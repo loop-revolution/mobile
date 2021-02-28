@@ -2,19 +2,16 @@ import React, { useCallback, useRef, useMemo, forwardRef, useImperativeHandle } 
 import { StyleSheet, View, Text, Share } from 'react-native'
 import BottomSheet, { BottomSheetScrollView, BottomSheetBackgroundProps, BottomSheetBackdropProps, BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 import { MenuComponent } from 'display-api/lib/components/menu'
-import colors from '../utils/colors'
+import colors from '../../utils/colors'
 import { Divider, Portal, TouchableRipple } from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useMutation } from 'urql'
-import { SET_NOTIFS, SET_STARRED } from '../api/gql'
 import { useNavigation } from '@react-navigation/native'
-import routes from '../navigation/routes'
-import { SearchMode } from '../api/types'
 import { SearchComponent } from 'display-api/lib/components/search'
+import { SET_NOTIFS, SET_STARRED } from '../../api/gql'
+import routes from '../../navigation/routes'
 
 export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) => {
-
-    const navigation = useNavigation();
 
     type StarredResult = { setStarred: { id: number, starred: boolean } }
     type StarredRequest = { blockId: number; starred: boolean }
@@ -26,6 +23,8 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 
     // hooks
     const sheetRef = useRef<BottomSheet>(null)
+    const navigation = useNavigation()
+
     const snapPoints = useMemo(() => ['0%', '80%'], [])
 
     const handleSheetChange = useCallback(index => {
@@ -57,6 +56,11 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
     const handleNotifs = () => {
         const request: NotifsRequest = { blockId: menu.block_id, enabled: !menu.notifications_enabled }
         setNotifs(request)
+    }
+
+    const handlePermissions = () => {
+        handleClose()
+        navigation.navigate(routes.BLOCK_PERMISSIONS, { menu })
     }
 
     const handleAddBlock = () => {
@@ -127,8 +131,8 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
                     {menu.permissions &&
                         renderItem(
                             'Permissions',
-                            handleClose,
-                            menu.permissions?.full + menu.permissions.edit + menu.permissions?.view)
+                            handlePermissions,
+                            menu.permissions?.full + menu.permissions?.edit + menu.permissions?.view)
                     }
                     {renderItem(
                         'Share',

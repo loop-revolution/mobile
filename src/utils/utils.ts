@@ -3,7 +3,7 @@ import moment from 'moment'
 export const getComponentIcon = ({ icon }: { icon?: any }) => {
     switch (icon) {
         case "Folder":
-            return 'folder'
+            return 'folder-outline'
         case "TaskComplete":
             return 'check'
         case "Message":

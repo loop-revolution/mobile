@@ -39,8 +39,8 @@ export function DrawerContent(props: DrawerContentComponentProps) {
                     </TouchableOpacity>
                     <Divider style={styles.separator} />
                     <View style={styles.userInfoSection}>
-                        <Text style={styles.title}>{user ? user.displayName : 'Loading...'}</Text>
-                        {user && <Text style={styles.subtitle}>{user.username}</Text>}
+                        <Text style={styles.title}>{user ? (user.displayName ?? user.username) : 'Loading...'}</Text>
+                        {user && <Text style={styles.subtitle}>@{user.username}</Text>}
                         {user && <Text style={styles.credits}>{user.credits} credits</Text>}
                         {user && <View>
                             <Button

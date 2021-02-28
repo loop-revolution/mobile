@@ -7,8 +7,8 @@ import { StyleSheet, View } from 'react-native'
 import { getComponentIcon } from '../../../utils/utils'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import routes from '../../../navigation/routes'
-import { useNavigation } from '@react-navigation/native';
-import { BottomMenu } from '../../bottomMenu'
+import { useNavigation } from '@react-navigation/native'
+import { BottomMenu } from '../../blockMenu/bottomMenu'
 
 export const CardComponent = ({ header, color, content }: CardArgs) => {
 
@@ -39,8 +39,7 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
                         //TODO: Temporary solution, there is a PR active to configure the 
                         //right item for this library.
                         if (isExpanded) {
-                            menuRef.current?.handleOpen()
-                            // navigation.navigate(routes.BLOCK_PAGE, {blockId: header.block_id})
+                            navigation.navigate(routes.BLOCK_PAGE, {blockId: header.block_id})
                         }
                         setExpended(!isExpanded)
                     }}>

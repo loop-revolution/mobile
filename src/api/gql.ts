@@ -27,13 +27,13 @@ export const VERIFY_EMAIL_MUTATION = `
 export const WHO_AM_I = gql`
 	query {
 		whoami {
-			root {
-				id
-			}
 			id
             username
             displayName
 			credits
+			root {
+				id
+			}
 		}
 	}
 `
@@ -95,6 +95,7 @@ export const GET_BLOCK = gql`
 export const USER_SEARCH = gql`
 	query($query: String!) {
 		searchUsers(query: $query) {
+            id
 			displayName
 			username
 		}
@@ -138,10 +139,47 @@ export const SET_STARRED = gql`
 `
 
 export const SET_NOTIFS = gql`
-mutation($blockId: Int!, $enabled: Boolean!) {
-	setNotifs(blockId: $blockId, enabled: $enabled) {
-		id
-		notifEnabled
+    mutation($blockId: Int!, $enabled: Boolean!) {
+        setNotifs(blockId: $blockId, enabled: $enabled) {
+            id
+            notifEnabled
+        }
+    }
+`
+
+export const UPDATE_VISIBILITY = gql`
+    mutation($blockId: Int!, $public: Boolean!) {
+        updateVisibility(blockId: $blockId, public: $public) {
+            id
+            public
+        }
+    }
+`
+
+export const USER_PROFILE = gql`
+	query($id: Int!) {
+		userById(id: $id) {
+			id,
+            username,
+            displayName,
+            credits,
+            featured {
+                id
+                pageDisplay
+                embedDisplay
+                starred
+                starCount
+            }
+		}
 	}
-}
+`
+
+export const UPDATE_DISPLAY_NAME = gql`
+    mutation($newDisplayName: String!) {
+        updateDisplayName(newDisplayName: $newDisplayName) {
+            id
+            username
+            displayName
+        }
+    }
 `
