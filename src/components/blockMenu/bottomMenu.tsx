@@ -63,19 +63,6 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
         navigation.navigate(routes.BLOCK_PERMISSIONS, { menu })
     }
 
-    const handleAddBlock = () => {
-        handleClose()
-
-        // TODO: This is a dummy searchComponent object and will be
-        // replaced by the one coming from the API
-        const searchComponent: SearchComponent = { 
-            cid: 'search', 
-            type: 'Block',
-            action_text: 'Select Block'
-        }
-        navigation.navigate(routes.SEARCH, { searchComponent })
-    }
-
     const renderItem = useCallback(
         (title, onClick, subtitle?, icon?) => (
             <TouchableRipple onPress={onClick}>
@@ -111,10 +98,6 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
                 snapPoints={snapPoints}
                 onChange={handleSheetChange}>
                 <BottomSheetScrollView>
-                    {renderItem(
-                        'Add Block',
-                        handleAddBlock,
-                    )}
                     {menu.star_button &&
                         renderItem(
                             menu.star_button.starred ? 'Unstar' : 'Star',
