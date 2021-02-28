@@ -65,7 +65,7 @@ export const BlockPage = ({ route, navigation }) => {
                 <SafeAreaView>
                     {display ? (
                         <View>
-                            {display.meta.page.header ? <Title>{display.meta.page.header}</Title> : null}
+                            {display.meta?.page?.header ? <Title>{display.meta?.page?.header}</Title> : null}
                             <ComponentDelegate component={display.display} />
                             {display.meta?.page?.menu && <BottomMenu ref={menuRef} menu={display.meta?.page?.menu} />}
                         </View>
