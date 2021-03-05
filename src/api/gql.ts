@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { gql } from "urql"
 
 export const LOGIN_MUTATION = `
@@ -28,8 +30,8 @@ export const WHO_AM_I = gql`
 	query {
 		whoami {
 			id
-            username
-            displayName
+			username
+			displayName
 			credits
 			root {
 				id
@@ -95,7 +97,7 @@ export const GET_BLOCK = gql`
 export const USER_SEARCH = gql`
 	query($query: String!) {
 		searchUsers(query: $query) {
-            id
+			id
 			displayName
 			username
 		}
@@ -122,11 +124,11 @@ export const NOTIFICATIONS = gql`
 `
 
 export const ADD_EXPO_TOKEN = gql`
-    mutation($token: String!) {
-        addExpoTokens(token: $token) {
-            id
-        }
-    }
+	mutation($token: String!) {
+		addExpoTokens(token: $token) {
+			id
+		}
+	}
 `
 
 export const SET_STARRED = gql`
@@ -139,47 +141,47 @@ export const SET_STARRED = gql`
 `
 
 export const SET_NOTIFS = gql`
-    mutation($blockId: Int!, $enabled: Boolean!) {
-        setNotifs(blockId: $blockId, enabled: $enabled) {
-            id
-            notifEnabled
-        }
-    }
+	mutation($blockId: Int!, $enabled: Boolean!) {
+		setNotifs(blockId: $blockId, enabled: $enabled) {
+			id
+			notifEnabled
+		}
+	}
 `
 
 export const UPDATE_VISIBILITY = gql`
-    mutation($blockId: Int!, $public: Boolean!) {
-        updateVisibility(blockId: $blockId, public: $public) {
-            id
-            public
-        }
-    }
+	mutation($blockId: Int!, $public: Boolean!) {
+		updateVisibility(blockId: $blockId, public: $public) {
+			id
+			public
+		}
+	}
 `
 
 export const USER_PROFILE = gql`
 	query($id: Int!) {
 		userById(id: $id) {
-			id,
-            username,
-            displayName,
-            credits,
-            featured {
-                id
-                pageDisplay
-                embedDisplay
-                starred
-                starCount
-            }
+			id
+			username
+			displayName
+			credits
+			featured {
+				id
+				pageDisplay
+				embedDisplay
+				starred
+				starCount
+			}
 		}
 	}
 `
 
 export const UPDATE_DISPLAY_NAME = gql`
-    mutation($newDisplayName: String!) {
-        updateDisplayName(newDisplayName: $newDisplayName) {
-            id
-            username
-            displayName
-        }
-    }
+	mutation($newDisplayName: String!) {
+		updateDisplayName(newDisplayName: $newDisplayName) {
+			id
+			username
+			displayName
+		}
+	}
 `
