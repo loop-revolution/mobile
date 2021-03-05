@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Format
-        run: yarn format
+        run: yarn lint
       - name: Check if there are changes
         id: changes
         uses: UnicornGlobal/has-changes-action@v1.0.11
