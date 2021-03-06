@@ -1,9 +1,9 @@
 export enum InputType {
-	displayName = "displayName",
-	username = "username",
-	password = "password",
-	email = "email",
-	verificationCode = "verificationCode",
+	displayName = 'displayName',
+	username = 'username',
+	password = 'password',
+	email = 'email',
+	verificationCode = 'verificationCode',
 }
 
 export const getRules = (type: InputType) => {

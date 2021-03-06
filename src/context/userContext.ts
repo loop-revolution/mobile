@@ -1,5 +1,5 @@
-import { createContext } from "react"
-import { User } from "../api/types"
+import { createContext } from 'react'
+import { User } from '../api/types'
 
 type UserContextType = {
 	user: User

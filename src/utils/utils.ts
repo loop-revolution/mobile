@@ -1,26 +1,26 @@
-import moment from "moment"
+import moment from 'moment'
 
 export const getComponentIcon = ({ icon }: { icon?: any }) => {
 	switch (icon) {
-		case "Folder":
-			return "folder-outline"
-		case "TaskComplete":
-			return "check"
-		case "Message":
-			return "message"
-		case "Box":
-			return "cube-outline"
-		case "Type":
-			return "text"
-		case "Feed":
-			return "rss"
+		case 'Folder':
+			return 'folder-outline'
+		case 'TaskComplete':
+			return 'check'
+		case 'Message':
+			return 'message'
+		case 'Box':
+			return 'cube-outline'
+		case 'Type':
+			return 'text'
+		case 'Feed':
+			return 'rss'
 		default:
-			return "cube"
+			return 'cube'
 	}
 }
 
 export const getInitials = (name: string) => {
-	const names = name.split(" ")
+	const names = name.split(' ')
 	let initials = names[0].substring(0, 1).toUpperCase()
 	if (names.length > 1) {
 		initials += names[names.length - 1].substring(0, 1).toUpperCase()
@@ -41,8 +41,8 @@ export const textToColor = (text: string) => {
 
 export function formatDate(dateStr: string) {
 	const date = moment(dateStr)
-	if (moment().diff(date, "days") >= 2) {
+	if (moment().diff(date, 'days') >= 2) {
 		return date.fromNow() // 2 days ago etc
 	}
-	return `${date.calendar().split(" ")[0]}, at ${date.format("hh:mm a")}`
+	return `${date.calendar().split(' ')[0]}, at ${date.format('hh:mm a')}`
 }

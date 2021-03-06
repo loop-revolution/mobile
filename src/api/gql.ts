@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { gql } from "urql"
+import { gql } from 'urql'
 
 export const LOGIN_MUTATION = `
   mutation ($username: String!, $password: String!) {

@@ -1,40 +1,48 @@
 module.exports = {
-  env: {
-    es6: true,
-    node: true,
-  },
-  extends: [
-    'plugin:react/recommended',
-    'airbnb',
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript",
-  ],
-  globals: {
-    Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly',
-  },
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
-    ecmaVersion: 2018,
-    sourceType: 'module',
-  },
-  plugins: [
-    'react',
-    '@typescript-eslint',
-  ],
-  rules: {
-    "import/extensions": "off",
-    "import/prefer-default-export": "off",
-    "no-shadow": "off",
-    "@typescript-eslint/no-shadow": ["error"],
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": ["error"],
-    "indent": [2, "tab"],
-    "no-tabs": 0,
-    "max-len": 0
-  },
-};
+	'env': {
+		'es6': true,
+		'node': true
+	},
+	'extends': [
+		'eslint:recommended',
+		'plugin:react/recommended',
+		'plugin:@typescript-eslint/eslint-recommended'
+	],
+	'globals': {
+		'Atomics': 'readonly',
+		'SharedArrayBuffer': 'readonly'
+	},
+	'parser': '@typescript-eslint/parser',
+	'parserOptions': {
+		'ecmaFeatures': {
+			'jsx': true
+		},
+		'ecmaVersion': 2018
+	},
+	'plugins': [
+		'react',
+		'@typescript-eslint'
+	],
+	'rules': {
+		'indent': [
+			'error',
+			'tab'
+		],
+		'linebreak-style': [
+			'error',
+			'unix'
+		],
+		'quotes': [
+			'error',
+			'single'
+		],
+		'semi': [
+			'error',
+			'never'
+		],
+		"react/no-unescaped-entities": "off",
+		"react/display-name": "off",
+		"no-unused-vars": "off",
+		"@typescript-eslint/no-unused-vars": ["error"]
+	}
+}

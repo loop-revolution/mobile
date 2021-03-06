@@ -1,7 +1,6 @@
-import { MethodObject } from "display-api"
-import { useClient } from "urql"
-import { client } from "../../api/client"
-import { BLOCK_METHOD_MUTATION } from "../../api/gql"
+import { MethodObject } from 'display-api'
+import { client } from '../../api/client'
+import { BLOCK_METHOD_MUTATION } from '../../api/gql'
 
 declare global {
 	interface Window {
@@ -29,11 +28,11 @@ export const getMethodVariables = () => {
 
 export const populateTemplate = (template: string) => {
 	let input = template
-	let vars = template.match(/\$\[[\w\d]+\]\$/g)
+	const vars = template.match(/\$\[[\w\d]+\]\$/g)
 	if (vars) {
 		vars.forEach((wrappedName: string) => {
-			const name = wrappedName.replace(/[\$\[\]]/g, "")
-			const value = getMethodVariable(name) || ""
+			const name = wrappedName.replace(/[\$\[\]]/g, '') // eslint-disable-line no-useless-escape
+			const value = getMethodVariable(name) || ''
 			if (value) {
 				input = input.replace(wrappedName, JSON.stringify(value))
 			}
@@ -51,15 +50,17 @@ type BlockMethodVars = {
 }
 
 export const blockMethod = async (method: MethodObject) => {
-    let args: string = null
-    if (method.arg_template) {
-        args = populateTemplate(method.arg_template)
-    }
-	const response = await client.mutation<BlockMethodReturn, BlockMethodVars>(BLOCK_METHOD_MUTATION, {
+	let args: string = null
+	if (method.arg_template) {
+		args = populateTemplate(method.arg_template)
+	}
+	const response = await client
+		.mutation<BlockMethodReturn, BlockMethodVars>(BLOCK_METHOD_MUTATION, {
 			type: method.type,
 			blockId: parseInt(method.block_id),
 			methodName: method.method_name,
 			args,
-		}).toPromise()
+		})
+		.toPromise()
 	return response
 }

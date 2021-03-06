@@ -6,7 +6,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "lint": "yarn eslint --ext '.js,.ts' --fix ./src && yarn prettier --write 'src/**/*.{ts,json,js}'"
+    "lint": "yarn eslint --fix --ext '.js,.ts,.tsx' ./src && yarn prettier --write 'src/**/*.{ts,json,js,tsx}'"
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.0",

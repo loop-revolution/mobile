@@ -1,20 +1,20 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { cacheExchange, Client, createClient, dedupExchange, errorExchange, fetchExchange } from "urql"
-import { authExchange } from "@urql/exchange-auth"
-import { AuthState, addAuthToOperation, getAuth, willAuthError, didAuthError } from "./auth"
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { cacheExchange, Client, createClient, dedupExchange, errorExchange, fetchExchange } from 'urql'
+import { authExchange } from '@urql/exchange-auth'
+import { AuthState, addAuthToOperation, getAuth, willAuthError, didAuthError } from './auth'
 
-export let client: Client // eslint-disable-line import/no-mutable-exports
+export let client: Client
 export function createAPIClient() {
 	client = createClient({
-		url: "https://api.loop.page",
+		url: 'https://api.loop.page',
 		exchanges: [
 			dedupExchange,
 			cacheExchange,
 			errorExchange({
 				onError: async error => {
-					const isAuthError = error.graphQLErrors.some(e => e.message.includes("[uar]"))
+					const isAuthError = error.graphQLErrors.some(e => e.message.includes('[uar]'))
 					if (isAuthError) {
-						await AsyncStorage.removeItem("token")
+						await AsyncStorage.removeItem('token')
 					}
 				},
 			}),
