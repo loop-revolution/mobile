@@ -68,7 +68,6 @@ const styles = (color = colors.primary) =>
 			borderLeftColor: color,
 			borderLeftWidth: 5,
 			borderRadius: 5,
-			flex: 1,
 		},
 		header: {
 			borderBottomColor: '#EBEAF5',
