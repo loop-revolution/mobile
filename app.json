@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "LoopMobile",
+    "name": "Loop Mobile",
     "slug": "loopmobile",
-    "privacy": "public",
+    "owner": "loop_revolution",
+    "privacy": "unlisted",
     "platforms": [
       "ios",
       "android"
@@ -22,7 +23,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false
     }
   }
 }

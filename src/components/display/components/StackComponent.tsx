@@ -1,21 +1,20 @@
-import React, { Component } from 'react'
-import { StackArgs } from "display-api"
-import { Text, Title } from "react-native-paper"
-import colors from '../../../utils/colors'
+import React from 'react'
+import { StackArgs } from 'display-api'
 import { ComponentDelegate } from '../ComponentDelegate'
 import { View, StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 
-export const StackComponent = ({ direction = 'vertical', items }: StackArgs) => {
-
-    const content = items.map(({ component }) => (
+// eslint-disable-next-line react/prop-types
+export const StackComponent = ({ direction = 'Vertical', items }: StackArgs) => {
+	// eslint-disable-next-line react/prop-types
+	const content = items.map(({ component }: { component: any }) => (
 		<ComponentDelegate component={component} key={JSON.stringify(component)} />
-    ))
-    
+	))
+
 	switch (direction) {
-		case "horizontal":
+		case 'Horizontal':
 			return <ScrollView style={styles.horizontal}>{content}</ScrollView>
-		case "fit":
+		case 'Fit':
 			return <View style={styles.fit}>{content}</View>
 		default:
 			return <View style={styles.vertical}>{content}</View>
@@ -23,15 +22,15 @@ export const StackComponent = ({ direction = 'vertical', items }: StackArgs) => 
 }
 
 const styles = StyleSheet.create({
-    horizontal: {
-        flexDirection: 'row',
-    },
-    vertical: {
-        flexDirection: 'column'
-    },
-    fit: {
-        flex: 1,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-    }
+	horizontal: {
+		flexDirection: 'row',
+	},
+	vertical: {
+		flexDirection: 'column',
+	},
+	fit: {
+		flex: 1,
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+	},
 })
