@@ -1,0 +1,143 @@
+diff --git a/node_modules/react-native-paper/lib/typescript/src/components/List/ListAccordion.d.ts b/node_modules/react-native-paper/lib/typescript/src/components/List/ListAccordion.d.ts
+index 9166ab7..eafac9b 100644
+--- a/node_modules/react-native-paper/lib/typescript/src/components/List/ListAccordion.d.ts
++++ b/node_modules/react-native-paper/lib/typescript/src/components/List/ListAccordion.d.ts
+@@ -16,6 +16,12 @@ declare type Props = {
+     left?: (props: {
+         color: string;
+     }) => React.ReactNode;
++    /**
++     * Callback which returns a React element to display on the right side.
++     */
++    right?: (props: {
++        isExpanded: boolean
++    }) => React.ReactNode;
+     /**
+      * Whether the accordion is expanded
+      * If this prop is provided, the accordion will behave as a "controlled component".
+@@ -120,9 +126,9 @@ declare class ListAccordion extends React.Component<Props, State> {
+     private handlePress;
+     render(): JSX.Element;
+ }
+-declare const _default: (React.ComponentClass<Pick<Props, "style" | "title" | "children" | "onPress" | "testID" | "left" | "description" | "expanded" | "titleStyle" | "descriptionStyle" | "titleNumberOfLines" | "descriptionNumberOfLines" | "id"> & {
++declare const _default: (React.ComponentClass<Pick<Props, "style" | "title" | "children" | "onPress" | "testID" | "left" | "right" | "description" | "expanded" | "titleStyle" | "descriptionStyle" | "titleNumberOfLines" | "descriptionNumberOfLines" | "id"> & {
+     theme?: import("@callstack/react-theme-provider").$DeepPartial<Theme> | undefined;
+-}, any> & import("@callstack/react-theme-provider/typings/hoist-non-react-statics").NonReactStatics<(React.ComponentClass<Props, any> & typeof ListAccordion) | (React.FunctionComponent<Props> & typeof ListAccordion), {}>) | (React.FunctionComponent<Pick<Props, "style" | "title" | "children" | "onPress" | "testID" | "left" | "description" | "expanded" | "titleStyle" | "descriptionStyle" | "titleNumberOfLines" | "descriptionNumberOfLines" | "id"> & {
++}, any> & import("@callstack/react-theme-provider/typings/hoist-non-react-statics").NonReactStatics<(React.ComponentClass<Props, any> & typeof ListAccordion) | (React.FunctionComponent<Props> & typeof ListAccordion), {}>) | (React.FunctionComponent<Pick<Props, "style" | "title" | "children" | "onPress" | "testID" | "left" | "right" | "description" | "expanded" | "titleStyle" | "descriptionStyle" | "titleNumberOfLines" | "descriptionNumberOfLines" | "id"> & {
+     theme?: import("@callstack/react-theme-provider").$DeepPartial<Theme> | undefined;
+ }> & import("@callstack/react-theme-provider/typings/hoist-non-react-statics").NonReactStatics<(React.ComponentClass<Props, any> & typeof ListAccordion) | (React.FunctionComponent<Props> & typeof ListAccordion), {}>);
+ export default _default;
+diff --git a/node_modules/react-native-paper/src/components/List/ListAccordion.tsx b/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
+index f663033..b72d131 100644
+--- a/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
++++ b/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
+@@ -32,6 +32,10 @@ type Props = {
+    * Callback which returns a React element to display on the left side.
+    */
+   left?: (props: { color: string }) => React.ReactNode;
++  /**
++   * Callback which returns a React element to display on the right side.
++   */
++  right?: (props: { isExpanded: boolean }) => React.ReactNode;
+   /**
+    * Whether the accordion is expanded
+    * If this prop is provided, the accordion will behave as a "controlled component".
+@@ -156,6 +160,7 @@ class ListAccordion extends React.Component<Props, State> {
+   render() {
+     const {
+       left,
++      right,
+       title,
+       description,
+       children,
+@@ -190,7 +195,7 @@ class ListAccordion extends React.Component<Props, State> {
+               'List.Accordion is used inside a List.AccordionGroup without specifying an id prop.'
+             );
+           }
+-          const expanded = groupContext
++          const isExpanded = groupContext
+             ? groupContext.expandedId === id
+             : expandedInternal;
+           const handlePress =
+@@ -210,10 +215,10 @@ class ListAccordion extends React.Component<Props, State> {
+                 <View style={styles.row} pointerEvents="none">
+                   {left
+                     ? left({
+-                        color: expanded
+-                          ? theme.colors.primary
+-                          : descriptionColor,
+-                      })
++                      color: isExpanded
++                        ? theme.colors.primary
++                        : descriptionColor,
++                    })
+                     : null}
+                   <View style={[styles.item, styles.content]}>
+                     <Text
+@@ -221,7 +226,7 @@ class ListAccordion extends React.Component<Props, State> {
+                       style={[
+                         styles.title,
+                         {
+-                          color: expanded ? theme.colors.primary : titleColor,
++                          color: isExpanded ? theme.colors.primary : titleColor,
+                         },
+                         titleStyle,
+                       ]}
+@@ -249,30 +254,38 @@ class ListAccordion extends React.Component<Props, State> {
+                       description ? styles.multiline : undefined,
+                     ]}
+                   >
+-                    <MaterialCommunityIcon
+-                      name={expanded ? 'chevron-up' : 'chevron-down'}
+-                      color={titleColor}
+-                      size={24}
+-                      direction={I18nManager.isRTL ? 'rtl' : 'ltr'}
+-                    />
++
++                    {right ? (
++                      right({
++                        isExpanded: isExpanded,
++                      })
++                    ) : (
++                        <MaterialCommunityIcon
++                          name={isExpanded ? 'chevron-up' : 'chevron-down'}
++                          color={titleColor}
++                          size={24}
++                          direction={I18nManager.isRTL ? 'rtl' : 'ltr'}
++                        />
++                      )}
++
+                   </View>
+                 </View>
+               </TouchableRipple>
+-              {expanded
++              {isExpanded
+                 ? React.Children.map(children, child => {
+-                    if (
+-                      left &&
+-                      React.isValidElement(child) &&
+-                      !child.props.left &&
+-                      !child.props.right
+-                    ) {
+-                      return React.cloneElement(child, {
+-                        style: [styles.child, child.props.style],
+-                      });
+-                    }
++                  if (
++                    left &&
++                    React.isValidElement(child) &&
++                    !child.props.left &&
++                    !child.props.right
++                  ) {
++                    return React.cloneElement(child, {
++                      style: [styles.child, child.props.style],
++                    });
++                  }
+ 
+-                    return child;
+-                  })
++                  return child;
++                })
+                 : null}
+             </View>
+           );
