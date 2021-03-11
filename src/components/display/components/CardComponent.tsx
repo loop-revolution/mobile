@@ -6,8 +6,6 @@ import { ComponentDelegate } from '../ComponentDelegate'
 import { StyleSheet, View } from 'react-native'
 import { getComponentIcon } from '../../../utils/utils'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import routes from '../../../navigation/routes'
-import { useNavigation } from '@react-navigation/native'
 import { BottomMenu } from '../../blockMenu/bottomMenu'
 
 export const CardComponent = ({ header, color, content }: CardArgs) => {
@@ -15,13 +13,24 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
 
 	const menuRef = useRef(null)
 
-	const navigation = useNavigation()
 	color = color || colors.primary
 	const LeftContent = () => <MaterialCommunityIcons color={color} name={getComponentIcon(header)} size={25} />
-	const RightContent = (props: any) => (
+	const RightContent = () => (
 		<View style={styles().titleOptions}>
-			<IconButton color={color} icon='dots-horizontal' onPress={() => { navigation.navigate(routes.BLOCK_PAGE, { blockId: header.block_id }) }} />
-			<IconButton color={color} icon='chevron-down' />
+			<IconButton
+				color={color}
+				icon='dots-horizontal'
+				onPress={() => {
+					menuRef.current?.handleOpen()
+				}}
+			/>
+			<IconButton
+				onPress={() => {
+					setExpended(!isExpanded)
+				}}
+				color={color}
+				icon={isExpanded ? 'chevron-up' : 'chevron-down'}
+			/>
 		</View>
 	)
 
@@ -36,11 +45,6 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
 					right={RightContent}
 					expanded={isExpanded}
 					onPress={() => {
-						//TODO: Temporary solution, there is a PR active to configure the
-						//right item for this library.
-						if (isExpanded) {
-							navigation.navigate(routes.BLOCK_PAGE, { blockId: header.block_id })
-						}
 						setExpended(!isExpanded)
 					}}
 				>
@@ -49,10 +53,10 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
 					</Card.Content>
 				</List.Accordion>
 			) : (
-					<Card.Content style={styles().cardContent}>
-						<ComponentDelegate component={content} />
-					</Card.Content>
-				)}
+				<Card.Content style={styles().cardContent}>
+					<ComponentDelegate component={content} />
+				</Card.Content>
+			)}
 			{header.menu && <BottomMenu ref={menuRef} menu={header.menu} />}
 		</Card>
 	)

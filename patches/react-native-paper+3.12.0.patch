@@ -27,21 +27,8 @@ index 9166ab7..eafac9b 100644
      theme?: import("@callstack/react-theme-provider").$DeepPartial<Theme> | undefined;
  }> & import("@callstack/react-theme-provider/typings/hoist-non-react-statics").NonReactStatics<(React.ComponentClass<Props, any> & typeof ListAccordion) | (React.FunctionComponent<Props> & typeof ListAccordion), {}>);
  export default _default;
-diff --git a/node_modules/react-native-paper/package.json b/node_modules/react-native-paper/package.json
-index e0cc967..dc41f78 100644
---- a/node_modules/react-native-paper/package.json
-+++ b/node_modules/react-native-paper/package.json
-@@ -4,7 +4,7 @@
-   "description": "Material design for React Native",
-   "main": "lib/commonjs/index.js",
-   "module": "lib/module/index.js",
--  "react-native": "lib/module/index.js",
-+  "react-native": "src/index.tsx",
-   "source": "src/index.tsx",
-   "types": "lib/typescript/src/index.d.ts",
-   "files": [
 diff --git a/node_modules/react-native-paper/src/components/List/ListAccordion.tsx b/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
-index f663033..b72d131 100644
+index f663033..afdfb6e 100644
 --- a/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
 +++ b/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
 @@ -32,6 +32,10 @@ type Props = {
@@ -72,8 +59,12 @@ index f663033..b72d131 100644
              ? groupContext.expandedId === id
              : expandedInternal;
            const handlePress =
-@@ -210,10 +215,10 @@ class ListAccordion extends React.Component<Props, State> {
-                 <View style={styles.row} pointerEvents="none">
+@@ -207,13 +212,13 @@ class ListAccordion extends React.Component<Props, State> {
+                 accessibilityRole="button"
+                 testID={testID}
+               >
+-                <View style={styles.row} pointerEvents="none">
++                <View style={styles.row}>
                    {left
                      ? left({
 -                        color: expanded
@@ -112,13 +103,13 @@ index f663033..b72d131 100644
 +                        isExpanded: isExpanded,
 +                      })
 +                    ) : (
-+                        <MaterialCommunityIcon
-+                          name={isExpanded ? 'chevron-up' : 'chevron-down'}
-+                          color={titleColor}
-+                          size={24}
-+                          direction={I18nManager.isRTL ? 'rtl' : 'ltr'}
-+                        />
-+                      )}
++                      <MaterialCommunityIcon
++                        name={isExpanded ? 'chevron-up' : 'chevron-down'}
++                        color={titleColor}
++                        size={24}
++                        direction={I18nManager.isRTL ? 'rtl' : 'ltr'}
++                      />
++                    )}
 +
                    </View>
                  </View>
