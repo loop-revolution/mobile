@@ -3173,10 +3173,10 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
-display-api@^0.1.12:
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/display-api/-/display-api-0.1.12.tgz"
-  integrity sha512-D20TMdzwn/3xyecQ5wur1fCHvL3ppQgbt2WELKbXW4apcVueQcAtnmwevezSjfEWAigWEYYxAMCDKSKFHYUrEQ==
+display-api@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/display-api/-/display-api-0.2.4.tgz#7b949e4a79560898547e8c9fc66dc603c634aced"
+  integrity sha512-5/y0m2hDrqvPmmtUuJbO8b31Gwc6faskr5Qg1SJP7KkD5ZUBWwvsW9z5vwP/lFCs9MxFJP2KnSVziplJHYOQNQ==
 
 doctrine@1.5.0:
   version "1.5.0"

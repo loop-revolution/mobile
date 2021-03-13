@@ -1,5 +1,6 @@
 import * as Notifications from 'expo-notifications'
 import * as Permissions from 'expo-permissions'
+import routes from '../navigation/routes'
 
 export async function registerForPushNotificationsAsync() {
 	const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS)
@@ -23,4 +24,17 @@ export async function registerForPushNotificationsAsync() {
 	const token = (await Notifications.getExpoPushTokenAsync()).data
 
 	return token
+}
+
+
+export function redirectTo(appPath: string, navigation: any) {
+	const segments = appPath.split("/");
+
+	if (segments.length > 1) {
+		if (segments[0] === 'b') {
+			navigation.navigate(routes.BLOCK_PAGE, { blockId: segments[1] })
+		} else {
+			navigation.navigate(routes.PROFILE, { userId: segments[1] })
+		}
+	}
 }

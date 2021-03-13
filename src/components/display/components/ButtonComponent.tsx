@@ -5,19 +5,22 @@ import { StyleSheet } from 'react-native'
 import { globalStyles } from '../../../utils/styles'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../../navigation/routes'
+import { redirectTo } from '../../../utils/helper'
 
 export const ButtonComponent = ({ text, interact }: ButtonArgs) => {
 	const navigation = useNavigation()
 
-	const onConfirm = () => {
+	const onPress = () => {
 		if (interact?.search) {
 			navigation.navigate(routes.SEARCH, { searchComponent: interact?.search })
+		} else if (interact.redirect) {
+			redirectTo(interact.redirect?.app_path, navigation)
 		}
 	}
 
 	return (
 		<Button
-			onPress={onConfirm}
+			onPress={onPress}
 			style={styles.button}
 			contentStyle={globalStyles.buttonContentStyle}
 			mode='contained'

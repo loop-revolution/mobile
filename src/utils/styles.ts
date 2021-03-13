@@ -18,4 +18,8 @@ export const globalStyles = StyleSheet.create({
 		textAlign: 'center',
 		marginTop: 10,
 	},
+	row: {
+		flexDirection: 'row',
+		alignItems: 'center'
+	}
 })
