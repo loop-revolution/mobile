@@ -21,6 +21,7 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
 	const RightContent = () => (
 		<View style={styles().titleOptions}>
 			<IconButton
+				style={styles().rightIcon}
 				color={color}
 				icon='dots-horizontal'
 				onPress={() => {
@@ -28,6 +29,7 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
 				}}
 			/>
 			<IconButton
+				style={styles().rightIcon}
 				onPress={() => {
 					setExpended(!isExpanded)
 				}}
@@ -94,4 +96,7 @@ const styles = (color = colors.primary) =>
 		titleOptions: {
 			flexDirection: 'row',
 		},
+		rightIcon: {
+			margin: 0
+		}
 	})
