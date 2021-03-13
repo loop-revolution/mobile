@@ -4,8 +4,16 @@ import { Button, TextInput } from 'react-native-paper'
 import { StyleSheet, Text, View } from 'react-native'
 import { globalStyles } from '../../../utils/styles'
 import { blockMethod, setMethodVariable } from '../method'
+import { multiply } from 'react-native-reanimated'
 
-export const InputComponent = ({ initial_value, name, label, mask, confirm_cancel }: InputArgs) => {
+export const InputComponent = ({
+	initial_value,
+	name,
+	label,
+	mask,
+	confirm_cancel,
+	disabled,
+	size }: InputArgs) => {
 	const [value, setValue] = useState<string>(initial_value)
 	const [error, setError] = useState<string>(null)
 	const [isFocused, setFocused] = useState<boolean>(false)
@@ -29,12 +37,20 @@ export const InputComponent = ({ initial_value, name, label, mask, confirm_cance
 		setValue(initial_value)
 	}
 
+	let inputStyle: Array<any> = [styles.input]
+	if (size === 'MultiLine') {
+		inputStyle.push(styles.multiline)
+	} else if (size === 'Small') {
+		inputStyle.push(styles.small)
+	}
+
 	return (
 		<View>
 			<TextInput
 				mode='outlined'
-				style={styles.input}
-				multiline={true}
+				disabled={disabled}
+				style={inputStyle}
+				multiline={size === 'MultiLine' || size === 'Flexible'}
 				label={label}
 				placeholder={label}
 				onChangeText={value => onChange(value)}
@@ -48,32 +64,34 @@ export const InputComponent = ({ initial_value, name, label, mask, confirm_cance
 					setFocused(false)
 				}}
 			/>
-			{confirm_cancel?.enabled && value !== initial_value && (
-				<View style={styles.buttonsContainer}>
-					<Button
-						onPress={onConfirm}
-						loading={isLoading}
-						contentStyle={globalStyles.buttonContentStyle}
-						mode='contained'
-						icon='check'
-						labelStyle={{ color: 'white' }}
-					>
-						Confirm
+			{
+				confirm_cancel?.enabled && value !== initial_value && (
+					<View style={styles.buttonsContainer}>
+						<Button
+							onPress={onConfirm}
+							loading={isLoading}
+							contentStyle={globalStyles.buttonContentStyle}
+							mode='contained'
+							icon='check'
+							labelStyle={{ color: 'white' }}
+						>
+							Confirm
 					</Button>
-					<Button
-						onPress={onCancel}
-						contentStyle={globalStyles.buttonContentStyle}
-						style={styles.button}
-						mode='contained'
-						icon='close'
-						labelStyle={{ color: 'white' }}
-					>
-						Cancel
+						<Button
+							onPress={onCancel}
+							contentStyle={globalStyles.buttonContentStyle}
+							style={styles.button}
+							mode='contained'
+							icon='close'
+							labelStyle={{ color: 'white' }}
+						>
+							Cancel
 					</Button>
-				</View>
-			)}
-			{error && <Text style={globalStyles.error}>{error}</Text>}
-		</View>
+					</View>
+				)
+			}
+			{ error && <Text style={globalStyles.error}>{error}</Text>}
+		</View >
 	)
 }
 
@@ -89,4 +107,10 @@ const styles = StyleSheet.create({
 	input: {
 		marginTop: 10,
 	},
+	small: {
+		width: '50%'
+	},
+	multiline: {
+		height: 150,
+	}
 })
