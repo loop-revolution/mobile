@@ -7,11 +7,14 @@ import { StyleSheet, View } from 'react-native'
 import { getComponentIcon } from '../../../utils/utils'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomMenu } from '../../blockMenu/bottomMenu'
+import { useNavigation } from '@react-navigation/core'
+import routes from '../../../navigation/routes'
 
 export const CardComponent = ({ header, color, content }: CardArgs) => {
 	const [isExpanded, setExpended] = useState(false)
 
 	const menuRef = useRef(null)
+	const navigation = useNavigation()
 
 	color = color || colors.primary
 	const LeftContent = () => <MaterialCommunityIcons color={color} name={getComponentIcon(header)} size={25} />
@@ -45,7 +48,7 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
 					right={RightContent}
 					expanded={isExpanded}
 					onPress={() => {
-						setExpended(!isExpanded)
+						navigation.navigate(routes.BLOCK_PAGE, { blockId: header.block_id })
 					}}
 				>
 					<Card.Content style={styles().cardContent}>
