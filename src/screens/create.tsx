@@ -40,7 +40,7 @@ export const Create = ({ navigation }: { navigation: any }) => {
 				}}
 			>
 				<Card.Content style={styles.cardContent}>
-					<MaterialCommunityIcons color={colors.primary} name={getComponentIcon(item)} size={50} />
+					<MaterialCommunityIcons color={colors.primary} name={getComponentIcon(item?.icon)} size={50} />
 					<Text style={styles.cardText}>{item.name}</Text>
 				</Card.Content>
 				<IconButton

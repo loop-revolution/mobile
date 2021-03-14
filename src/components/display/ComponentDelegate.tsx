@@ -9,6 +9,8 @@ import { ButtonComponent } from './components/ButtonComponent'
 import { LinkComponent } from './components/LinkComponent'
 import { DropdownComponent } from './components/DropdownComponent'
 import { CheckboxComponent } from './components/CheckboxComponent'
+import { BadgeComponent } from './components/BadgeComponent'
+import { ProgressBarComponent } from './components/ProgressBarComponent'
 
 export const ComponentDelegate = ({ component }: { component: ComponentObject }) => {
 	switch (component.cid) {
@@ -26,6 +28,12 @@ export const ComponentDelegate = ({ component }: { component: ComponentObject })
 			return <LinkComponent {...component.args} />
 		case 'checkbox':
 			return <CheckboxComponent {...component.args} />
+		case 'badge':
+			return <BadgeComponent {...component.args} />
+		case 'progress':
+			return <ProgressBarComponent {...component.args} />
+		case 'dropdown':
+			return <DropdownComponent {...component.args} />
 		default:
 			return <Text>No Component Found</Text>
 	}

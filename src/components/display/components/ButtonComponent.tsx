@@ -1,13 +1,23 @@
 import React from 'react'
 import { ButtonArgs } from 'display-api'
 import { Button } from 'react-native-paper'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { globalStyles } from '../../../utils/styles'
 import { useNavigation } from '@react-navigation/native'
 import routes from '../../../navigation/routes'
 import { redirectTo } from '../../../utils/helper'
+import colors from '../../../utils/colors'
+import { getComponentIcon } from '../../../utils/utils'
 
-export const ButtonComponent = ({ text, interact }: ButtonArgs) => {
+export const ButtonComponent = ({
+	text,
+	interact,
+	color_scheme,
+	variant,
+	icon,
+	size,
+	disabled,
+	readonly }: ButtonArgs) => {
 	const navigation = useNavigation()
 
 	const onPress = () => {
@@ -17,22 +27,41 @@ export const ButtonComponent = ({ text, interact }: ButtonArgs) => {
 			redirectTo(interact.redirect?.app_path, navigation)
 		}
 	}
+	const mode = variant === 'Link' ? 'text' : variant === 'Outline' ? 'outlined' : 'contained'
+	const buttonStyle: any = [styles().button]
+	if (variant === 'Outline') {
+		buttonStyle.push(styles(color_scheme).outline)
+	}
 
 	return (
-		<Button
-			onPress={onPress}
-			style={styles.button}
-			contentStyle={globalStyles.buttonContentStyle}
-			mode='contained'
-			labelStyle={{ color: 'white' }}
-		>
-			{text}
-		</Button>
+		<View style={size === 'Small' ? globalStyles.row : null}>
+			<Button
+				onPress={onPress}
+				style={buttonStyle}
+				contentStyle={globalStyles.buttonContentStyle}
+				mode={mode}
+				icon={getComponentIcon(icon)}
+				color={color_scheme}
+				disabled={disabled || readonly}
+				labelStyle={variant === 'Outline' || variant === 'Link' ? styles(color_scheme).colorLabel : styles().whiteLabel}>
+				{text}
+			</Button>
+		</View>
+
 	)
 }
-
-const styles = StyleSheet.create({
-	button: {
-		margin: 5,
-	},
-})
+const styles = (color = colors.primary) =>
+	StyleSheet.create({
+		button: {
+			margin: 5
+		},
+		whiteLabel: {
+			color: 'white',
+		},
+		colorLabel: {
+			color: color
+		},
+		outline: {
+			borderColor: color
+		}
+	})

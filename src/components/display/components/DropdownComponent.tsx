@@ -2,45 +2,69 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { DropdownArgs, DropdownOption } from 'display-api'
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Menu, Provider, Text, TouchableRipple } from 'react-native-paper'
+import { Menu, Provider, Text, TouchableRipple, ActivityIndicator } from 'react-native-paper'
 import colors from '../../../utils/colors'
 import { globalStyles } from '../../../utils/styles'
+import { getComponentIcon } from '../../../utils/utils'
+import { blockMethod, setMethodVariable } from '../method'
 
 export const DropdownComponent = ({
     color_scheme,
     disabled,
+    readonly,
     name,
     on_change,
     options,
-    readonly,
     variant }: DropdownArgs) => {
+
     const [isVisible, setVisible] = React.useState(false)
+    const [value, setValue] = React.useState(name)
+    const [isLoading, setLoading] = React.useState(false)
 
     const openMenu = () => setVisible(true)
     const closeMenu = () => setVisible(false)
 
-    const menuOptions = options.map(({ icon, text }: DropdownOption) => (
+    const onSelect = async (index: number) => {
+        name && setMethodVariable(name, index.toString())
+        setLoading(true)
+        const response = await blockMethod(on_change.method)
+        setLoading(false)
+        if (response.error) {
+            //TODO: handle error based on usage
+        }
+    }
+
+    const menuOptions = options.map(({ icon, text }: DropdownOption, index: number) => (
         <Menu.Item
-            icon={icon}
+            icon={getComponentIcon(icon)}
             title={text}
-            onPress={() => { }} />
+            titleStyle={styles().title}
+            onPress={() => {
+                setValue(text)
+                setVisible(false)
+                onSelect(index)
+            }} />
     ))
 
     const isOutlined = variant === 'Outline'
     const anchor = (
         <TouchableRipple
-            disabled={disabled}
-            style={[styles(color_scheme).anchor, isOutlined ? styles(color_scheme).outlined : styles(color_scheme).filled]}
+            disabled={disabled || readonly}
+            style={[styles(color_scheme).anchor, isOutlined ? styles(color_scheme).outlined : styles(color_scheme).filled, { marginTop: 50 }]}
             onPress={openMenu}>
             <View style={globalStyles.row}>
                 <Text
                     style={styles(isOutlined ? color_scheme : colors.white).title}>
-                    {name}
+                    {value}
                 </Text>
-                <MaterialCommunityIcons
-                    color={isOutlined ? color_scheme : colors.white}
-                    size={20}
-                    name={'chevron-down'} />
+                {isLoading ?
+                    <ActivityIndicator {...null}
+                        color={isOutlined ? color_scheme : colors.white}
+                        style={styles().activityIndicator} /> :
+                    <MaterialCommunityIcons
+                        color={isOutlined ? color_scheme : colors.white}
+                        size={20}
+                        name={'chevron-down'} />}
             </View>
         </TouchableRipple>
     )
@@ -79,6 +103,13 @@ const styles = (color = colors.text) =>
             borderWidth: 1
         },
         title: {
-            color: color
+            padding: 5,
+            color: color,
+            fontSize: 14,
+            fontWeight: '400',
+            lineHeight: 18,
+        },
+        activityIndicator: {
+            marginLeft: 5
         }
     })

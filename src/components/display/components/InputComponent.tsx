@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 import { InputArgs } from 'display-api'
 import { Button, TextInput } from 'react-native-paper'
-import { StyleSheet, Text, View } from 'react-native'
+import { Platform, StyleSheet, Text, View } from 'react-native'
 import { globalStyles } from '../../../utils/styles'
 import { blockMethod, setMethodVariable } from '../method'
-import { multiply } from 'react-native-reanimated'
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import colors from '../../../utils/colors'
+import moment from 'moment'
 
 export const InputComponent = ({
 	initial_value,
@@ -13,11 +16,17 @@ export const InputComponent = ({
 	mask,
 	confirm_cancel,
 	disabled,
-	size }: InputArgs) => {
+	size,
+	type }: InputArgs) => {
 	const [value, setValue] = useState<string>(initial_value)
 	const [error, setError] = useState<string>(null)
 	const [isFocused, setFocused] = useState<boolean>(false)
 	const [isLoading, setLoading] = useState(false)
+
+	const [date, setDate] = useState(new Date())
+	const [time, setTime] = useState(new Date())
+	const [showDate, setShowDate] = useState(false);
+	const [showTime, setShowTime] = useState(false);
 
 	const onChange = (value: string) => {
 		setValue(value)
@@ -44,8 +53,8 @@ export const InputComponent = ({
 		inputStyle.push(styles.small)
 	}
 
-	return (
-		<View>
+	const textInput = () => {
+		return (
 			<TextInput
 				mode='outlined'
 				disabled={disabled}
@@ -64,6 +73,90 @@ export const InputComponent = ({
 					setFocused(false)
 				}}
 			/>
+		)
+	}
+
+	const datePicker = () => {
+		const rightView = () => (
+			<TextInput.Icon
+				name={() => <MaterialCommunityIcons color={colors.primary} name={'calendar'} size={25} />}
+				onPress={() => { setShowDate(!showDate) }} />
+		)
+
+		const onChangeDatePicker = (event: any, selectedDate: Date) => {
+			const currentDate = selectedDate || date;
+			setShowDate(Platform.OS === 'ios');
+			setDate(currentDate);
+		}
+
+		return (
+			<>
+				<TextInput
+					mode='outlined'
+					right={rightView()}
+					disabled={disabled}
+					style={inputStyle}
+					label='Date'
+					placeholder='Date'
+					editable={false}
+					value={moment(date).format('MMM DD, YYYY')}
+				/>
+				{showDate && (
+					<DateTimePicker
+						value={date}
+						mode='date'
+						display={Platform.OS === 'ios' ? 'inline' : 'default'}
+						textColor="red"
+						style={styles.input}
+						onChange={onChangeDatePicker}
+					/>
+				)}
+			</>
+		)
+	}
+
+	const timePicker = () => {
+		const rightView = () => (
+			<TextInput.Icon
+				name={() => <MaterialCommunityIcons color={colors.primary} name={'clock'} size={25} />}
+				onPress={() => { setShowTime(!showTime) }} />
+		)
+
+		const onChangeTimePicker = (event: any, selectedTime: Date) => {
+			const currentTime = selectedTime || time;
+			setShowTime(Platform.OS === 'ios');
+			setTime(currentTime);
+		}
+
+		return (
+			<>
+				<TextInput
+					mode='outlined'
+					right={rightView()}
+					disabled={disabled}
+					style={inputStyle}
+					label='Date'
+					placeholder='Date'
+					editable={false}
+					value={moment(time).format('hh:mm A')}
+				/>
+				{showTime && (
+					<DateTimePicker
+						value={time}
+						mode='time'
+						display={Platform.OS === 'ios' ? 'inline' : 'default'}
+						onChange={onChangeTimePicker}
+					/>
+				)}
+			</>
+		)
+	}
+
+	return (
+		<View>
+			{type === 'Date' ? datePicker() :
+				type === 'Time' ? timePicker() :
+					textInput()}
 			{
 				confirm_cancel?.enabled && value !== initial_value && (
 					<View style={styles.buttonsContainer}>
@@ -73,8 +166,7 @@ export const InputComponent = ({
 							contentStyle={globalStyles.buttonContentStyle}
 							mode='contained'
 							icon='check'
-							labelStyle={{ color: 'white' }}
-						>
+							labelStyle={{ color: 'white' }}>
 							Confirm
 					</Button>
 						<Button
@@ -83,8 +175,7 @@ export const InputComponent = ({
 							style={styles.button}
 							mode='contained'
 							icon='close'
-							labelStyle={{ color: 'white' }}
-						>
+							labelStyle={{ color: 'white' }}>
 							Cancel
 					</Button>
 					</View>

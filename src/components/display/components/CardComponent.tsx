@@ -17,7 +17,13 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
 
 	const navigation = useNavigation()
 	color = color || colors.primary
-	const LeftContent = () => <MaterialCommunityIcons color={color} name={getComponentIcon(header)} size={25} />
+	const LeftContent = () => {
+		if (header?.custom) {
+			return <ComponentDelegate component={header?.custom} />
+		} else {
+			return <MaterialCommunityIcons color={color} name={getComponentIcon(header?.icon)} size={25} />
+		}
+	}
 	// const RightContent = (content: any) => (
 	// 	<View style={styles().titleOptions}>
 	// 		<IconButton color={color} icon='dots-horizontal' onPress={() => { navigation.navigate(routes.BLOCK_PAGE, {blockId: header.block_id}) }} />
@@ -31,7 +37,7 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
 				<List.Accordion
 					style={styles().header}
 					titleStyle={styles().title}
-					title={header.title}
+					title={header?.custom ? '' : header.title}
 					left={LeftContent}
 					expanded={isExpanded}
 					onPress={() => {

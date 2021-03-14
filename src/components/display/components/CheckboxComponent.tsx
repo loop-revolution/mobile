@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import { CheckboxArgs, TextArgs } from 'display-api'
-import { Checkbox, Text, Title } from 'react-native-paper'
+import { ActivityIndicator, Checkbox, Text, Title } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 import colors from '../../../utils/colors'
 import { globalStyles } from '../../../utils/styles'
-import { CheckboxAndroid } from 'react-native-paper/lib/typescript/src/components/Checkbox/CheckboxAndroid'
-import { TextComponent } from './TextComponent'
 import { ComponentDelegate } from '../ComponentDelegate'
+import { blockMethod, setMethodVariable } from '../method'
 
 export const CheckboxComponent = ({
     color_scheme,
@@ -21,13 +20,21 @@ export const CheckboxComponent = ({
     color = color || colors.text
 
     const [checked, setChecked] = React.useState(value)
+    const [isLoading, setLoading] = React.useState(false)
 
-    const onPress = () => {
+    const onPress = async () => {
         if (variant === 'Default') {
             setChecked(checked === 0 ? 1 : 0)
         } else {
             // TODO: handle the cancel check state
             setChecked(checked === 0 ? 1 : 0)
+        }
+        name && setMethodVariable(name, checked.toString())
+        setLoading(true)
+        const response = await blockMethod(on_change.method)
+        setLoading(false)
+        if (response.error) {
+            //TODO: handle error based on usage
         }
     }
 
@@ -44,6 +51,7 @@ export const CheckboxComponent = ({
                     {name}
                 </Text>
             }
+            {isLoading && <ActivityIndicator {...null} color={color_scheme} />}
         </View>
     )
 }

@@ -1,10 +1,14 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { BadgeArgs } from "display-api";
-import { Badge, Chip } from 'react-native-paper';
+import { Chip } from 'react-native-paper';
 import colors from '../../../utils/colors';
 
-export const BadgeComponent = ({ text, variant, color_scheme, size }: BadgeArgs) => {
+export const BadgeComponent = ({
+    text,
+    variant,
+    color_scheme }: BadgeArgs) => {
+
     return <View style={styles().container}>
         <Chip
             textStyle={styles().textStyle}
