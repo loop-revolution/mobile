@@ -1,0 +1,138 @@
+diff --git a/node_modules/react-native-paper/lib/typescript/components/List/ListAccordion.d.ts b/node_modules/react-native-paper/lib/typescript/components/List/ListAccordion.d.ts
+index 48fd3b7..cad8afe 100644
+--- a/node_modules/react-native-paper/lib/typescript/components/List/ListAccordion.d.ts
++++ b/node_modules/react-native-paper/lib/typescript/components/List/ListAccordion.d.ts
+@@ -15,6 +15,12 @@ declare type Props = {
+     left?: (props: {
+         color: string;
+     }) => React.ReactNode;
++    /**
++     * Callback which returns a React element to display on the right side.
++     */
++    right?: (props: {
++        isExpanded: boolean
++    }) => React.ReactNode;
+     /**
+      * Whether the accordion is expanded
+      * If this prop is provided, the accordion will behave as a "controlled component".
+@@ -68,21 +74,21 @@ declare type Props = {
+      */
+     testID?: string;
+ };
+-declare const _default: (React.ComponentClass<Pick<Props, "style" | "title" | "children" | "onPress" | "onLongPress" | "testID" | "left" | "description" | "titleStyle" | "descriptionStyle" | "titleNumberOfLines" | "descriptionNumberOfLines" | "id" | "expanded"> & {
++declare const _default: (React.ComponentClass<Pick<Props, "style" | "title" | "children" | "onPress" | "onLongPress" | "testID" | "left" | "right" | "description" | "titleStyle" | "descriptionStyle" | "titleNumberOfLines" | "descriptionNumberOfLines" | "id" | "expanded"> & {
+     theme?: import("@callstack/react-theme-provider").$DeepPartial<ReactNativePaper.Theme> | undefined;
+ }, any> & import("@callstack/react-theme-provider/typings/hoist-non-react-statics").NonReactStatics<(React.ComponentClass<Props, any> & {
+-    ({ left, title, description, children, theme, titleStyle, descriptionStyle, titleNumberOfLines, descriptionNumberOfLines, style, id, testID, onPress, onLongPress, expanded: expandedProp, }: Props): JSX.Element;
++    ({ left, right, title, description, children, theme, titleStyle, descriptionStyle, titleNumberOfLines, descriptionNumberOfLines, style, id, testID, onPress, onLongPress, expanded: expandedProp, }: Props): JSX.Element;
+     displayName: string;
+ }) | (React.FunctionComponent<Props> & {
+-    ({ left, title, description, children, theme, titleStyle, descriptionStyle, titleNumberOfLines, descriptionNumberOfLines, style, id, testID, onPress, onLongPress, expanded: expandedProp, }: Props): JSX.Element;
++    ({ left, right, title, description, children, theme, titleStyle, descriptionStyle, titleNumberOfLines, descriptionNumberOfLines, style, id, testID, onPress, onLongPress, expanded: expandedProp, }: Props): JSX.Element;
+     displayName: string;
+-}), {}>) | (React.FunctionComponent<Pick<Props, "style" | "title" | "children" | "onPress" | "onLongPress" | "testID" | "left" | "description" | "titleStyle" | "descriptionStyle" | "titleNumberOfLines" | "descriptionNumberOfLines" | "id" | "expanded"> & {
++}), {}>) | (React.FunctionComponent<Pick<Props, "style" | "title" | "children" | "onPress" | "onLongPress" | "testID" | "left" | "right" | "description" | "titleStyle" | "descriptionStyle" | "titleNumberOfLines" | "descriptionNumberOfLines" | "id" | "expanded"> & {
+     theme?: import("@callstack/react-theme-provider").$DeepPartial<ReactNativePaper.Theme> | undefined;
+ }> & import("@callstack/react-theme-provider/typings/hoist-non-react-statics").NonReactStatics<(React.ComponentClass<Props, any> & {
+-    ({ left, title, description, children, theme, titleStyle, descriptionStyle, titleNumberOfLines, descriptionNumberOfLines, style, id, testID, onPress, onLongPress, expanded: expandedProp, }: Props): JSX.Element;
++    ({ left, right, title, description, children, theme, titleStyle, descriptionStyle, titleNumberOfLines, descriptionNumberOfLines, style, id, testID, onPress, onLongPress, expanded: expandedProp, }: Props): JSX.Element;
+     displayName: string;
+ }) | (React.FunctionComponent<Props> & {
+-    ({ left, title, description, children, theme, titleStyle, descriptionStyle, titleNumberOfLines, descriptionNumberOfLines, style, id, testID, onPress, onLongPress, expanded: expandedProp, }: Props): JSX.Element;
++    ({ left, right, title, description, children, theme, titleStyle, descriptionStyle, titleNumberOfLines, descriptionNumberOfLines, style, id, testID, onPress, onLongPress, expanded: expandedProp, }: Props): JSX.Element;
+     displayName: string;
+ }), {}>);
+ export default _default;
+diff --git a/node_modules/react-native-paper/src/components/List/ListAccordion.tsx b/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
+index 38d380b..1aac8ee 100644
+--- a/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
++++ b/node_modules/react-native-paper/src/components/List/ListAccordion.tsx
+@@ -28,6 +28,10 @@ type Props = {
+    * Callback which returns a React element to display on the left side.
+    */
+   left?: (props: { color: string }) => React.ReactNode;
++  /**
++   * Callback which returns a React element to display on the right side.
++   */
++  right?: (props: { isExpanded: boolean }) => React.ReactNode;
+   /**
+    * Whether the accordion is expanded
+    * If this prop is provided, the accordion will behave as a "controlled component".
+@@ -127,6 +131,7 @@ type Props = {
+  */
+ const ListAccordion = ({
+   left,
++  right,
+   title,
+   description,
+   children,
+@@ -186,11 +191,11 @@ const ListAccordion = ({
+         accessibilityRole="button"
+         testID={testID}
+       >
+-        <View style={styles.row} pointerEvents="none">
++        <View style={styles.row}>
+           {left
+             ? left({
+-                color: isExpanded ? theme.colors.primary : descriptionColor,
+-              })
++              color: isExpanded ? theme.colors.primary : descriptionColor,
++            })
+             : null}
+           <View style={[styles.item, styles.content]}>
+             <Text
+@@ -225,30 +230,36 @@ const ListAccordion = ({
+           <View
+             style={[styles.item, description ? styles.multiline : undefined]}
+           >
+-            <MaterialCommunityIcon
+-              name={isExpanded ? 'chevron-up' : 'chevron-down'}
+-              color={titleColor}
+-              size={24}
+-              direction={I18nManager.isRTL ? 'rtl' : 'ltr'}
+-            />
++            {right ? (
++              right({
++                isExpanded: isExpanded,
++              })
++            ) : (
++              <MaterialCommunityIcon
++                name={isExpanded ? 'chevron-up' : 'chevron-down'}
++                color={titleColor}
++                size={24}
++                direction={I18nManager.isRTL ? 'rtl' : 'ltr'}
++              />
++            )}
+           </View>
+         </View>
+       </TouchableRipple>
+       {isExpanded
+         ? React.Children.map(children, (child) => {
+-            if (
+-              left &&
+-              React.isValidElement(child) &&
+-              !child.props.left &&
+-              !child.props.right
+-            ) {
+-              return React.cloneElement(child, {
+-                style: [styles.child, child.props.style],
+-              });
+-            }
++          if (
++            left &&
++            React.isValidElement(child) &&
++            !child.props.left &&
++            !child.props.right
++          ) {
++            return React.cloneElement(child, {
++              style: [styles.child, child.props.style],
++            });
++          }
+ 
+-            return child;
+-          })
++          return child;
++        })
+         : null}
+     </View>
+   );
