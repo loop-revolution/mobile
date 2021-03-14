@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { Provider as PaperProvider } from 'react-native-paper'
 import { RootNavigator } from './navigation/rootNavigator'
 import { Provider as UrqlProvider } from 'urql'
+import { ActionSheetProvider } from '@expo/react-native-action-sheet'
 import { createAPIClient } from './api/client'
 import { DefaultPaperTheme } from './utils/theme'
 import { StatusBar } from 'react-native'
@@ -77,8 +78,12 @@ export const Main = () => {
 		<UrqlProvider value={client}>
 			<PaperProvider theme={DefaultPaperTheme}>
 				<UserContext.Provider value={userObject}>
-					<StatusBar barStyle='light-content' />
-					<RootNavigator />
+					<ActionSheetProvider>
+						<>
+							<StatusBar barStyle='light-content' />
+							<RootNavigator />
+						</>
+					</ActionSheetProvider>
 				</UserContext.Provider>
 			</PaperProvider>
 		</UrqlProvider>

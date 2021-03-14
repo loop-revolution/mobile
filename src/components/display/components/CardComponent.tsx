@@ -11,12 +11,12 @@ import { useNavigation } from '@react-navigation/native'
 import { BottomMenu } from '../../blockMenu/bottomMenu'
 
 export const CardComponent = ({ header, color, content }: CardArgs) => {
+
 	const [isExpanded, setExpended] = useState(false)
-
 	const menuRef = useRef(null)
-
 	const navigation = useNavigation()
 	color = color || colors.primary
+
 	const LeftContent = () => {
 		if (header?.custom) {
 			return <ComponentDelegate component={header?.custom} />
