@@ -1,29 +1,43 @@
 import React, { useRef, useState } from 'react'
 import { CardArgs } from 'display-api'
-import { Card, List } from 'react-native-paper'
+import { Card, IconButton, List } from 'react-native-paper'
 import colors from '../../../utils/colors'
 import { ComponentDelegate } from '../ComponentDelegate'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { getComponentIcon } from '../../../utils/utils'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import routes from '../../../navigation/routes'
-import { useNavigation } from '@react-navigation/native'
 import { BottomMenu } from '../../blockMenu/bottomMenu'
+import { useNavigation } from '@react-navigation/core'
+import routes from '../../../navigation/routes'
 
 export const CardComponent = ({ header, color, content }: CardArgs) => {
 	const [isExpanded, setExpended] = useState(false)
 
 	const menuRef = useRef(null)
-
 	const navigation = useNavigation()
+
 	color = color || colors.primary
 	const LeftContent = () => <MaterialCommunityIcons color={color} name={getComponentIcon(header)} size={25} />
-	// const RightContent = (content: any) => (
-	// 	<View style={styles().titleOptions}>
-	// 		<IconButton color={color} icon='dots-horizontal' onPress={() => { navigation.navigate(routes.BLOCK_PAGE, {blockId: header.block_id}) }} />
-	// 		<IconButton color={color} icon='chevron-down' />
-	// 	</View>
-	// )
+	const RightContent = () => (
+		<View style={styles().titleOptions}>
+			<IconButton
+				style={styles().rightIcon}
+				color={color}
+				icon='dots-horizontal'
+				onPress={() => {
+					menuRef.current?.handleOpen()
+				}}
+			/>
+			<IconButton
+				style={styles().rightIcon}
+				onPress={() => {
+					setExpended(!isExpanded)
+				}}
+				color={color}
+				icon={isExpanded ? 'chevron-up' : 'chevron-down'}
+			/>
+		</View>
+	)
 
 	return (
 		<Card style={styles(color).cardContainer}>
@@ -33,14 +47,10 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
 					titleStyle={styles().title}
 					title={header.title}
 					left={LeftContent}
+					right={RightContent}
 					expanded={isExpanded}
 					onPress={() => {
-						//TODO: Temporary solution, there is a PR active to configure the
-						//right item for this library.
-						if (isExpanded) {
-							navigation.navigate(routes.BLOCK_PAGE, { blockId: header.block_id })
-						}
-						setExpended(!isExpanded)
+						navigation.navigate(routes.BLOCK_PAGE, { blockId: header.block_id })
 					}}
 				>
 					<Card.Content style={styles().cardContent}>
@@ -86,4 +96,7 @@ const styles = (color = colors.primary) =>
 		titleOptions: {
 			flexDirection: 'row',
 		},
+		rightIcon: {
+			margin: 0
+		}
 	})
