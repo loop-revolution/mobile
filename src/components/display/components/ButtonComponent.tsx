@@ -17,7 +17,8 @@ export const ButtonComponent = ({
 	icon,
 	size,
 	disabled,
-	readonly }: ButtonArgs) => {
+	readonly,
+}: ButtonArgs) => {
 	const navigation = useNavigation()
 
 	const onPress = () => {
@@ -43,25 +44,25 @@ export const ButtonComponent = ({
 				icon={getComponentIcon(icon)}
 				color={color_scheme}
 				disabled={disabled || readonly}
-				labelStyle={variant === 'Outline' || variant === 'Link' ? styles(color_scheme).colorLabel : styles().whiteLabel}>
+				labelStyle={variant === 'Outline' || variant === 'Link' ? styles(color_scheme).colorLabel : styles().whiteLabel}
+			>
 				{text}
 			</Button>
 		</View>
-
 	)
 }
 const styles = (color = colors.primary) =>
 	StyleSheet.create({
 		button: {
-			margin: 5
+			margin: 5,
 		},
 		whiteLabel: {
 			color: 'white',
 		},
 		colorLabel: {
-			color: color
+			color: color,
 		},
 		outline: {
-			borderColor: color
-		}
+			borderColor: color,
+		},
 	})

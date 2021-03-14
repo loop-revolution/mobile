@@ -26,9 +26,8 @@ export async function registerForPushNotificationsAsync() {
 	return token
 }
 
-
 export function redirectTo(appPath: string, navigation: any) {
-	const segments = appPath.split("/");
+	const segments = appPath.split('/')
 
 	if (segments.length > 1) {
 		if (segments[0] === 'b') {

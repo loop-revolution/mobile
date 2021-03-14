@@ -4,7 +4,7 @@ import { Button, TextInput } from 'react-native-paper'
 import { Platform, StyleSheet, Text, View } from 'react-native'
 import { globalStyles } from '../../../utils/styles'
 import { blockMethod, setMethodVariable } from '../method'
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import colors from '../../../utils/colors'
 import moment from 'moment'
@@ -17,7 +17,8 @@ export const InputComponent = ({
 	confirm_cancel,
 	disabled,
 	size,
-	type }: InputArgs) => {
+	type,
+}: InputArgs) => {
 	const [value, setValue] = useState<string>(initial_value)
 	const [error, setError] = useState<string>(null)
 	const [isFocused, setFocused] = useState<boolean>(false)
@@ -25,8 +26,8 @@ export const InputComponent = ({
 
 	const [date, setDate] = useState(new Date())
 	const [time, setTime] = useState(new Date())
-	const [showDate, setShowDate] = useState(false);
-	const [showTime, setShowTime] = useState(false);
+	const [showDate, setShowDate] = useState(false)
+	const [showTime, setShowTime] = useState(false)
 
 	const onChange = (value: string) => {
 		setValue(value)
@@ -46,7 +47,7 @@ export const InputComponent = ({
 		setValue(initial_value)
 	}
 
-	let inputStyle: Array<any> = [styles.input]
+	const inputStyle: Array<any> = [styles.input]
 	if (size === 'MultiLine') {
 		inputStyle.push(styles.multiline)
 	} else if (size === 'Small') {
@@ -80,13 +81,16 @@ export const InputComponent = ({
 		const rightView = () => (
 			<TextInput.Icon
 				name={() => <MaterialCommunityIcons color={colors.primary} name={'calendar'} size={25} />}
-				onPress={() => { setShowDate(!showDate) }} />
+				onPress={() => {
+					setShowDate(!showDate)
+				}}
+			/>
 		)
 
 		const onChangeDatePicker = (event: any, selectedDate: Date) => {
-			const currentDate = selectedDate || date;
-			setShowDate(Platform.OS === 'ios');
-			setDate(currentDate);
+			const currentDate = selectedDate || date
+			setShowDate(Platform.OS === 'ios')
+			setDate(currentDate)
 		}
 
 		return (
@@ -106,7 +110,7 @@ export const InputComponent = ({
 						value={date}
 						mode='date'
 						display={Platform.OS === 'ios' ? 'inline' : 'default'}
-						textColor="red"
+						textColor='red'
 						style={styles.input}
 						onChange={onChangeDatePicker}
 					/>
@@ -119,13 +123,16 @@ export const InputComponent = ({
 		const rightView = () => (
 			<TextInput.Icon
 				name={() => <MaterialCommunityIcons color={colors.primary} name={'clock'} size={25} />}
-				onPress={() => { setShowTime(!showTime) }} />
+				onPress={() => {
+					setShowTime(!showTime)
+				}}
+			/>
 		)
 
 		const onChangeTimePicker = (event: any, selectedTime: Date) => {
-			const currentTime = selectedTime || time;
-			setShowTime(Platform.OS === 'ios');
-			setTime(currentTime);
+			const currentTime = selectedTime || time
+			setShowTime(Platform.OS === 'ios')
+			setTime(currentTime)
 		}
 
 		return (
@@ -154,35 +161,33 @@ export const InputComponent = ({
 
 	return (
 		<View>
-			{type === 'Date' ? datePicker() :
-				type === 'Time' ? timePicker() :
-					textInput()}
-			{
-				confirm_cancel?.enabled && value !== initial_value && (
-					<View style={styles.buttonsContainer}>
-						<Button
-							onPress={onConfirm}
-							loading={isLoading}
-							contentStyle={globalStyles.buttonContentStyle}
-							mode='contained'
-							icon='check'
-							labelStyle={{ color: 'white' }}>
-							Confirm
+			{type === 'Date' ? datePicker() : type === 'Time' ? timePicker() : textInput()}
+			{confirm_cancel?.enabled && value !== initial_value && (
+				<View style={styles.buttonsContainer}>
+					<Button
+						onPress={onConfirm}
+						loading={isLoading}
+						contentStyle={globalStyles.buttonContentStyle}
+						mode='contained'
+						icon='check'
+						labelStyle={{ color: 'white' }}
+					>
+						Confirm
 					</Button>
-						<Button
-							onPress={onCancel}
-							contentStyle={globalStyles.buttonContentStyle}
-							style={styles.button}
-							mode='contained'
-							icon='close'
-							labelStyle={{ color: 'white' }}>
-							Cancel
+					<Button
+						onPress={onCancel}
+						contentStyle={globalStyles.buttonContentStyle}
+						style={styles.button}
+						mode='contained'
+						icon='close'
+						labelStyle={{ color: 'white' }}
+					>
+						Cancel
 					</Button>
-					</View>
-				)
-			}
-			{ error && <Text style={globalStyles.error}>{error}</Text>}
-		</View >
+				</View>
+			)}
+			{error && <Text style={globalStyles.error}>{error}</Text>}
+		</View>
 	)
 }
 
@@ -199,9 +204,9 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 	},
 	small: {
-		width: '50%'
+		width: '50%',
 	},
 	multiline: {
 		height: 150,
-	}
+	},
 })

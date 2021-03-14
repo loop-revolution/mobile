@@ -20,6 +20,6 @@ export const globalStyles = StyleSheet.create({
 	},
 	row: {
 		flexDirection: 'row',
-		alignItems: 'center'
-	}
+		alignItems: 'center',
+	},
 })

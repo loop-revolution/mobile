@@ -8,19 +8,9 @@ export const TextComponent = ({ text, color, preset }: TextArgs, { isLink = fals
 	color = color || colors.text
 
 	if (preset === 'Heading') {
-		return (
-			<Title
-				style={[styles(color).headline, isLink ? styles().link : null]}>
-				{text}
-			</Title>
-		)
+		return <Title style={[styles(color).headline, isLink ? styles().link : null]}>{text}</Title>
 	}
-	return (
-		<Text
-			style={[styles(color).text, isLink ? styles().link : null]}>
-			{text}
-		</Text>
-	)
+	return <Text style={[styles(color).text, isLink ? styles().link : null]}>{text}</Text>
 }
 
 const styles = (color = colors.text) =>
@@ -36,6 +26,6 @@ const styles = (color = colors.text) =>
 			lineHeight: 18,
 		},
 		link: {
-			textDecorationLine: 'underline'
-		}
+			textDecorationLine: 'underline',
+		},
 	})

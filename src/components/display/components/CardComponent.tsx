@@ -11,7 +11,6 @@ import { useNavigation } from '@react-navigation/core'
 import routes from '../../../navigation/routes'
 
 export const CardComponent = ({ header, color, content }: CardArgs) => {
-
 	const [isExpanded, setExpended] = useState(false)
 	const menuRef = useRef(null)
 	const navigation = useNavigation()
@@ -105,6 +104,6 @@ const styles = (color = colors.primary) =>
 			flexDirection: 'row',
 		},
 		rightIcon: {
-			margin: 0
-		}
+			margin: 0,
+		},
 	})
