@@ -10,13 +10,13 @@ import { blockMethod, setMethodVariable } from '../method'
 
 export const DropdownComponent = ({
 	color_scheme,
-	default,
 	disabled,
 	readonly,
 	name,
 	on_change,
 	options,
-	variant }: DropdownArgs) => {
+	variant,
+}: DropdownArgs) => {
 	const [isVisible, setVisible] = React.useState(false)
 	const [value, setValue] = React.useState(name)
 	const [isLoading, setLoading] = React.useState(false)

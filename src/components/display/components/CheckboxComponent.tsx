@@ -1,15 +1,13 @@
 import React from 'react'
 import { CheckboxArgs } from 'display-api'
-import { ActivityIndicator, Checkbox, Text } from 'react-native-paper'
-import { StyleSheet, View } from 'react-native'
-import colors from '../../../utils/colors'
+import { ActivityIndicator, Checkbox } from 'react-native-paper'
+import { View } from 'react-native'
 import { globalStyles } from '../../../utils/styles'
 import { ComponentDelegate } from '../ComponentDelegate'
 import { blockMethod, setMethodVariable } from '../method'
 
 export const CheckboxComponent = ({
 	color_scheme,
-	color,
 	variant,
 	readonly,
 	disabled,
@@ -18,8 +16,6 @@ export const CheckboxComponent = ({
 	text,
 	on_change,
 }: CheckboxArgs) => {
-	color = color || colors.text
-
 	const [checked, setChecked] = React.useState(value)
 	const [isLoading, setLoading] = React.useState(false)
 
@@ -57,14 +53,3 @@ export const CheckboxComponent = ({
 		</View>
 	)
 }
-
-const styles = (color = colors.text) =>
-	StyleSheet.create({
-		text: {
-			padding: 10,
-			color: color,
-			fontSize: 14,
-			fontWeight: '400',
-			lineHeight: 18,
-		},
-	})

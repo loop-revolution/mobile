@@ -57,8 +57,13 @@ export const ActionPopoverComponent = ({ trigger, actions }: ActionPopoverArgs) 
 			<TouchableRipple
 				onPress={() => {
 					showActionSheet()
-				}}>
-				{trigger ? <ComponentDelegate component={trigger} /> : <MaterialCommunityIcons color={colors.primary} name='dots-horizontal' size={25} />}
+				}}
+			>
+				{trigger ? (
+					<ComponentDelegate component={trigger} />
+				) : (
+					<MaterialCommunityIcons color={colors.primary} name='dots-horizontal' size={25} />
+				)}
 			</TouchableRipple>
 		</>
 	)

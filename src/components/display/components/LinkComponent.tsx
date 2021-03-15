@@ -6,7 +6,7 @@ import { TouchableRipple } from 'react-native-paper'
 import { redirectTo } from '../../../utils/helper'
 import { TextComponent } from './TextComponent'
 
-export const LinkComponent = ({ text, external, app_path, url }: LinkArgs) => {
+export const LinkComponent = ({ text, app_path, url }: LinkArgs) => {
 	const navigation = useNavigation()
 
 	const onPress = () => {

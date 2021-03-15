@@ -32,5 +32,5 @@ const styles = (color = colors.text) =>
 			color: color,
 			fontSize: 20,
 			fontWeight: '500',
-		}
+		},
 	})
