@@ -8,6 +8,8 @@ import { getComponentIcon } from '../../../utils/utils'
 import { ComponentDelegate } from '../ComponentDelegate'
 import { useActionSheet } from '@expo/react-native-action-sheet'
 import { blockMethod, setMethodVariable } from '../method'
+import colors from '../../../utils/colors'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 export const ActionPopoverComponent = ({ trigger, actions }: ActionPopoverArgs) => {
 	const navigation = useNavigation()
@@ -52,15 +54,12 @@ export const ActionPopoverComponent = ({ trigger, actions }: ActionPopoverArgs) 
 
 	return (
 		<>
-			{trigger && (
-				<TouchableRipple
-					onPress={() => {
-						showActionSheet()
-					}}
-				>
-					<ComponentDelegate component={trigger} />
-				</TouchableRipple>
-			)}
+			<TouchableRipple
+				onPress={() => {
+					showActionSheet()
+				}}>
+				{trigger ? <ComponentDelegate component={trigger} /> : <MaterialCommunityIcons color={colors.primary} name='dots-horizontal' size={25} />}
+			</TouchableRipple>
 		</>
 	)
 }

@@ -11,6 +11,7 @@ import { DropdownComponent } from './components/DropdownComponent'
 import { CheckboxComponent } from './components/CheckboxComponent'
 import { BadgeComponent } from './components/BadgeComponent'
 import { ProgressBarComponent } from './components/ProgressBarComponent'
+import { ActionPopoverComponent } from './components/ActionPopoverComponent'
 
 export const ComponentDelegate = ({ component }: { component: ComponentObject }) => {
 	switch (component.cid) {
@@ -34,6 +35,8 @@ export const ComponentDelegate = ({ component }: { component: ComponentObject })
 			return <ProgressBarComponent {...component.args} />
 		case 'dropdown':
 			return <DropdownComponent {...component.args} />
+		case 'actionpopover':
+			return <ActionPopoverComponent {...component.args} />
 		default:
 			return <Text>No Component Found</Text>
 	}

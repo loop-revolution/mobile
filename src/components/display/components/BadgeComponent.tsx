@@ -8,10 +8,9 @@ export const BadgeComponent = ({ text, variant, color_scheme }: BadgeArgs) => {
 	return (
 		<View style={styles().container}>
 			<Chip
-				textStyle={styles().textStyle}
-				style={variant === 'Subtle' ? styles(color_scheme).subtleChip : styles(color_scheme).solidChip}
-				mode={variant === 'Outline' ? 'outlined' : 'flat'}
-			>
+				textStyle={variant === 'Outline' ? styles(color_scheme).outlineTextStyle : styles().textStyle}
+				style={variant === 'Subtle' ? styles(color_scheme).subtleChip : variant === 'Solid' ? styles(color_scheme).solidChip : styles(color_scheme).outlineChip}
+				mode="outlined">
 				{text}
 			</Chip>
 		</View>
@@ -28,11 +27,17 @@ const styles = (color = colors.primary) =>
 		textStyle: {
 			color: colors.white,
 		},
+		outlineTextStyle: {
+			color: color
+		},
 		solidChip: {
 			backgroundColor: color,
 		},
 		subtleChip: {
 			backgroundColor: color,
 			opacity: 0.6,
+		},
+		outlineChip: {
+			borderColor: color,
 		},
 	})

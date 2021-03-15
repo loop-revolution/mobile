@@ -30,12 +30,14 @@ export const CheckboxComponent = ({
 			// TODO: handle the cancel check state
 			setChecked(checked === 0 ? 1 : 0)
 		}
-		name && setMethodVariable(name, checked.toString())
-		setLoading(true)
-		const response = await blockMethod(on_change.method)
-		setLoading(false)
-		if (response.error) {
-			//TODO: handle error based on usage
+		if (on_change) {
+			name && setMethodVariable(name, checked.toString())
+			setLoading(true)
+			const response = await blockMethod(on_change?.method)
+			setLoading(false)
+			if (response.error) {
+				//TODO: handle error based on usage
+			}
 		}
 	}
 
@@ -50,7 +52,7 @@ export const CheckboxComponent = ({
 				}}
 			/>
 
-			{text ? <ComponentDelegate component={text} /> : <Text style={styles(color).text}>{name}</Text>}
+			{text && <ComponentDelegate component={text} />}
 			{isLoading && <ActivityIndicator {...null} color={color_scheme} />}
 		</View>
 	)

@@ -12,7 +12,7 @@ export const LinkComponent = ({ text, external, app_path, url }: LinkArgs) => {
 	const onPress = () => {
 		if (app_path) {
 			redirectTo(app_path, navigation)
-		} else if (external && url && Linking.canOpenURL(url)) {
+		} else if (url && Linking.canOpenURL(url)) {
 			Linking.openURL(url)
 		}
 	}

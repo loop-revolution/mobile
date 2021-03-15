@@ -24,8 +24,8 @@ export const ButtonComponent = ({
 	const onPress = () => {
 		if (interact?.search) {
 			navigation.navigate(routes.SEARCH, { searchComponent: interact?.search })
-		} else if (interact.redirect) {
-			redirectTo(interact.redirect?.app_path, navigation)
+		} else if (interact?.redirect) {
+			redirectTo(interact?.redirect?.app_path, navigation)
 		}
 	}
 	const mode = variant === 'Link' ? 'text' : variant === 'Outline' ? 'outlined' : 'contained'
