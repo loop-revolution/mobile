@@ -16,9 +16,10 @@ export const DropdownComponent = ({
 	on_change,
 	options,
 	variant,
+	default: initial,
 }: DropdownArgs) => {
 	const [isVisible, setVisible] = React.useState(false)
-	const [value, setValue] = React.useState(name)
+	const [selectedIndex, setSelectedIndex] = React.useState(initial ?? 0)
 	const [isLoading, setLoading] = React.useState(false)
 
 	const openMenu = () => setVisible(true)
@@ -41,7 +42,7 @@ export const DropdownComponent = ({
 			title={text}
 			titleStyle={styles().title}
 			onPress={() => {
-				setValue(text)
+				setSelectedIndex(index)
 				setVisible(false)
 				onSelect(index)
 			}}
@@ -60,7 +61,7 @@ export const DropdownComponent = ({
 			onPress={openMenu}
 		>
 			<View style={globalStyles.row}>
-				<Text style={styles(isOutlined ? color_scheme : colors.white).title}>{value}</Text>
+				<Text style={styles(isOutlined ? color_scheme : colors.white).title}>{options.length > 0 ? options[selectedIndex]?.text : ''}</Text>
 				{isLoading ? (
 					<ActivityIndicator
 						{...null}

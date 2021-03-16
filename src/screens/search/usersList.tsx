@@ -29,7 +29,9 @@ export const UsersList = ({
 					description={'@' + item.username}
 					descriptionStyle={styles().description}
 					onPress={() => {
-						selectUser ? selectUser(item.id.toString()) : navigation.navigate(routes.PROFILE, { userId: item.id })
+						selectUser
+							? selectUser(item.id.toString())
+							: navigation.navigate(routes.PROFILE, { username: item.username })
 					}}
 					left={() => (
 						<Avatar.Text

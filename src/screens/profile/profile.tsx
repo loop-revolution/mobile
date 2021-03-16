@@ -16,18 +16,18 @@ import { globalStyles } from '../../utils/styles'
 export const Profile = ({ route, navigation }: { route: any; navigation: any }) => {
 	const currentUser = useContext(UserContext)
 
-	type UserProfileRequest = { id: number }
-	type UserProfileResult = { userById: User }
+	type UserProfileRequest = { username: string }
+	type UserProfileResult = { userByName: User }
 	type StarredResult = { setStarred: { id: number; starred: boolean } }
 	type StarredRequest = { blockId: number; starred: boolean }
 
 	const [, setStarred] = useMutation<StarredResult, StarredRequest>(SET_STARRED)
 	const [profileResponse] = useQuery<UserProfileResult, UserProfileRequest>({
 		query: USER_PROFILE,
-		variables: { id: route.params?.userId },
+		variables: { username: route.params?.username },
 	})
 
-	const user = profileResponse.data?.userById
+	const user = profileResponse.data?.userByName
 
 	if (!user) {
 		return <ActivityIndicator {...null} style={globalStyles.flex1} color={colors.primary} />

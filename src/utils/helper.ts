@@ -33,7 +33,7 @@ export function redirectTo(appPath: string, navigation: any) {
 		if (segments[0] === 'b') {
 			navigation.navigate(routes.BLOCK_PAGE, { blockId: segments[1] })
 		} else {
-			navigation.navigate(routes.PROFILE, { userId: segments[1] })
+			navigation.navigate(routes.PROFILE, { username: segments[1] })
 		}
 	}
 }

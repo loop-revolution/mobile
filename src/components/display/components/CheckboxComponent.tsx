@@ -23,8 +23,7 @@ export const CheckboxComponent = ({
 		if (variant === 'Default') {
 			setChecked(checked === 0 ? 1 : 0)
 		} else {
-			// TODO: handle the cancel check state
-			setChecked(checked === 0 ? 1 : 0)
+			setChecked(checked === 0 ? 1 : checked === 1 ? 2 : 0)
 		}
 		if (on_change) {
 			name && setMethodVariable(name, checked.toString())
@@ -39,10 +38,11 @@ export const CheckboxComponent = ({
 
 	return (
 		<View style={globalStyles.row}>
-			<Checkbox
+			<Checkbox.Android
 				disabled={disabled || readonly}
 				color={color_scheme}
-				status={checked === 0 ? 'unchecked' : 'checked'}
+				uncheckedColor={color_scheme}
+				status={checked === 0 ? 'unchecked' : checked === 1 ? 'checked' : 'indeterminate'}
 				onPress={() => {
 					onPress()
 				}}
