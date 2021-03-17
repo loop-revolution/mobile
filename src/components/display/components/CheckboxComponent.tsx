@@ -20,10 +20,10 @@ export const CheckboxComponent = ({
 	const [isLoading, setLoading] = React.useState(false)
 
 	const onPress = async () => {
-		if (variant === 'Default') {
-			setChecked(checked === 0 ? 1 : 0)
-		} else {
+		if (variant === 'Cancel') {
 			setChecked(checked === 0 ? 1 : checked === 1 ? 2 : 0)
+		} else {
+			setChecked(checked === 0 ? 1 : 0)
 		}
 		if (on_change) {
 			name && setMethodVariable(name, checked.toString())
