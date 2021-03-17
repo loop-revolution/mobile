@@ -27,11 +27,13 @@ export const DropdownComponent = ({
 
 	const onSelect = async (index: number) => {
 		name && setMethodVariable(name, index.toString())
-		setLoading(true)
-		const response = await blockMethod(on_change.method)
-		setLoading(false)
-		if (response.error) {
-			//TODO: handle error based on usage
+		if (on_change) {
+			setLoading(true)
+			const response = await blockMethod(on_change.method)
+			setLoading(false)
+			if (response.error) {
+				//TODO: handle error based on usage
+			}
 		}
 	}
 
@@ -61,7 +63,9 @@ export const DropdownComponent = ({
 			onPress={openMenu}
 		>
 			<View style={globalStyles.row}>
-				<Text style={styles(isOutlined ? color_scheme : colors.white).title}>{options.length > 0 ? options[selectedIndex]?.text : ''}</Text>
+				<Text style={styles(isOutlined ? color_scheme : colors.white).title}>
+					{options.length > 0 ? options[selectedIndex]?.text : ''}
+				</Text>
 				{isLoading ? (
 					<ActivityIndicator
 						{...null}
