@@ -158,9 +158,27 @@ export const UPDATE_VISIBILITY = gql`
 	}
 `
 
-export const USER_PROFILE = gql`
+export const USER_BY_ID = gql`
 	query($id: Int!) {
 		userById(id: $id) {
+			id
+			username
+			displayName
+			credits
+			featured {
+				id
+				pageDisplay
+				embedDisplay
+				starred
+				starCount
+			}
+		}
+	}
+`
+
+export const USER_PROFILE = gql`
+	query($username: String!) {
+		userByName(username: $username) {
 			id
 			username
 			displayName

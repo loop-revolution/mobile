@@ -12,12 +12,19 @@ import routes from '../../../navigation/routes'
 
 export const CardComponent = ({ header, color, content }: CardArgs) => {
 	const [isExpanded, setExpended] = useState(false)
-
 	const menuRef = useRef(null)
 	const navigation = useNavigation()
 
 	color = color || colors.primary
-	const LeftContent = () => <MaterialCommunityIcons color={color} name={getComponentIcon(header)} size={25} />
+
+	const LeftContent = () => {
+		if (header?.custom) {
+			return <ComponentDelegate component={header?.custom} />
+		} else {
+			return <MaterialCommunityIcons color={color} name={getComponentIcon(header?.icon)} size={25} />
+		}
+	}
+
 	const RightContent = () => (
 		<View style={styles().titleOptions}>
 			<IconButton
@@ -45,7 +52,7 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
 				<List.Accordion
 					style={styles().header}
 					titleStyle={styles().title}
-					title={header.title}
+					title={header?.custom ? '' : header.title}
 					left={LeftContent}
 					right={RightContent}
 					expanded={isExpanded}
@@ -97,6 +104,6 @@ const styles = (color = colors.primary) =>
 			flexDirection: 'row',
 		},
 		rightIcon: {
-			margin: 0
-		}
+			margin: 0,
+		},
 	})

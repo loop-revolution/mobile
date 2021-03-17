@@ -1,6 +1,6 @@
 import moment from 'moment'
 
-export const getComponentIcon = ({ icon }: { icon?: any }) => {
+export const getComponentIcon = (icon: string) => {
 	switch (icon) {
 		case 'Folder':
 			return 'folder-outline'
