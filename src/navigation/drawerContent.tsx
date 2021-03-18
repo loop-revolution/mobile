@@ -4,7 +4,7 @@ import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from
 import React, { useContext } from 'react'
 import { StyleSheet, View, Image } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { Divider, Drawer, Text, Button } from 'react-native-paper'
+import { Divider, Drawer, Text } from 'react-native-paper'
 import Animated from 'react-native-reanimated'
 import { UserContext } from '../context/userContext'
 import colors from '../utils/colors'
@@ -40,20 +40,6 @@ export function DrawerContent(props: DrawerContentComponentProps) {
 					<View style={styles.userInfoSection}>
 						<Text style={styles.title}>{user ? user.displayName ?? user.username : 'Loading...'}</Text>
 						{user && <Text style={styles.subtitle}>@{user.username}</Text>}
-						{user && <Text style={styles.credits}>{user.credits} credits</Text>}
-						{user && (
-							<View>
-								<Button
-									style={styles.button}
-									contentStyle={styles.buttonContent}
-									labelStyle={styles.buttonLabel}
-									onPress={() => {}}
-									mode='outlined'
-								>
-									Send Credits
-								</Button>
-							</View>
-						)}
 					</View>
 					<Divider style={styles.separator} />
 					<DrawerItem
