@@ -101,7 +101,7 @@ export const Profile = ({ route, navigation }: { route: any; navigation: any }) 
 							{user && <Text style={styles.username}>{user.displayName ?? user.username}</Text>}
 							{user && <Caption style={styles.caption}>@{user.username}</Caption>}
 							{renderStarredItem()}
-							{ }
+							{}
 							{currentUser.user.id === user.id && (
 								<>
 									<Button

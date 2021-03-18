@@ -67,7 +67,11 @@ export const HomeNavigator = ({ navigation }: { navigation: any }) => {
 			/>
 			<Stack.Screen name={routes.PROFILE} component={Profile} options={{ headerTitle: 'Profile' }} />
 			<Stack.Screen name={routes.EDIT_PROFILE} component={EditProfile} options={{ headerTitle: 'Edit Profile' }} />
-			<Stack.Screen name={routes.CHANGE_PASSWORD} component={ChangePassword} options={{ headerTitle: 'Change Password' }} />
+			<Stack.Screen
+				name={routes.CHANGE_PASSWORD}
+				component={ChangePassword}
+				options={{ headerTitle: 'Change Password' }}
+			/>
 			<Stack.Screen name={routes.BLOCK_PERMISSIONS} component={Permissions} options={{ headerTitle: 'Permissions' }} />
 		</Stack.Navigator>
 	)

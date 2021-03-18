@@ -204,6 +204,31 @@ export const UPDATE_DISPLAY_NAME = gql`
 	}
 `
 
+export const UPDATE_USER_NAME = gql`
+	mutation($newUsername: String!, $password: String!) {
+		updateUsername(newUsername: $newUsername, password: $password) {
+			id
+			username
+			displayName
+		}
+	}
+`
+
+export const UPDATE_PROFILE = gql`
+	mutation($newUsername: String!, $password: String!, $newDisplayName: String!) {
+		updateUsername(newUsername: $newUsername, password: $password) {
+			id
+			username
+			displayName
+		}
+		updateDisplayName(newDisplayName: $newDisplayName) {
+			id
+			username
+			displayName
+		}
+	}
+`
+
 export const UPDATE_PASSWORD = gql`
 	mutation($newPassword: String!, $password: String!) {
 		updatePassword(newPassword: $newPassword, password: $password) {
