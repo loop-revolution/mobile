@@ -203,3 +203,11 @@ export const UPDATE_DISPLAY_NAME = gql`
 		}
 	}
 `
+
+export const UPDATE_PASSWORD = gql`
+	mutation($newPassword: String!, $password: String!) {
+		updatePassword(newPassword: $newPassword, password: $password) {
+			id
+		}
+	}
+`
