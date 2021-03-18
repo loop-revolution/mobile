@@ -32,6 +32,7 @@ export const ChangePassword = () => {
                             onChangeText={value => onChange(value)}
                             value={value}
                             disabled={disabled}
+                            secureTextEntry={true}
                             error={errors}
                             autoCapitalize='none'
                         />
