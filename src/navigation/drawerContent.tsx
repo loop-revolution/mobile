@@ -46,7 +46,9 @@ export function DrawerContent(props: DrawerContentComponentProps) {
 						icon={() => <Image source={Images.settings} />}
 						label='Account Settings'
 						labelStyle={styles.optionLabel}
-						onPress={() => {}}
+						onPress={() => {
+							props.navigation.navigate(routes.PROFILE, { username: user.username })
+						}}
 					/>
 					<Divider style={styles.separator} />
 					<DrawerItem
