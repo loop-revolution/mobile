@@ -17,7 +17,7 @@ export const DropdownComponent = ({
 	options,
 	variant,
 	default: initial,
-}: DropdownArgs) => {
+}: DropdownArgs, { onSelect = null }: { onSelect?: Function }) => {
 	const [isVisible, setVisible] = React.useState(false)
 	const [selectedIndex, setSelectedIndex] = React.useState(initial ?? 0)
 	const [isLoading, setLoading] = React.useState(false)
@@ -25,7 +25,7 @@ export const DropdownComponent = ({
 	const openMenu = () => setVisible(true)
 	const closeMenu = () => setVisible(false)
 
-	const onSelect = async (index: number) => {
+	const onSelectValue = async (text: string, index: number) => {
 		name && setMethodVariable(name, index.toString())
 		if (on_change) {
 			setLoading(true)
@@ -34,6 +34,8 @@ export const DropdownComponent = ({
 			if (response.error) {
 				//TODO: handle error based on usage
 			}
+		} else if (onSelect) {
+			onSelect(text)
 		}
 	}
 
@@ -46,7 +48,7 @@ export const DropdownComponent = ({
 			onPress={() => {
 				setSelectedIndex(index)
 				setVisible(false)
-				onSelect(index)
+				onSelectValue(text, index)
 			}}
 		/>
 	))
@@ -58,11 +60,10 @@ export const DropdownComponent = ({
 			style={[
 				styles(color_scheme).anchor,
 				isOutlined ? styles(color_scheme).outlined : styles(color_scheme).filled,
-				{ marginTop: 50 },
 			]}
 			onPress={openMenu}
 		>
-			<View style={globalStyles.row}>
+			<View style={[globalStyles.row]}>
 				<Text style={styles(isOutlined ? color_scheme : colors.white).title}>
 					{options.length > 0 ? options[selectedIndex]?.text : ''}
 				</Text>
@@ -93,14 +94,17 @@ export const DropdownComponent = ({
 const styles = (color = colors.text) =>
 	StyleSheet.create({
 		container: {
-			padding: 5,
+			marginTop: 7,
 			flexDirection: 'row',
-			justifyContent: 'center',
+			justifyContent: 'flex-start',
 		},
 		anchor: {
 			borderColor: color,
 			padding: 10,
 			borderRadius: 5,
+			height: 56, //same as input's default height
+			justifyContent: 'center',
+			alignSelf: 'flex-start',
 		},
 		filled: {
 			backgroundColor: color,
