@@ -8,16 +8,10 @@ import { globalStyles } from '../../../utils/styles'
 import { getComponentIcon } from '../../../utils/utils'
 import { blockMethod, setMethodVariable } from '../method'
 
-export const DropdownComponent = ({
-	color_scheme,
-	disabled,
-	readonly,
-	name,
-	on_change,
-	options,
-	variant,
-	default: initial,
-}: DropdownArgs, { onSelect = null }: { onSelect?: Function }) => {
+export const DropdownComponent = (
+	{ color_scheme, disabled, readonly, name, on_change, options, variant, default: initial }: DropdownArgs,
+	{ onSelect = null }: { onSelect?: Function },
+) => {
 	const [isVisible, setVisible] = React.useState(false)
 	const [selectedIndex, setSelectedIndex] = React.useState(initial ?? 0)
 	const [isLoading, setLoading] = React.useState(false)
@@ -57,10 +51,7 @@ export const DropdownComponent = ({
 	const anchor = (
 		<TouchableRipple
 			disabled={disabled || readonly}
-			style={[
-				styles(color_scheme).anchor,
-				isOutlined ? styles(color_scheme).outlined : styles(color_scheme).filled,
-			]}
+			style={[styles(color_scheme).anchor, isOutlined ? styles(color_scheme).outlined : styles(color_scheme).filled]}
 			onPress={openMenu}
 		>
 			<View style={[globalStyles.row]}>

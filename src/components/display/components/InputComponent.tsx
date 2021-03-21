@@ -21,7 +21,7 @@ export const InputComponent = ({
 	type,
 }: InputArgs) => {
 	const [value, setValue] = useState<string>(initial_value)
-	const [freqency, setFreqency] = useState<string | null>("Days")
+	const [freqency, setFreqency] = useState<string | null>('Days')
 	const [error, setError] = useState<string>(null)
 	const [isFocused, setFocused] = useState<boolean>(false)
 	const [isLoading, setLoading] = useState(false)
@@ -81,10 +81,10 @@ export const InputComponent = ({
 	}
 
 	const frequency = () => {
-		const options: DropdownOption[] = [{ text: "Days" }, { text: "Weeks" }, { text: "Months" }, { text: "Years" }]
+		const options: DropdownOption[] = [{ text: 'Days' }, { text: 'Weeks' }, { text: 'Months' }, { text: 'Years' }]
 		const dropdownArgs: DropdownArgs = {
 			default: 0,
-			name: "frequency",
+			name: 'frequency',
 			options: options,
 		}
 
@@ -192,7 +192,13 @@ export const InputComponent = ({
 
 	return (
 		<View>
-			{type === 'Date' ? datePicker() : type === 'Time' ? timePicker() : type === 'Frequency' ? frequency() : textInput()}
+			{type === 'Date'
+				? datePicker()
+				: type === 'Time'
+				? timePicker()
+				: type === 'Frequency'
+				? frequency()
+				: textInput()}
 			{confirm_cancel?.enabled && value !== initial_value && (
 				<View style={styles.buttonsContainer}>
 					<Button
@@ -236,7 +242,7 @@ const styles = StyleSheet.create({
 		paddingTop: 0,
 		top: 0,
 		paddingVertical: 0,
-		marginVertical: 0
+		marginVertical: 0,
 	},
 	small: {
 		width: '50%',
@@ -246,6 +252,6 @@ const styles = StyleSheet.create({
 	},
 	frequencyInput: {
 		width: '15%',
-		marginRight: 10
-	}
+		marginRight: 10,
+	},
 })
