@@ -6,7 +6,7 @@ import BottomSheet, {
 	BottomSheetBackdropProps,
 	BottomSheetBackdrop,
 } from '@gorhom/bottom-sheet'
-import { MenuComponent } from 'display-api/lib/components/menu'
+import { CustomMenuItem, MenuComponent } from 'display-api/lib/components/menu'
 import colors from '../../utils/colors'
 import { Divider, Portal, TouchableRipple } from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
@@ -14,6 +14,9 @@ import { useMutation } from 'urql'
 import { useNavigation } from '@react-navigation/native'
 import { SET_NOTIFS, SET_STARRED } from '../../api/gql'
 import routes from '../../navigation/routes'
+import { redirectTo } from '../../utils/helper'
+import { ActionObject } from 'display-api'
+import { getComponentIcon } from '../../utils/utils'
 
 export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) => {
 	type StarredResult = { setStarred: { id: number; starred: boolean } }
@@ -66,9 +69,18 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 		navigation.navigate(routes.BLOCK_PERMISSIONS, { menu })
 	}
 
+	const onPressCustomItem = (interact: ActionObject) => {
+		handleClose()
+		if (interact?.search) {
+			navigation.navigate(routes.SEARCH, { searchComponent: interact?.search })
+		} else if (interact?.redirect) {
+			redirectTo(interact.redirect?.app_path, navigation)
+		}
+	}
+
 	const renderItem = useCallback(
-		(title, onClick, subtitle?, icon?) => (
-			<TouchableRipple onPress={onClick}>
+		(title: string, onClick: any, subtitle?: any, icon?: any, disabled: boolean = false) => (
+			<TouchableRipple onPress={onClick} disabled={disabled} style={disabled && styles.disabled}>
 				<>
 					<View key={title} style={styles.itemContainer}>
 						<Text style={styles.itemTitle}>{title}</Text>
@@ -103,6 +115,10 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 				onChange={handleSheetChange}
 			>
 				<BottomSheetScrollView>
+					{menu.custom &&
+						menu.custom.map(({ icon, text, interact, disabled }: CustomMenuItem) =>
+							renderItem(text, onPressCustomItem.bind(this, interact), null, getComponentIcon(icon), disabled),
+						)}
 					{menu.star_button &&
 						renderItem(
 							menu.star_button.starred ? 'Unstar' : 'Star',
@@ -122,6 +138,7 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 							handlePermissions,
 							menu.permissions?.full + menu.permissions?.edit + menu.permissions?.view,
 						)}
+
 					{renderItem('Share', handleShare)}
 				</BottomSheetScrollView>
 			</BottomSheet>
@@ -165,5 +182,8 @@ const styles = StyleSheet.create({
 	},
 	separator: {
 		backgroundColor: '#404040',
+	},
+	disabled: {
+		opacity: 0.5,
 	},
 })
