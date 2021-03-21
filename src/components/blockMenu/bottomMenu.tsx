@@ -115,6 +115,10 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 				onChange={handleSheetChange}
 			>
 				<BottomSheetScrollView>
+					{menu.custom &&
+						menu.custom.map(({ icon, text, interact, disabled }: CustomMenuItem) =>
+							renderItem(text, onPressCustomItem.bind(this, interact), null, getComponentIcon(icon), disabled),
+						)}
 					{menu.star_button &&
 						renderItem(
 							menu.star_button.starred ? 'Unstar' : 'Star',
@@ -136,10 +140,6 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 						)}
 
 					{renderItem('Share', handleShare)}
-					{menu.custom &&
-						menu.custom.map(({ icon, text, interact, disabled }: CustomMenuItem) =>
-							renderItem(text, onPressCustomItem.bind(this, interact), null, getComponentIcon(icon), disabled),
-						)}
 				</BottomSheetScrollView>
 			</BottomSheet>
 		</Portal>
