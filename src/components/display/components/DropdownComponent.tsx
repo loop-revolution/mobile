@@ -8,10 +8,17 @@ import { globalStyles } from '../../../utils/styles'
 import { getComponentIcon } from '../../../utils/utils'
 import { blockMethod, setMethodVariable } from '../method'
 
-export const DropdownComponent = (
-	{ color_scheme, disabled, readonly, name, on_change, options, variant, default: initial }: DropdownArgs,
-	{ onSelect = null }: { onSelect?: Function },
-) => {
+export const DropdownComponent = ({
+	color_scheme,
+	disabled,
+	readonly,
+	name,
+	on_change,
+	options,
+	variant,
+	default: initial,
+	onSelect,
+}: DropdownArgs & { onSelect?: (index?: number) => void }) => {
 	const [isVisible, setVisible] = React.useState(false)
 	const [selectedIndex, setSelectedIndex] = React.useState(initial ?? 0)
 	const [isLoading, setLoading] = React.useState(false)
@@ -19,7 +26,7 @@ export const DropdownComponent = (
 	const openMenu = () => setVisible(true)
 	const closeMenu = () => setVisible(false)
 
-	const onSelectValue = async (text: string, index: number) => {
+	const onSelectValue = async (index: number) => {
 		name && setMethodVariable(name, index.toString())
 		if (on_change) {
 			setLoading(true)
@@ -29,7 +36,7 @@ export const DropdownComponent = (
 				//TODO: handle error based on usage
 			}
 		} else if (onSelect) {
-			onSelect(text)
+			onSelect(index)
 		}
 	}
 
@@ -42,7 +49,7 @@ export const DropdownComponent = (
 			onPress={() => {
 				setSelectedIndex(index)
 				setVisible(false)
-				onSelectValue(text, index)
+				onSelectValue(index)
 			}}
 		/>
 	))

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { DropdownArgs, DropdownOption, InputArgs } from 'display-api'
+import { DropdownOption, InputArgs } from 'display-api'
 import { Button, TextInput } from 'react-native-paper'
 import { Platform, StyleSheet, Text, View } from 'react-native'
 import { globalStyles } from '../../../utils/styles'
@@ -21,7 +21,7 @@ export const InputComponent = ({
 	type,
 }: InputArgs) => {
 	const [value, setValue] = useState<string>(initial_value)
-	const [freqency, setFreqency] = useState<string | null>('Days')
+	const [frequency, setFrequency] = useState<string | null>('Days')
 	const [error, setError] = useState<string>(null)
 	const [isFocused, setFocused] = useState<boolean>(false)
 	const [isLoading, setLoading] = useState(false)
@@ -80,17 +80,18 @@ export const InputComponent = ({
 		)
 	}
 
-	const frequency = () => {
+	const frequencyInput = () => {
 		const options: DropdownOption[] = [{ text: 'Days' }, { text: 'Weeks' }, { text: 'Months' }, { text: 'Years' }]
-		const dropdownArgs: DropdownArgs = {
-			default: 0,
-			name: 'frequency',
-			options: options,
-		}
 
-		const onSelectFrequency = (frequency: string) => {
-			setFreqency(frequency)
-			dropdownArgs.name && setMethodVariable(dropdownArgs.name, freqency)
+		const onSelectFrequency = (index: number) => {
+			if (index != undefined) {
+				setFrequency(options[index].text)
+				name && setMethodVariable(name, `${value} ${frequency}`)
+			}
+		}
+		const updateNumber = (number: string) => {
+			setValue(number)
+			name && setMethodVariable(name, `${number} ${frequency}`)
 		}
 
 		return (
@@ -99,11 +100,11 @@ export const InputComponent = ({
 					mode='outlined'
 					style={[inputStyle, styles.frequencyInput]}
 					placeholder=''
-					onChangeText={value => onChange(value)}
+					onChangeText={value => updateNumber(value)}
 					autoCapitalize='none'
 					keyboardType='numeric'
 				/>
-				{DropdownComponent({ ...dropdownArgs }, { onSelect: onSelectFrequency })}
+				<DropdownComponent default={0} options={options} onSelect={onSelectFrequency} />
 			</View>
 		)
 	}
@@ -197,7 +198,7 @@ export const InputComponent = ({
 				: type === 'Time'
 				? timePicker()
 				: type === 'Frequency'
-				? frequency()
+				? frequencyInput()
 				: textInput()}
 			{confirm_cancel?.enabled && value !== initial_value && (
 				<View style={styles.buttonsContainer}>
