@@ -2,6 +2,8 @@ export enum InputType {
 	displayName = 'displayName',
 	username = 'username',
 	password = 'password',
+	newPassword = 'newPassword',
+	confirmPassword = 'confirmPassword',
 	email = 'email',
 	verificationCode = 'verificationCode',
 }
@@ -13,6 +15,8 @@ export const getRules = (type: InputType) => {
 		case InputType.username:
 			return { required: true }
 		case InputType.password:
+			return { required: true }
+		case InputType.newPassword:
 			return { required: true }
 		case InputType.email:
 			return {

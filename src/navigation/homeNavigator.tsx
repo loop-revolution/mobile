@@ -11,6 +11,7 @@ import { Search } from '../screens/search/search'
 import { Profile } from '../screens/profile/profile'
 import { EditProfile } from '../screens/profile/editProfile'
 import { Permissions } from '../components/blockMenu/permissions'
+import { ChangePassword } from '../screens/profile/changePassword'
 
 const Stack = createStackNavigator()
 
@@ -66,6 +67,11 @@ export const HomeNavigator = ({ navigation }: { navigation: any }) => {
 			/>
 			<Stack.Screen name={routes.PROFILE} component={Profile} options={{ headerTitle: 'Profile' }} />
 			<Stack.Screen name={routes.EDIT_PROFILE} component={EditProfile} options={{ headerTitle: 'Edit Profile' }} />
+			<Stack.Screen
+				name={routes.CHANGE_PASSWORD}
+				component={ChangePassword}
+				options={{ headerTitle: 'Change Password' }}
+			/>
 			<Stack.Screen name={routes.BLOCK_PERMISSIONS} component={Permissions} options={{ headerTitle: 'Permissions' }} />
 		</Stack.Navigator>
 	)

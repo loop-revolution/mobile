@@ -6,7 +6,6 @@ import { ScrollView } from 'react-native-gesture-handler'
 
 // eslint-disable-next-line react/prop-types
 export const StackComponent = ({ direction = 'Vertical', items }: StackArgs) => {
-	console.log('direction, ', direction)
 	// eslint-disable-next-line react/prop-types
 	const content = items.map(({ component }: { component: any }) => (
 		<ComponentDelegate component={component} key={JSON.stringify(component)} />
