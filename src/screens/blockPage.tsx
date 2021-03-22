@@ -7,7 +7,6 @@ import { ActivityIndicator, Title, Appbar, Subheading } from 'react-native-paper
 import { globalStyles } from '../utils/styles'
 import colors from '../utils/colors'
 import { ScrollView } from 'react-native-gesture-handler'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { ComponentDelegate } from '../components/display/ComponentDelegate'
 import { BreadcrumbHeader } from '../components/breadcrumbHeader'
 import { Block } from '../api/types'
@@ -60,21 +59,19 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 	return (
 		<View style={globalStyles.flex1}>
 			<ScrollView contentContainerStyle={[styles.scrollViewContent]}>
-				<SafeAreaView>
-					{display ? (
-						<View>
-							{display.meta?.page?.header ? <Title>{display.meta?.page?.header}</Title> : null}
-							<ComponentDelegate component={display.display} />
-							{display.meta?.page?.menu && <BottomMenu ref={menuRef} menu={display.meta?.page?.menu} />}
-						</View>
-					) : user && !blockId ? (
-						<Subheading style={styles.subheading}>
-							No Blocks Found! Go ahead and create one from the bottom menu.
-						</Subheading>
-					) : (
-						<ActivityIndicator {...null} style={globalStyles.flex1} color={colors.primary} />
-					)}
-				</SafeAreaView>
+				{display ? (
+					<View>
+						{display.meta?.page?.header ? <Title>{display.meta?.page?.header}</Title> : null}
+						<ComponentDelegate component={display.display} />
+						{display.meta?.page?.menu && <BottomMenu ref={menuRef} menu={display.meta?.page?.menu} />}
+					</View>
+				) : user && !blockId ? (
+					<Subheading style={styles.subheading}>
+						No Blocks Found! Go ahead and create one from the bottom menu.
+					</Subheading>
+				) : (
+					<ActivityIndicator {...null} style={globalStyles.flex1} color={colors.primary} />
+				)}
 			</ScrollView>
 
 			{block?.breadcrumb && (
@@ -91,8 +88,7 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 
 const styles = StyleSheet.create({
 	scrollViewContent: {
-		flex: 1,
-		marginHorizontal: 5,
+		margin: 5,
 	},
 	subheading: {
 		textAlign: 'center',

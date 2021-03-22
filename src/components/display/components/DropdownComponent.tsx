@@ -1,12 +1,12 @@
+import * as React from 'react'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { DropdownArgs, DropdownOption } from 'display-api'
-import * as React from 'react'
-import { View, StyleSheet } from 'react-native'
-import { Menu, Provider, Text, TouchableRipple, ActivityIndicator } from 'react-native-paper'
+import { StyleSheet } from 'react-native'
 import colors from '../../../utils/colors'
-import { globalStyles } from '../../../utils/styles'
-import { getComponentIcon } from '../../../utils/utils'
 import { blockMethod, setMethodVariable } from '../method'
+import DropDownPicker from 'react-native-dropdown-picker'
+import { getComponentIcon } from '../../../utils/utils'
+import { ActivityIndicator } from 'react-native-paper'
 
 export const DropdownComponent = ({
 	color_scheme,
@@ -19,12 +19,11 @@ export const DropdownComponent = ({
 	default: initial,
 	onSelect,
 }: DropdownArgs & { onSelect?: (index?: number) => void }) => {
-	const [isVisible, setVisible] = React.useState(false)
 	const [selectedIndex, setSelectedIndex] = React.useState(initial ?? 0)
 	const [isLoading, setLoading] = React.useState(false)
 
-	const openMenu = () => setVisible(true)
-	const closeMenu = () => setVisible(false)
+	const isOutlined = variant === 'Outline'
+	const tinColor = isOutlined ? color_scheme : colors.white
 
 	const onSelectValue = async (index: number) => {
 		name && setMethodVariable(name, index.toString())
@@ -40,52 +39,40 @@ export const DropdownComponent = ({
 		}
 	}
 
-	const menuOptions = options.map(({ icon, text }: DropdownOption, index: number) => (
-		<Menu.Item
-			key={index}
-			icon={getComponentIcon(icon)}
-			title={text}
-			titleStyle={styles().title}
-			onPress={() => {
-				setSelectedIndex(index)
-				setVisible(false)
-				onSelectValue(index)
-			}}
-		/>
-	))
-
-	const isOutlined = variant === 'Outline'
-	const anchor = (
-		<TouchableRipple
-			disabled={disabled || readonly}
-			style={[styles(color_scheme).anchor, isOutlined ? styles(color_scheme).outlined : styles(color_scheme).filled]}
-			onPress={openMenu}
-		>
-			<View style={[globalStyles.row]}>
-				<Text style={styles(isOutlined ? color_scheme : colors.white).title}>
-					{options.length > 0 ? options[selectedIndex]?.text : ''}
-				</Text>
-				{isLoading ? (
-					<ActivityIndicator
-						{...null}
-						color={isOutlined ? color_scheme : colors.white}
-						style={styles().activityIndicator}
-					/>
-				) : (
-					<MaterialCommunityIcons color={isOutlined ? color_scheme : colors.white} size={20} name={'chevron-down'} />
-				)}
-			</View>
-		</TouchableRipple>
-	)
+	const menuOptions = options.map(({ icon, text }: DropdownOption, index: number) => {
+		return {
+			label: text,
+			value: index,
+			icon: () =>
+				icon && <MaterialCommunityIcons style={styles(tinColor).icon} name={getComponentIcon(icon)} size={20} />,
+		}
+	})
+	const rightIcon = (iconName: any) => {
+		if (isLoading) {
+			return <ActivityIndicator size='small' />
+		}
+		return <MaterialCommunityIcons style={styles(tinColor).icon} name={iconName} size={20} />
+	}
 
 	return (
-		<Provider>
-			<View style={styles().container}>
-				<Menu visible={isVisible} onDismiss={closeMenu} anchor={anchor}>
-					{menuOptions}
-				</Menu>
-			</View>
-		</Provider>
+		<DropDownPicker
+			disabled={disabled || readonly}
+			items={menuOptions}
+			defaultValue={selectedIndex}
+			style={[styles(color_scheme).anchor, isOutlined ? styles(color_scheme).outlined : styles(color_scheme).filled]}
+			itemStyle={styles().dropdownItem}
+			dropDownStyle={isOutlined ? styles(color_scheme).outlined : styles(color_scheme).filled}
+			labelStyle={styles(tinColor).title}
+			arrowColor={tinColor}
+			containerStyle={styles().dropdownContainerStyle}
+			dropDownMaxHeight={200}
+			customArrowUp={() => rightIcon('chevron-up')}
+			customArrowDown={() => rightIcon('chevron-down')}
+			onChangeItem={item => {
+				setSelectedIndex(item.value)
+				onSelectValue(item.value)
+			}}
+		/>
 	)
 }
 
@@ -118,7 +105,18 @@ const styles = (color = colors.text) =>
 			fontWeight: '400',
 			lineHeight: 18,
 		},
+		icon: {
+			color: color,
+		},
 		activityIndicator: {
 			marginLeft: 5,
+		},
+		dropdownItem: {
+			justifyContent: 'flex-start',
+		},
+		dropdownContainerStyle: {
+			height: 60,
+			flex: 1,
+			marginTop: 5,
 		},
 	})

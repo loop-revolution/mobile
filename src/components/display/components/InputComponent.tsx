@@ -82,7 +82,6 @@ export const InputComponent = ({
 
 	const frequencyInput = () => {
 		const options: DropdownOption[] = [{ text: 'Days' }, { text: 'Weeks' }, { text: 'Months' }, { text: 'Years' }]
-
 		const onSelectFrequency = (index: number) => {
 			if (index != undefined) {
 				setFrequency(options[index].text)
@@ -104,7 +103,7 @@ export const InputComponent = ({
 					autoCapitalize='none'
 					keyboardType='numeric'
 				/>
-				<DropdownComponent default={0} options={options} onSelect={onSelectFrequency} />
+				<DropdownComponent variant={'Outline'} default={0} options={options} onSelect={onSelectFrequency} />
 			</View>
 		)
 	}
@@ -192,7 +191,7 @@ export const InputComponent = ({
 	}
 
 	return (
-		<View>
+		<View style={{ zIndex: 10 }}>
 			{type === 'Date'
 				? datePicker()
 				: type === 'Time'
