@@ -35,3 +35,9 @@ export type Notification = {
 	blockLink: number
 	time: string
 }
+
+export type Permission = {
+	full: Array<User>
+	edit: Array<User>
+	view: Array<User>
+}

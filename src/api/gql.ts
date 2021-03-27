@@ -236,3 +236,47 @@ export const UPDATE_PASSWORD = gql`
 		}
 	}
 `
+
+export const GET_PERMISSIONS = gql`
+	query($id: Int!) {
+		blockById(id: $id) {
+			full: permFull(level: FULL) {
+				id
+				username
+				displayName
+			}
+			edit: permFull(level: EDIT) {
+				id
+				username
+				displayName
+			}
+			view: permFull(level: VIEW) {
+				id
+				username
+				displayName
+			}
+		}
+	}
+`
+
+export const SET_PERMISSIONS = gql`
+	mutation($full: [Int!]!, $edit: [Int!]!, $view: [Int!]!, $blockId: Int!) {
+		setPerms(permFull: $full, permEdit: $edit, permView: $view, blockId: $blockId) {
+			full: permFull(level: FULL) {
+				id
+				username
+				displayName
+			}
+			edit: permFull(level: EDIT) {
+				id
+				username
+				displayName
+			}
+			view: permFull(level: VIEW) {
+				id
+				username
+				displayName
+			}
+		}
+	}
+`
