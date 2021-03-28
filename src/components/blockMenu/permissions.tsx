@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, SectionList } from 'react-native'
 import {
 	ActivityIndicator,
-	Appbar,
 	Avatar,
 	Button,
 	Divider,
@@ -30,6 +29,7 @@ export const Permissions = ({ route, navigation }: { route: any; navigation: any
 	const [full, setFull] = useState([])
 	const [edit, setEdit] = useState([])
 	const [view, setView] = useState([])
+	const [saveEnabled, setSaveEnabled] = useState(false)
 	const [isLoading, setLoading] = useState(false)
 	const [snackbarVisible, setSnackbarVisible] = useState(false)
 	const { showActionSheetWithOptions } = useActionSheet()
@@ -55,7 +55,7 @@ export const Permissions = ({ route, navigation }: { route: any; navigation: any
 	const permissionsData = [
 		{ title: 'Full', data: full },
 		{ title: 'Edit', data: edit },
-		{ title: 'View', data: view },
+		{ title: 'Read-Only', data: view },
 	]
 
 	if (visibilityResult.data?.updateVisibility) {
@@ -71,6 +71,16 @@ export const Permissions = ({ route, navigation }: { route: any; navigation: any
 		}
 	}, [permissionResponse])
 
+	useEffect(() => {
+		const blockById = permissionResponse.data?.blockById
+
+		const hasFullChanged = blockById?.full.length !== full.length || blockById?.full.some((e, i) => e.id !== full[i].id)
+		const hasEditChanged = blockById?.edit.length !== edit.length || blockById?.edit.some((e, i) => e.id !== edit[i].id)
+		const hasViewChanged = blockById?.view.length !== view.length || blockById?.view.some((e, i) => e.id !== view[i].id)
+
+		setSaveEnabled(hasFullChanged || hasEditChanged || hasViewChanged)
+	}, [view, edit, full])
+
 	// Capturing data from the child component
 	React.useEffect(() => {
 		if (route.params?.user) {
@@ -80,26 +90,6 @@ export const Permissions = ({ route, navigation }: { route: any; navigation: any
 			}
 		}
 	}, [route.params?.user])
-
-	React.useLayoutEffect(() => {
-		navigation.setOptions({
-			headerRight: () => {
-				return (
-					<Appbar.Action
-						icon='plus'
-						onPress={() => {
-							const searchComponent: SearchComponent = {
-								cid: 'search',
-								type: 'User',
-								action_text: 'Select User',
-							}
-							navigation.navigate(routes.SEARCH, { searchComponent: searchComponent, isManualSelection: true })
-						}}
-					/>
-				)
-			},
-		})
-	}, [navigation])
 
 	const handlePermissions = () => {
 		const request: VisibilityRequest = { blockId: menu?.block_id, public: !isPublic }
@@ -132,26 +122,40 @@ export const Permissions = ({ route, navigation }: { route: any; navigation: any
 		})
 	}
 
+	const removeUser = (item: User) => {
+		setView(oldValue => oldValue.filter(e => e.id !== item.id))
+		setEdit(oldValue => oldValue.filter(e => e.id !== item.id))
+		setFull(oldValue => oldValue.filter(e => e.id !== item.id))
+	}
+
+	const updatePermissionType = (item: User, index: number) => {
+		const destination = index === 0 ? full : index === 1 ? edit : index === 2 ? view : undefined
+		if (!destination) {
+			return
+		}
+		const setDestination = index === 0 ? setFull : index === 1 ? setEdit : setView
+		const exists = destination.some(e => e.id === item.id)
+		if (!exists) {
+			removeUser(item)
+			setDestination(oldValue => [...oldValue, item])
+		}
+	}
+
 	const showActionSheet = (item: User) => {
-		const options = ['Full', 'Edit', 'View', 'Cancel']
-		const cancelButtonIndex = 3
+		const options = ['Full', 'Edit', 'Read-Only', 'Remove', 'Cancel']
+		const cancelButtonIndex = 4
+		const destructiveButtonIndex = 3
 		showActionSheetWithOptions(
 			{
 				options,
 				cancelButtonIndex,
+				destructiveButtonIndex,
 			},
 			index => {
-				const destination = index === 0 ? full : index === 1 ? edit : index === 2 ? view : undefined
-				if (!destination) {
-					return
-				}
-				const setDestination = index === 0 ? setFull : index === 1 ? setEdit : setView
-				const exists = destination.some(e => e.id === item.id)
-				if (!exists) {
-					setView(oldValue => oldValue.filter(e => e.id !== item.id))
-					setEdit(oldValue => oldValue.filter(e => e.id !== item.id))
-					setFull(oldValue => oldValue.filter(e => e.id !== item.id))
-					setDestination(oldValue => [...oldValue, item])
+				if (index === destructiveButtonIndex) {
+					removeUser(item)
+				} else {
+					updatePermissionType(item, index)
 				}
 			},
 		)
@@ -202,14 +206,31 @@ export const Permissions = ({ route, navigation }: { route: any; navigation: any
 			</TouchableRipple>
 			<View style={styles().permissionsTitleContainer}>
 				<Title style={styles().permissionsTitle}>User Permissions</Title>
-				<Button
-					onPress={onSubmit}
-					contentStyle={globalStyles.buttonContentStyle}
-					loading={isLoading}
-					labelStyle={{ color: colors.primary }}
-				>
-					Save
-				</Button>
+				<View style={globalStyles.row}>
+					<Button
+						onPress={() => {
+							const searchComponent: SearchComponent = {
+								cid: 'search',
+								type: 'User',
+								action_text: 'Select User',
+							}
+							navigation.navigate(routes.SEARCH, { searchComponent: searchComponent, isManualSelection: true })
+						}}
+						contentStyle={globalStyles.buttonContentStyle}
+						labelStyle={{ color: colors.primary }}
+					>
+						Add
+					</Button>
+					<Button
+						disabled={!saveEnabled}
+						onPress={onSubmit}
+						contentStyle={globalStyles.buttonContentStyle}
+						loading={isLoading}
+						labelStyle={{ color: saveEnabled ? colors.primary : colors.subtext }}
+					>
+						Save
+					</Button>
+				</View>
 			</View>
 			<SectionList
 				bounces={false}
