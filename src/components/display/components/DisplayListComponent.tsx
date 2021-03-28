@@ -6,6 +6,7 @@ import { ComponentDelegate } from '../ComponentDelegate'
 import { IconButton } from 'react-native-paper'
 import colors from '../../../utils/colors'
 import { BottomMenu } from '../../blockMenu/bottomMenu'
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 
 export const DisplayListComponent = ({ items }: DisplayListArgs) => {
 	const menuRefs = useMemo(() => Array.from({ length: items.length }, () => useRef(null)), [items])
@@ -31,7 +32,7 @@ export const DisplayListComponent = ({ items }: DisplayListArgs) => {
 	}
 
 	return (
-		<FlatList
+		<KeyboardAwareFlatList
 			style={styles.flatList}
 			data={items}
 			renderItem={renderItem}
