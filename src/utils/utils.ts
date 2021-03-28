@@ -14,6 +14,8 @@ export const getComponentIcon = (icon: string) => {
 			return 'text'
 		case 'Feed':
 			return 'rss'
+		case 'Plus':
+			return 'plus'
 		default:
 			return 'cube'
 	}
