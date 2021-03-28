@@ -10,6 +10,7 @@ import { UsersList } from './usersList'
 import { BlocksList } from './blocksList'
 import { SearchComponent } from 'display-api/lib/components/search'
 import { blockMethod, setMethodVariable } from '../../components/display/method'
+import routes from '../../navigation/routes'
 
 export const Search = ({ route, navigation }: { route: any; navigation: any }) => {
 	type BlockQueryResults = { searchBlocks: Array<BlockCrumbs> }
@@ -23,7 +24,7 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 	const [blocksLoading, setBlocksLoading] = useState(false)
 	const [usersLoading, setUsersLoading] = useState(false)
 	const [index, setIndex] = useState(1)
-	const [routes] = useState([
+	const [tabRoutes] = useState([
 		{ key: 'blocks', title: 'Blocks' },
 		{ key: 'people', title: 'People' },
 	])
@@ -40,6 +41,7 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 	})
 
 	const searchComponent: SearchComponent = route.params?.searchComponent
+	const isManualSelection: boolean = route.params?.isManualSelection
 
 	React.useLayoutEffect(() => {
 		navigation.setOptions({
@@ -86,10 +88,9 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 
 	// This will be called when the user or block
 	// is selected from the search component
-	const onSelect = async (id: string) => {
-		console.log('onSelect ID:', id)
+	const onSelectAction = async (user: User) => {
 		if (searchComponent?.then) {
-			searchComponent?.name && setMethodVariable(searchComponent?.name, id)
+			searchComponent?.name && setMethodVariable(searchComponent?.name, user.id.toString())
 			const response = await blockMethod(searchComponent?.then?.method)
 			if (response.error) {
 				//TODO: handle error
@@ -98,6 +99,10 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 			} else {
 				navigation.pop()
 			}
+		} else if (isManualSelection) {
+			// This will be called when there is a manual
+			// selectUser action passed from the previous component
+			navigation.navigate(routes.BLOCK_PERMISSIONS, { user })
 		}
 	}
 
@@ -154,18 +159,14 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 				<BlocksList
 					blocks={blockResult.data?.searchBlocks}
 					loading={blocksLoading}
-					selectBlock={searchComponent?.then ? onSelect : undefined}
+					selectBlock={searchComponent?.then ? onSelectAction : undefined}
 				/>
 			) : searchComponent?.type === 'User' ? (
-				<UsersList
-					users={userResult.data?.searchUsers}
-					loading={usersLoading}
-					selectUser={searchComponent?.then ? onSelect : undefined}
-				/>
+				<UsersList users={userResult.data?.searchUsers} loading={usersLoading} selectUser={onSelectAction} />
 			) : (
 				<TabView
 					renderTabBar={renderTabBar}
-					navigationState={{ index, routes }}
+					navigationState={{ index, tabRoutes }}
 					renderScene={renderScene}
 					onIndexChange={setIndex}
 				/>
