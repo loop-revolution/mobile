@@ -1,49 +1,65 @@
 import React, { useRef } from 'react'
-import { RichTextArgs } from "display-api"
-import { useCallback, useEffect, useMemo, useState } from "react"
-import { createEditor, Text } from "slate"
-import { Editable, RenderLeafProps, Slate, withReact } from "slate-react"
-import { setMethodVariable } from "../method"
-import { View, StyleSheet, Keyboard } from 'react-native'
+import { RichTextArgs } from 'display-api'
+import { useCallback, useEffect, useState } from 'react'
+import { blockMethod, setMethodVariable } from '../method'
+import { View, StyleSheet } from 'react-native'
 import { globalStyles } from '../../../utils/styles'
-import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { actions, RichEditor, RichToolbar } from 'react-native-pell-rich-editor'
-import { KeyboardAwareView } from 'react-native-keyboard-aware-view'
 import colors from '../../../utils/colors'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { IconButton, Portal } from 'react-native-paper'
-import { jsonToHtmlConversion } from '../../../utils/htmlJsonConversion'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { jsonToHtmlConversion, htmlToJsonCoverstion } from '../../../utils/htmlJsonConversion'
 
 export const RichTextComponent = ({ content, editable = false, name, save, on_enter }: RichTextArgs) => {
-
-	let richText = useRef();
+	const richText = useRef()
 	const [value, setValue] = useState<string>(jsonToHtmlConversion(content))
 	const [isFocused, setFocused] = useState<boolean>(false)
 
+	useEffect(() => {
+		const saveTimeout = setTimeout(() => {
+			const components = htmlToJsonCoverstion(value)
+			if (save && components !== content) {
+				save && blockMethod(save)
+			}
+		}, 1000)
+		return () => clearTimeout(saveTimeout)
+	}, [value])
+
+	const setHtml = useCallback(
+		(val: string) => {
+			setValue(val)
+			const components = htmlToJsonCoverstion(val)
+			name && setMethodVariable(name, components)
+		},
+		[name],
+	)
+
 	return (
 		<View style={globalStyles.flex1}>
-			{/* <SafeAreaView style={globalStyles.flex1}> */}
-
-			{/* <ScrollView style={globalStyles.flex1}> */}
 			<RichEditor
 				disabled={!editable}
 				ref={richText}
 				scrollEnabled={false}
-				onFocus={() => { setFocused(true) }}
-				onBlur={() => { setFocused(false) }}
-				onChange={(text) => {
-					console.log("text: ", text)
+				onFocus={() => {
+					setFocused(true)
+				}}
+				onBlur={() => {
+					setFocused(false)
+				}}
+				onChange={html => {
+					setHtml(html)
+				}}
+				onKeyDown={event => {
+					if (event.key === 'Enter') {
+						on_enter && blockMethod(on_enter)
+						return
+					}
 				}}
 				initialContentHTML={value}
 				editorStyle={{ backgroundColor: 'transparent' }}
 				style={[{ backgroundColor: 'transparent' }]}
 				placeholder='Start typing...'
 			/>
-
-			{/* <Portal> */}
-			{
-				isFocused && <View>
+			{isFocused && (
+				<View>
 					<RichToolbar
 						style={styles.richBar}
 						selectedIconTint={colors.accent}
@@ -61,11 +77,8 @@ export const RichTextComponent = ({ content, editable = false, name, save, on_en
 						]}
 					/>
 				</View>
-			}
-			{/* </ScrollView> */}
-			{/* </Portal> */}
-			{/* </SafeAreaView> */}
-		</View >
+			)}
+		</View>
 	)
 }
 
@@ -73,12 +86,5 @@ const styles = StyleSheet.create({
 	richBar: {
 		borderColor: colors.navigationPrimary,
 		borderTopWidth: StyleSheet.hairlineWidth,
-		// marginTop: 100,
-		// backgroundColor: 'red',
-		// flex: 1,
-		// justifyContent: 'flex-end'
-		// position: 'absolute',
-		// bottom: 0
 	},
 })
-

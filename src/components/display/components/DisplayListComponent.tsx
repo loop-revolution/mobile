@@ -1,7 +1,6 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useMemo, useRef } from 'react'
 import { DisplayListArgs, DisplayListItem } from 'display-api'
-import { FlatList } from 'react-native-gesture-handler'
 import { ComponentDelegate } from '../ComponentDelegate'
 import { IconButton } from 'react-native-paper'
 import colors from '../../../utils/colors'
