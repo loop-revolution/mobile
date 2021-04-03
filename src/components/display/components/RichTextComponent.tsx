@@ -9,7 +9,7 @@ import colors from '../../../utils/colors'
 import { jsonToHtmlConversion, htmlToJsonCoverstion } from '../../../utils/htmlJsonConversion'
 
 export const RichTextComponent = ({ content, editable = false, name, save, on_enter }: RichTextArgs) => {
-	const richText = useRef()
+	const richText = useRef(null)
 	const [value, setValue] = useState<string>(jsonToHtmlConversion(content))
 	const [isFocused, setFocused] = useState<boolean>(false)
 
@@ -49,6 +49,7 @@ export const RichTextComponent = ({ content, editable = false, name, save, on_en
 				}}
 				onKeyDown={event => {
 					if (event.key === 'Enter') {
+						richText.current?.blurContentEditor()
 						on_enter && blockMethod(on_enter)
 						return
 					}
