@@ -11,6 +11,7 @@ import {
 	IconButton,
 	Paragraph,
 	Portal,
+	Searchbar,
 	Text,
 	TouchableRipple,
 } from 'react-native-paper'
@@ -25,6 +26,8 @@ import { getComponentIcon } from '../utils/utils'
 export const Create = ({ navigation, route }: { navigation: any; route: any }) => {
 	const [infoVisible, setInfoVisible] = React.useState(false)
 	const [info, setInfo] = React.useState(null)
+	const [searchQuery, setSearchQuery] = React.useState(null)
+	const [filteredData, setFilteredData] = React.useState([])
 
 	const isGrid = route.params?.isGrid ?? true
 	const returningRoute = route.params?.returningRoute
@@ -99,16 +102,36 @@ export const Create = ({ navigation, route }: { navigation: any; route: any }) =
 		)
 	}
 
+	const onChangeSearch = (query: string) => {
+		setSearchQuery(query)
+		const filteredData = blockTypes?.filter(function(item) {
+			return item.name.includes(query) || item.desc.includes(query)
+		})
+		setFilteredData(filteredData)
+	}
+
 	if (!blockTypes) {
 		return <ActivityIndicator {...null} style={styles.activityIndicator} color={Colors.primary} />
 	}
 
 	return (
 		<View style={styles.viewContainer}>
+			{!isGrid && (
+				<View style={styles.searchbarContainer}>
+					<Searchbar
+						style={styles.searchBar}
+						inputStyle={styles.searchText}
+						autoCapitalize='none'
+						placeholder='Search'
+						onChangeText={onChangeSearch}
+						value={searchQuery}
+					/>
+				</View>
+			)}
 			<FlatList
 				numColumns={isGrid ? 2 : undefined}
 				style={styles.flatList}
-				data={blockTypes}
+				data={searchQuery?.length > 0 ? filteredData : blockTypes}
 				renderItem={isGrid ? renderGridItem : renderListItem}
 				keyExtractor={item => item.name}
 			/>
@@ -170,5 +193,19 @@ const styles = StyleSheet.create({
 	separator: {
 		height: 1,
 		backgroundColor: colors.separator,
+	},
+	searchText: {
+		color: colors.text,
+		fontWeight: '500',
+		fontSize: 15,
+	},
+	searchbarContainer: {
+		backgroundColor: colors.navigationPrimary,
+	},
+	searchBar: {
+		marginHorizontal: 10,
+		marginVertical: 10,
+		borderRadius: 22,
+		height: 44,
 	},
 })
