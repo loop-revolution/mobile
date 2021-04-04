@@ -30,6 +30,7 @@ export const BlockFilters = () => {
 					<Button
 						color={colors.white}
 						onPress={() => {
+							setSortIndex(null)
 							setOnlyStarred(false)
 						}}
 					>
@@ -59,13 +60,16 @@ export const BlockFilters = () => {
 
 	const showSortingOptions = () => {
 		const cancelButtonIndex = 3
+		const destructiveButtonIndex = 3
 		showActionSheetWithOptions(
 			{
 				options: sortingOptions,
-				cancelButtonIndex,
+				cancelButtonIndex
 			},
 			index => {
-				setSortIndex(index)
+				if (index !== 3) {
+					setSortIndex(index)
+				}
 			},
 		)
 	}
