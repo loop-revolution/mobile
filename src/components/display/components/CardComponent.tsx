@@ -69,7 +69,7 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
 					<ComponentDelegate component={content} />
 				</Card.Content>
 			)}
-			{header.menu && <BottomMenu ref={menuRef} menu={header.menu} />}
+			{header?.menu && <BottomMenu ref={menuRef} menu={header?.menu} />}
 		</Card>
 	)
 }
