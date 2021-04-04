@@ -60,11 +60,10 @@ export const BlockFilters = () => {
 
 	const showSortingOptions = () => {
 		const cancelButtonIndex = 3
-		const destructiveButtonIndex = 3
 		showActionSheetWithOptions(
 			{
 				options: sortingOptions,
-				cancelButtonIndex
+				cancelButtonIndex,
 			},
 			index => {
 				if (index !== 3) {

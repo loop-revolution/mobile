@@ -13,6 +13,7 @@ import { BadgeComponent } from './components/BadgeComponent'
 import { ProgressBarComponent } from './components/ProgressBarComponent'
 import { ActionPopoverComponent } from './components/ActionPopoverComponent'
 import { DisplayListComponent } from './components/DisplayListComponent'
+import { RichTextComponent } from './components/RichTextComponent'
 
 export const ComponentDelegate = ({ component }: { component: ComponentObject }) => {
 	switch (component.cid) {
@@ -40,6 +41,8 @@ export const ComponentDelegate = ({ component }: { component: ComponentObject })
 			return <ActionPopoverComponent {...component.args} />
 		case 'displaylist':
 			return <DisplayListComponent {...component.args} />
+		case 'richtext':
+			return <RichTextComponent {...component.args} />
 		default:
 			return <Text>No Component Found</Text>
 	}
