@@ -93,4 +93,8 @@ const styles = StyleSheet.create({
 	subheading: {
 		textAlign: 'center',
 	},
+	richBar: {
+		borderColor: colors.navigationPrimary,
+		borderTopWidth: StyleSheet.hairlineWidth,
+	},
 })
