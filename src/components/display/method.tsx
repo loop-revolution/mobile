@@ -10,7 +10,7 @@ declare global {
 	}
 }
 
-export const setMethodVariable = (name: string, value: string) => {
+export const setMethodVariable = (name: string, value: any) => {
 	if (window.loop_method_vars == undefined) {
 		window.loop_method_vars = {}
 	}
