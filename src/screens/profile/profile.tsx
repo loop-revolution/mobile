@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { ActivityIndicator, Avatar, Button, Caption, Card, Text } from 'react-native-paper'
@@ -22,10 +22,14 @@ export const Profile = ({ route, navigation }: { route: any; navigation: any }) 
 	type StarredRequest = { blockId: number; starred: boolean }
 
 	const [, setStarred] = useMutation<StarredResult, StarredRequest>(SET_STARRED)
-	const [profileResponse] = useQuery<UserProfileResult, UserProfileRequest>({
+	const [profileResponse, getProfile] = useQuery<UserProfileResult, UserProfileRequest>({
 		query: USER_PROFILE,
 		variables: { username: route.params?.username },
 	})
+
+	useEffect(() => {
+		getProfile()
+	}, [route])
 
 	const user = profileResponse.data?.userByName
 
@@ -115,18 +119,6 @@ export const Profile = ({ route, navigation }: { route: any; navigation: any }) 
 										}}
 									>
 										Edit Profile
-									</Button>
-									<Button
-										icon='lock'
-										mode='text'
-										compact
-										style={styles.editButton}
-										uppercase={false}
-										onPress={() => {
-											navigation.push(routes.CHANGE_PASSWORD)
-										}}
-									>
-										Change Password
 									</Button>
 								</>
 							)}
