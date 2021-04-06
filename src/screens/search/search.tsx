@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Searchbar, Text } from 'react-native-paper'
+import { Button, Searchbar, Text } from 'react-native-paper'
 import { useQuery } from 'urql'
 import { BLOCK_SEARCH, USER_SEARCH } from '../../api/gql'
 import { User, BlockCrumbs } from '../../api/types'
@@ -41,7 +41,7 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 	})
 
 	const searchComponent: SearchComponent = route.params?.searchComponent
-	const isManualSelection: boolean = route.params?.isManualSelection
+	const manualSelectionRoute: string = route.params?.manualSelectionRoute
 
 	React.useLayoutEffect(() => {
 		navigation.setOptions({
@@ -99,10 +99,10 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 			} else {
 				navigation.pop()
 			}
-		} else if (isManualSelection) {
+		} else if (manualSelectionRoute) {
 			// This will be called when there is a manual
 			// selectUser action passed from the previous component
-			navigation.navigate(routes.BLOCK_PERMISSIONS, { user })
+			navigation.navigate(manualSelectionRoute, { user })
 		}
 	}
 
@@ -127,6 +127,15 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 				indicatorStyle={styles().indicator}
 				style={styles().tabBar}
 			/>
+			<Button
+				disabled={index === 1}
+				style={styles().filters}
+				onPress={() => {
+					navigation.navigate(routes.BLOCK_FILTERS)
+				}}
+			>
+				Filters
+			</Button>
 		</View>
 	)
 
@@ -166,7 +175,7 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 			) : (
 				<TabView
 					renderTabBar={renderTabBar}
-					navigationState={{ index, tabRoutes }}
+					navigationState={{ index, routes: tabRoutes }}
 					renderScene={renderScene}
 					onIndexChange={setIndex}
 				/>
@@ -199,10 +208,17 @@ const styles = () =>
 			backgroundColor: '#EDEFF1',
 			borderBottomColor: '#DDDDDD',
 			borderBottomWidth: 1,
+			flexDirection: 'row',
+			alignContent: 'space-between',
 		},
 		tabBar: {
-			marginHorizontal: '15%',
+			marginRight: '20%',
 			backgroundColor: 'transparent',
+			flex: 2,
+		},
+		filters: {
+			alignSelf: 'center',
+			justifyContent: 'flex-end',
 		},
 		indicator: {
 			backgroundColor: colors.primary,

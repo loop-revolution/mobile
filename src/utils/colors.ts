@@ -8,4 +8,5 @@ export default {
 	background: '#ECEEF0',
 	white: '#fff',
 	starring: '#FFCA7A',
+	separator: '#DDDDDD',
 }
