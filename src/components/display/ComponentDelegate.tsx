@@ -14,6 +14,7 @@ import { ProgressBarComponent } from './components/ProgressBarComponent'
 import { ActionPopoverComponent } from './components/ActionPopoverComponent'
 import { DisplayListComponent } from './components/DisplayListComponent'
 import { RichTextComponent } from './components/RichTextComponent'
+import { StickyToggleButtonComponent } from './components/StickyToggleButtonComponent'
 
 export const ComponentDelegate = ({ component }: { component: ComponentObject }) => {
 	switch (component.cid) {
@@ -43,6 +44,8 @@ export const ComponentDelegate = ({ component }: { component: ComponentObject })
 			return <DisplayListComponent {...component.args} />
 		case 'richtext':
 			return <RichTextComponent {...component.args} />
+		case 'stickytogglebutton':
+			return <StickyToggleButtonComponent {...component.args} />
 		default:
 			return <Text>No Component Found</Text>
 	}

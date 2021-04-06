@@ -18,7 +18,8 @@ export const ButtonComponent = ({
 	size,
 	disabled,
 	readonly,
-}: ButtonArgs) => {
+	onChange,
+}: ButtonArgs & { onChange?: () => void }) => {
 	const navigation = useNavigation()
 
 	const onPress = () => {
@@ -27,6 +28,7 @@ export const ButtonComponent = ({
 		} else if (interact?.redirect) {
 			redirectTo(interact?.redirect?.app_path, navigation)
 		}
+		onChange && onChange()
 	}
 	const mode = variant === 'Link' ? 'text' : variant === 'Outline' ? 'outlined' : 'contained'
 	const buttonStyle: any = [styles().button]
