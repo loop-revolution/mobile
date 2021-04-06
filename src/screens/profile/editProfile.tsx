@@ -1,168 +1,109 @@
-import React, { useState } from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
-import { Button, TextInput, Text, HelperText, Title, Snackbar } from 'react-native-paper'
-import { useForm, Controller } from 'react-hook-form'
-import { useMutation } from 'urql'
-import { UPDATE_DISPLAY_NAME, UPDATE_USER_NAME, UPDATE_PROFILE } from '../../api/gql'
-import { globalStyles } from '../../utils/styles'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { getRules, InputType } from '../../utils/validation'
-import lodash from 'lodash'
-import { User } from '../../api/types'
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
+import { Text, TouchableRipple, Divider, Appbar } from 'react-native-paper'
+import colors from '../../utils/colors'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import routes from '../../navigation/routes'
 
-type UpdateProfileResult = { user: User }
-type UpdateProfileRequest = { newUsername?: string; password?: string; newDisplayName?: string }
-
-export const EditProfile = ({ route }: { route: any }) => {
-	const [isLoading, setLoading] = useState(false)
-	const [snackbarVisible, setSnackbarVisible] = useState(false)
-	const { control, handleSubmit, errors } = useForm()
-	const [showPassword, setShowPassword] = useState(false)
-	const [error, setError] = useState(null)
-
-	const [, updateDisplayName] = useMutation<UpdateProfileResult, UpdateProfileRequest>(UPDATE_DISPLAY_NAME)
-	const [, updateUserName] = useMutation<UpdateProfileResult, UpdateProfileRequest>(UPDATE_USER_NAME)
-	const [, updateUserProfile] = useMutation<UpdateProfileResult, UpdateProfileRequest>(UPDATE_PROFILE)
-
+export const EditProfile = ({ route, navigation }: { route: any; navigation: any }) => {
 	const user = route.params?.user
 
-	const textInput = (
-		type: InputType,
-		hasError: boolean,
-		defaultValue: string = null,
-		disabled: boolean = false,
-		isPasswordInput = false,
-	) => {
-		const label: string = lodash.startCase(type)
+	React.useLayoutEffect(() => {
+		navigation.setOptions({
+			headerLeft: () => {
+				return (
+					<Appbar.BackAction
+						onPress={() => {
+							navigation.navigate(routes.PROFILE, { username: user.username })
+						}}
+					/>
+				)
+			},
+		})
+	}, [navigation, route])
+
+	type ItemData = { title: string; subtitle: string; onPress: any }
+	const renderItem = ({ title, subtitle, onPress }: ItemData) => {
 		return (
-			<Controller
-				control={control}
-				render={({ onChange, value }) => (
-					<View style={styles.inputText}>
-						<TextInput
-							mode='outlined'
-							label={label}
-							onChangeText={value => {
-								onChange(value)
-								if (type === InputType.username) {
-									handleUserNameOnChange(value)
-								}
-							}}
-							value={value}
-							disabled={disabled}
-							error={hasError}
-							autoCapitalize='none'
-							secureTextEntry={isPasswordInput}
-						/>
-						{hasError && <HelperText type='error'>This is required.</HelperText>}
+			<TouchableRipple key={title} onPress={onPress}>
+				<>
+					<View key={title} style={styles.itemContainer}>
+						<Text style={styles.itemTitle}>{title}</Text>
+						<View style={styles.itemRightView}>
+							<Text style={styles.itemSubtitle}>{subtitle}</Text>
+							<MaterialCommunityIcons name={'chevron-right'} color={colors.text} size={30} />
+						</View>
 					</View>
-				)}
-				name={type}
-				rules={getRules(type)}
-				defaultValue={defaultValue}
-			/>
+					<Divider style={styles.separator} />
+				</>
+			</TouchableRipple>
 		)
 	}
 
-	const handleUserNameOnChange = (value: string) => {
-		if (value !== user.username) {
-			setShowPassword(true)
-		} else {
-			setShowPassword(false)
-		}
-	}
+	const data: ItemData[] = [
+		{
+			title: 'Display Name',
+			subtitle: user.displayName,
+			onPress: () => {
+				navigation.navigate(routes.CHANGE_DISPLAY_NAME, { user })
+			},
+		},
+		{
+			title: 'Username',
+			subtitle: user.username,
+			onPress: () => {
+				navigation.navigate(routes.CHANGE_USER_NAME, { user })
+			},
+		},
+		{
+			title: 'Email',
+			subtitle: user.email,
+			onPress: () => {
+				navigation.navigate(routes.CHANGE_EMAIL, { user })
+			},
+		},
+		{
+			title: 'Password',
+			subtitle: '••••••••',
+			onPress: () => {
+				navigation.navigate(routes.CHANGE_PASSWORD)
+			},
+		},
+	]
 
-	const onSubmit = (formData: any) => {
-		setLoading(true)
-
-		const isUsernameUpdated: boolean = formData.username !== user.username
-		const isDisplayNameUpdated: boolean = formData.displayName !== user.displayName
-		let request: UpdateProfileRequest = {}
-
-		if (isUsernameUpdated && isDisplayNameUpdated) {
-			request = {
-				newUsername: formData.username,
-				password: formData.password,
-				newDisplayName: formData.displayName,
-			}
-			updateUserProfile(request).then(async ({ data, error }) => {
-				setLoading(false)
-				if (data != undefined) {
-					setSnackbarVisible(true)
-				}
-				setError(error)
-			})
-		} else if (isUsernameUpdated) {
-			request = {
-				newUsername: formData.username,
-				password: formData.password,
-			}
-			updateUserName(request).then(async ({ data, error }) => {
-				setLoading(false)
-				if (data != undefined) {
-					setSnackbarVisible(true)
-				}
-				setError(error)
-			})
-		} else if (isDisplayNameUpdated) {
-			request = {
-				newDisplayName: formData.displayName,
-			}
-			updateDisplayName(request).then(async ({ data, error }) => {
-				setLoading(false)
-				if (data != undefined) {
-					setSnackbarVisible(true)
-				}
-				setError(error)
-			})
-		}
-	}
-
-	return (
-		<>
-			<ScrollView contentContainerStyle={[styles.scrollViewContent]}>
-				<SafeAreaView>
-					<Title style={styles.title}>Update your information below</Title>
-
-					{textInput(InputType.displayName, errors.displayName, user.displayName)}
-					{textInput(InputType.username, errors.username, user.username)}
-					{showPassword && textInput(InputType.password, errors.password, null, false, true)}
-
-					<Button
-						onPress={handleSubmit(onSubmit)}
-						style={styles.button}
-						contentStyle={globalStyles.buttonContentStyle}
-						mode='contained'
-						loading={isLoading}
-						labelStyle={{ color: 'white' }}
-					>
-						Update
-					</Button>
-					{error && <Text style={globalStyles.error}>{error.message.replace(/\[\w+\]/g, '')}</Text>}
-				</SafeAreaView>
-			</ScrollView>
-			<Snackbar visible={snackbarVisible} onDismiss={() => setSnackbarVisible(false)}>
-				Profile updated successfully
-			</Snackbar>
-		</>
-	)
+	return <>{data.map(renderItem)}</>
 }
 
 const styles = StyleSheet.create({
-	scrollViewContent: {
-		flex: 1,
-		paddingHorizontal: 30,
+	flatList: {
+		backgroundColor: colors.white,
 	},
-	title: {
-		marginTop: 10,
+	itemContainer: {
+		paddingVertical: 20,
+		backgroundColor: 'transparent',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		marginHorizontal: 15,
 	},
-	caption: {
-		marginBottom: 10,
+	itemTitle: {
+		color: colors.text,
+		fontSize: 16,
+		fontWeight: '600',
 	},
-	button: {
-		marginTop: 20,
+	itemSubtitle: {
+		color: colors.text,
+		opacity: 0.5,
+		fontSize: 16,
+		fontWeight: '300',
+		marginLeft: 10,
 	},
-	inputText: {
-		marginTop: 10,
+	itemRightView: {
+		alignItems: 'center',
+		flexDirection: 'row',
+	},
+	separator: {
+		height: 1,
+		backgroundColor: '#DDDDDD',
 	},
 })

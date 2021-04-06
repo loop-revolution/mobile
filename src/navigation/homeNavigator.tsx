@@ -12,6 +12,9 @@ import { Profile } from '../screens/profile/profile'
 import { EditProfile } from '../screens/profile/editProfile'
 import { Permissions } from '../components/blockMenu/permissions'
 import { ChangePassword } from '../screens/profile/changePassword'
+import { ChangeEmail } from '../screens/profile/changeEmail'
+import { ChangeDisplayName } from '../screens/profile/changeDisplayName'
+import { ChangeUsername } from '../screens/profile/changeUsername'
 import { BlockFilters } from '../screens/search/blockFilters'
 import { Create } from '../screens/create'
 
@@ -35,7 +38,11 @@ export const HomeNavigator = ({ navigation }: { navigation: any }) => {
 					return (
 						<Appbar.Header theme={theme}>
 							{previous ? (
-								<Appbar.BackAction onPress={navigation.goBack} />
+								options.headerLeft ? (
+									options.headerLeft()
+								) : (
+									<Appbar.BackAction onPress={navigation.goBack} />
+								)
 							) : (
 								<Appbar.Action icon='menu' onPress={openDrawer} />
 							)}
@@ -73,6 +80,17 @@ export const HomeNavigator = ({ navigation }: { navigation: any }) => {
 				name={routes.CHANGE_PASSWORD}
 				component={ChangePassword}
 				options={{ headerTitle: 'Change Password' }}
+			/>
+			<Stack.Screen name={routes.CHANGE_EMAIL} component={ChangeEmail} options={{ headerTitle: 'Change Email' }} />
+			<Stack.Screen
+				name={routes.CHANGE_DISPLAY_NAME}
+				component={ChangeDisplayName}
+				options={{ headerTitle: 'Change Display Name' }}
+			/>
+			<Stack.Screen
+				name={routes.CHANGE_USER_NAME}
+				component={ChangeUsername}
+				options={{ headerTitle: 'Change Username' }}
 			/>
 			<Stack.Screen name={routes.BLOCK_PERMISSIONS} component={Permissions} options={{ headerTitle: 'Permissions' }} />
 			<Stack.Screen name={routes.BLOCK_FILTERS} component={BlockFilters} options={{ headerTitle: 'Filters' }} />
