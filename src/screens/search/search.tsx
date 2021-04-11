@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import { Button, Searchbar, Text } from 'react-native-paper'
 import { useQuery } from 'urql'
 import { BLOCK_SEARCH, USER_SEARCH } from '../../api/gql'
-import { User, BlockCrumbs } from '../../api/types'
+import { User, BlockResults, BlockSortType } from '../../api/types'
 import colors from '../../utils/colors'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
 import { UsersList } from './usersList'
@@ -11,23 +11,35 @@ import { BlocksList } from './blocksList'
 import { SearchComponent } from 'display-api/lib/components/search'
 import { blockMethod, setMethodVariable } from '../../components/display/method'
 import routes from '../../navigation/routes'
+import { useIsFocused } from '@react-navigation/core'
 
 export const Search = ({ route, navigation }: { route: any; navigation: any }) => {
-	type BlockQueryResults = { searchBlocks: Array<BlockCrumbs> }
-	type BlockQueryRequest = { query: string }
+	type BlockSearchFilters = { starred?: boolean; blockType?: string; ownerId?: number }
+	type BlockQueryResults = { searchBlocks: Array<BlockResults> }
+	type BlockQueryRequest = { query: string; filters?: BlockSearchFilters; sortBy?: BlockSortType }
 
 	type UserQueryResults = { searchUsers: Array<User> }
 	type UserQueryRequest = { query: string }
+	type BlockFilterType = {
+		sortBy?: { key: BlockSortType; name: string }
+		blockType?: string
+		owner?: User
+		starred?: boolean
+	}
 
 	const [searchQuery, setSearchQuery] = useState(null)
 	const [shouldFetch, setFetch] = useState(false)
-	const [blocksLoading, setBlocksLoading] = useState(false)
-	const [usersLoading, setUsersLoading] = useState(false)
 	const [index, setIndex] = useState(1)
 	const [tabRoutes] = useState([
 		{ key: 'blocks', title: 'Blocks' },
 		{ key: 'people', title: 'People' },
 	])
+	const [filterObject, setFilterObject] = useState<BlockFilterType>({
+		sortBy: undefined,
+		blockType: undefined,
+		owner: undefined,
+		starred: false,
+	})
 
 	const [userResult, getUsers] = useQuery<UserQueryResults, UserQueryRequest>({
 		query: USER_SEARCH,
@@ -36,12 +48,26 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 	})
 	const [blockResult, getBlocks] = useQuery<BlockQueryResults, BlockQueryRequest>({
 		query: BLOCK_SEARCH,
-		variables: { query: searchQuery },
+		variables: {
+			query: searchQuery,
+			filters: {
+				blockType: filterObject?.blockType,
+				starred: filterObject?.starred,
+				ownerId: filterObject?.owner?.id,
+			},
+			sortBy: filterObject?.sortBy?.key,
+		},
 		pause: !searchQuery || !shouldFetch,
 	})
 
+	const isFocused = useIsFocused()
+
 	const searchComponent: SearchComponent = route.params?.searchComponent
 	const manualSelectionRoute: string = route.params?.manualSelectionRoute
+
+	useEffect(() => {
+		setFetch(true)
+	}, [isFocused])
 
 	React.useLayoutEffect(() => {
 		navigation.setOptions({
@@ -64,21 +90,10 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 
 	useEffect(() => {
 		if (shouldFetch) {
-			setUsersLoading(true)
-			setBlocksLoading(true)
 			getUsers()
 			getBlocks()
 		}
 	}, [shouldFetch])
-
-	useEffect(() => {
-		if (blockResult.data?.searchBlocks) {
-			setBlocksLoading(false)
-		}
-		if (userResult.data?.searchUsers) {
-			setUsersLoading(false)
-		}
-	}, [blockResult, userResult])
 
 	useEffect(() => {
 		return () => {
@@ -94,7 +109,6 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 			const response = await blockMethod(searchComponent?.then?.method)
 			if (response.error) {
 				//TODO: handle error
-				console.log(response.error)
 				navigation.pop()
 			} else {
 				navigation.pop()
@@ -131,7 +145,7 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 				disabled={index === 1}
 				style={styles().filters}
 				onPress={() => {
-					navigation.navigate(routes.BLOCK_FILTERS)
+					navigation.navigate(routes.BLOCK_FILTERS, { filterObject, setFilterObject })
 				}}
 			>
 				Filters
@@ -143,12 +157,12 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 		blocks: () =>
 			BlocksList({
 				blocks: blockResult.data?.searchBlocks,
-				loading: blocksLoading,
+				loading: blockResult.fetching,
 			}),
 		people: () =>
 			UsersList({
 				users: userResult.data?.searchUsers,
-				loading: usersLoading,
+				loading: userResult.fetching,
 			}),
 	})
 
@@ -167,11 +181,11 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 			{searchComponent?.type === 'Block' ? (
 				<BlocksList
 					blocks={blockResult.data?.searchBlocks}
-					loading={blocksLoading}
+					loading={blockResult.fetching}
 					selectBlock={searchComponent?.then ? onSelectAction : undefined}
 				/>
 			) : searchComponent?.type === 'User' ? (
-				<UsersList users={userResult.data?.searchUsers} loading={usersLoading} selectUser={onSelectAction} />
+				<UsersList users={userResult.data?.searchUsers} loading={userResult.fetching} selectUser={onSelectAction} />
 			) : (
 				<TabView
 					renderTabBar={renderTabBar}

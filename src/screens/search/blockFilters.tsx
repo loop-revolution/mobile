@@ -8,12 +8,26 @@ import { useNavigation } from '@react-navigation/core'
 import routes from '../../navigation/routes'
 import { useActionSheet } from '@expo/react-native-action-sheet'
 
-export const BlockFilters = () => {
+export const BlockFilters = ({ route }: { route: any }) => {
 	const navigation = useNavigation()
 	const { showActionSheetWithOptions } = useActionSheet()
 
+	let filterObject = route.params?.filterObject
+	const setFilterObject: Function = route.params?.setFilterObject
+
+	// set BlockType retured from create routes
+	filterObject.blockType = route.params?.blockType?.name ?? filterObject.blockType
+	setFilterObject(filterObject)
+
+	// set Owner retured from search routes
+	filterObject.owner = route.params?.user ?? filterObject.owner
+	setFilterObject(filterObject)
+
+	const sortingOptions = ['Star count', 'Last updated', 'Creation date', 'Cancel']
+	const filterObjectSortIndex = filterObject?.sortBy && sortingOptions.indexOf(filterObject?.sortBy)
+
+	const [sortIndex, setSortIndex] = useState(filterObjectSortIndex)
 	const [onlyStarred, setOnlyStarred] = useState(false)
-	const [sortIndex, setSortIndex] = useState(null)
 
 	const filters = [
 		{ key: 'sort', title: 'Sort' },
@@ -21,7 +35,6 @@ export const BlockFilters = () => {
 		{ key: 'blockType', title: 'Block Type' },
 		{ key: 'onlyStarred', title: 'Only Starred' },
 	]
-	const sortingOptions = ['Star count', 'Last updated', 'Creation date', 'Cancel']
 
 	React.useLayoutEffect(() => {
 		navigation.setOptions({
@@ -30,6 +43,8 @@ export const BlockFilters = () => {
 					<Button
 						color={colors.white}
 						onPress={() => {
+							filterObject = null
+							setFilterObject({})
 							setSortIndex(null)
 							setOnlyStarred(false)
 						}}
@@ -68,6 +83,9 @@ export const BlockFilters = () => {
 			index => {
 				if (index !== 3) {
 					setSortIndex(index)
+					const sortByValue = sortingOptions[index]
+					filterObject.sortBy = sortByValue
+					setFilterObject(filterObject)
 				}
 			},
 		)
@@ -91,12 +109,18 @@ export const BlockFilters = () => {
 								value={onlyStarred}
 								onValueChange={() => {
 									setOnlyStarred(!onlyStarred)
+									filterObject.starred = onlyStarred
+									setFilterObject(filterObject)
 								}}
 							/>
 						) : (
 							<View style={styles.itemRightView}>
 								<Text style={styles.itemSubtitle}>
 									{item.key === 'sort' && sortIndex !== null && sortingOptions[sortIndex]}
+									{item.key === 'owner' &&
+										filterObject.owner &&
+										(filterObject.owner?.displayName ?? filterObject.owner?.username)}
+									{item.key === 'blockType' && filterObject.blockType && filterObject.blockType}
 								</Text>
 								<MaterialCommunityIcons name={'chevron-right'} color={colors.text} size={30} />
 							</View>

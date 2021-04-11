@@ -85,7 +85,7 @@ export const Create = ({ navigation, route }: { navigation: any; route: any }) =
 				onPress={() => {
 					if (returningRoute) {
 						// this is used for passing data back to the previous screen
-						navigation.navigate(returningRoute, item)
+						navigation.navigate(returningRoute, { blockType: item })
 					} else {
 						navigation.push(routes.CREATE_BLOCK, item)
 					}
@@ -104,7 +104,7 @@ export const Create = ({ navigation, route }: { navigation: any; route: any }) =
 
 	const onChangeSearch = (query: string) => {
 		setSearchQuery(query)
-		const filteredData = blockTypes?.filter(function(item) {
+		const filteredData = blockTypes?.filter(function (item) {
 			return item.name.includes(query) || item.desc.includes(query)
 		})
 		setFilteredData(filteredData)

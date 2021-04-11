@@ -3,7 +3,7 @@ import { View, FlatList, StyleSheet } from 'react-native'
 import { ActivityIndicator, Divider, List } from 'react-native-paper'
 import { textToColor } from '../../utils/utils'
 import { globalStyles } from '../../utils/styles'
-import { BlockCrumbs } from '../../api/types'
+import { BlockResults } from '../../api/types'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import colors from '../../utils/colors'
 import routes from '../../navigation/routes'
@@ -14,18 +14,19 @@ export const BlocksList = ({
 	loading,
 	selectBlock = null,
 }: {
-	blocks: Array<BlockCrumbs>
+	blocks: Array<BlockResults>
 	loading: boolean
 	selectBlock?: Function
 }) => {
 	const navigation = useNavigation()
 
-	const renderBlocksItem = ({ item }: { item: BlockCrumbs }) => {
-		const lastItem = item.length > 0 ? item[item.length - 1] : null
+	const renderBlocksItem = ({ item }: { item: BlockResults }) => {
+		const crumbs = item?.crumbs
+		const lastItem = crumbs.length > 0 ? crumbs[crumbs.length - 1] : null
 		if (!lastItem) {
 			return <></>
 		}
-		const displayName = item.map(({ name }) => name).join(' / ')
+		const displayName = crumbs.map(({ name }) => name).join(' / ')
 		const color = textToColor(displayName)
 		return (
 			<>
@@ -55,7 +56,7 @@ export const BlocksList = ({
 					style={styles.flatList}
 					data={blocks}
 					renderItem={renderBlocksItem}
-					keyExtractor={item => item.map(({ blockId }) => blockId).join('.')}
+					keyExtractor={item => item?.crumbs?.map(({ blockId }) => blockId).join('.')}
 				/>
 			) : null}
 		</View>
