@@ -104,7 +104,7 @@ export const Create = ({ navigation, route }: { navigation: any; route: any }) =
 
 	const onChangeSearch = (query: string) => {
 		setSearchQuery(query)
-		const filteredData = blockTypes?.filter(function (item) {
+		const filteredData = blockTypes?.filter(function(item) {
 			return item.name.includes(query) || item.desc.includes(query)
 		})
 		setFilteredData(filteredData)

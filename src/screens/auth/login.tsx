@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { Headline, Caption, Button, TextInput, Text, HelperText } from 'react-native-paper'
+import { Headline, Caption, Button, TextInput, Text, HelperText, IconButton } from 'react-native-paper'
 import { useForm, Controller } from 'react-hook-form'
 import { useMutation } from 'urql'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -11,6 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { getRules, InputType } from '../../utils/validation'
 import { UserContext } from '../../context/userContext'
 import lodash from 'lodash'
+import colors from '../../utils/colors'
 
 type LoginResult = { login: { token: string } }
 type LoginRequest = { username: string; password: string }
@@ -18,6 +19,7 @@ type LoginRequest = { username: string; password: string }
 export const Login = ({ navigation }: { navigation: any }) => {
 	const [isLoading, setLoading] = useState(false)
 	const { control, handleSubmit, errors } = useForm()
+	const [showPassword, setShowPassword] = useState(false)
 	const [loginResult, login] = useMutation<LoginResult, LoginRequest>(LOGIN_MUTATION)
 	const { setUserLoggedIn } = useContext(UserContext)
 
@@ -34,9 +36,24 @@ export const Login = ({ navigation }: { navigation: any }) => {
 							label={label}
 							onChangeText={value => onChange(value)}
 							value={value}
-							secureTextEntry={secureTextEntry}
+							secureTextEntry={secureTextEntry ? !showPassword : false}
 							error={hasError}
 							autoCapitalize='none'
+							right={
+								type === InputType.password && (
+									<TextInput.Icon
+										name={() => (
+											<IconButton
+												onPress={() => setShowPassword(!showPassword)}
+												color={colors.subtext}
+												style={{ marginRight: 10 }}
+												icon={showPassword ? 'eye' : 'eye-off'}
+												size={25}
+											/>
+										)}
+									/>
+								)
+							}
 						/>
 						{hasError && <HelperText type='error'>This is required.</HelperText>}
 					</View>
@@ -66,7 +83,7 @@ export const Login = ({ navigation }: { navigation: any }) => {
 		<ScrollView contentContainerStyle={[styles.scrollViewContent]}>
 			<SafeAreaView>
 				<Headline style={styles.headline}>Login</Headline>
-				<Caption style={styles.caption}>Please login to continue</Caption>
+				<Caption style={styles.caption}>Login to start boosting your productivity!</Caption>
 
 				{textInput(InputType.username, errors.username)}
 				{textInput(InputType.password, errors.password, true)}
@@ -81,8 +98,9 @@ export const Login = ({ navigation }: { navigation: any }) => {
 					Login
 				</Button>
 				<View style={styles.signupContainer}>
-					<Text>Don't have an account?</Text>
+					<Text style={styles.signUpLabel}>Don't have an account?</Text>
 					<Button
+						labelStyle={styles.signUpLabel}
 						onPress={() => {
 							navigation.push(routes.SIGNUP)
 						}}
@@ -92,7 +110,7 @@ export const Login = ({ navigation }: { navigation: any }) => {
 				</View>
 				<View style={styles.signupContainer}>
 					<Button
-						labelStyle={styles.buttonLable}
+						labelStyle={styles.signUpLabel}
 						onPress={() => {
 							navigation.push(routes.FORGOT_PASSWORD)
 						}}
@@ -112,12 +130,22 @@ const styles = StyleSheet.create({
 	scrollViewContent: {
 		flex: 1,
 		paddingHorizontal: 30,
+		backgroundColor: colors.white,
 	},
 	headline: {
-		marginTop: 0,
+		marginVertical: 10,
+		fontWeight: '500',
+		fontSize: 32,
+		alignSelf: 'center',
+		color: '#323C47',
 	},
 	caption: {
-		marginBottom: 10,
+		alignSelf: 'center',
+		marginBottom: 30,
+		fontSize: 16,
+		fontWeight: '500',
+		color: colors.subtext,
+		textAlign: 'center',
 	},
 	button: {
 		marginTop: 20,
@@ -133,8 +161,11 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		flexDirection: 'row',
+		marginTop: 10,
 	},
-	buttonLable: {
+	signUpLabel: {
 		textTransform: 'capitalize',
+		fontWeight: '500',
+		fontSize: 14,
 	},
 })

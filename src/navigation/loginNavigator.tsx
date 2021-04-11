@@ -8,6 +8,7 @@ import { Login } from '../screens/auth/login'
 import { Signup } from '../screens/auth/signup'
 import { VerifyEmail } from '../screens/auth/verifyEmail'
 import { ForgotPassword } from '../screens/auth/forgotPassword'
+import colors from '../utils/colors'
 
 const Stack = createStackNavigator()
 
@@ -19,12 +20,12 @@ export const LoginNavigator = () => {
 			initialRouteName={routes.LOGIN}
 			headerMode='screen'
 			screenOptions={{
-				header: ({ scene, previous, navigation }: { scene: any; previous: any; navigation: any }) => {
-					const { options } = scene.descriptor
+				header: ({ previous, navigation }: { previous: any; navigation: any }) => {
+					// const { options } = scene.descriptor
 					return (
-						<Appbar.Header theme={theme}>
+						<Appbar.Header theme={theme} style={styles.navBar}>
 							{previous ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
-							<Appbar.Content title={options.headerTitle} titleStyle={styles.navBarTitle} />
+							{/* <Appbar.Content title={options.headerTitle} titleStyle={styles.navBarTitle} /> */}
 						</Appbar.Header>
 					)
 				},
@@ -43,6 +44,11 @@ export const LoginNavigator = () => {
 }
 
 const styles = StyleSheet.create({
+	navBar: {
+		backgroundColor: colors.white,
+		elevation: 0, // remove shadow on Android
+		shadowOpacity: 0,
+	},
 	navBarTitle: {
 		fontSize: 18,
 		fontWeight: '500',

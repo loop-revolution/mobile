@@ -12,6 +12,7 @@ import { useMutation } from 'urql'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { UserContext } from '../../context/userContext'
 import routes from '../../navigation/routes'
+import colors from '../../utils/colors'
 
 type ForgotPasswordResult = { forgotPassword: { sessionCode: string } }
 type ForgotPasswordRequest = { username: string }
@@ -141,12 +142,22 @@ const styles = StyleSheet.create({
 	scrollViewContent: {
 		flex: 1,
 		paddingHorizontal: 30,
+		backgroundColor: colors.white,
 	},
 	headline: {
-		marginTop: 10,
+		marginVertical: 10,
+		fontWeight: '500',
+		fontSize: 32,
+		alignSelf: 'center',
+		color: '#323C47',
 	},
 	caption: {
-		marginBottom: 10,
+		alignSelf: 'center',
+		marginBottom: 30,
+		fontSize: 16,
+		fontWeight: '500',
+		color: colors.subtext,
+		textAlign: 'center',
 	},
 	button: {
 		marginTop: 20,

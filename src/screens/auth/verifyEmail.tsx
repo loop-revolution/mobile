@@ -1,60 +1,30 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { Headline, Caption, TextInput, Text, HelperText } from 'react-native-paper'
-import { useForm, Controller } from 'react-hook-form'
+import { Headline, Caption, Text } from 'react-native-paper'
 import { useMutation } from 'urql'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { VERIFY_EMAIL_MUTATION } from '../../api/gql'
 import routes from '../../navigation/routes'
 import { globalStyles } from '../../utils/styles'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { getRules, InputType } from '../../utils/validation'
 import { UserContext } from '../../context/userContext'
-import CodeInput from 'react-native-confirmation-code-input';
+import CodeInput from 'react-native-confirmation-code-input'
 import colors from '../../utils/colors'
 
 type VerifyEmailResult = { confirmEmail: { token: string } }
 type VerifyEmailRequest = { username: string; sessionCode: string; verificationCode: string }
 
 export const VerifyEmail = ({ route, navigation }: { route: any; navigation: any }) => {
-	const [isLoading, setLoading] = useState(false)
-	const { control, handleSubmit, errors } = useForm()
 	const [verifyEmailResult, verifyEmail] = useMutation<VerifyEmailResult, VerifyEmailRequest>(VERIFY_EMAIL_MUTATION)
 	const { setUserLoggedIn } = useContext(UserContext)
-
-	const textInput = (type: InputType, hasError: boolean) => {
-		return (
-			<Controller
-				control={control}
-				render={({ onChange, value }) => (
-					<View style={styles.inputText}>
-						<TextInput
-							mode='outlined'
-							label='Verification Code'
-							onChangeText={value => onChange(value)}
-							value={value}
-							error={hasError}
-							autoCapitalize='none'
-						/>
-						{hasError && <HelperText type='error'>This is required.</HelperText>}
-					</View>
-				)}
-				name={type}
-				rules={getRules(type)}
-				defaultValue=''
-			/>
-		)
-	}
 
 	const onSubmit = (code: string) => {
 		const request: VerifyEmailRequest = {
 			username: route.params?.username,
 			sessionCode: route.params?.sessionCode,
-			verificationCode: code
+			verificationCode: code,
 		}
-		setLoading(true)
 		verifyEmail(request).then(async ({ data }) => {
-			setLoading(false)
 			if (data != undefined) {
 				const token = data.confirmEmail.token
 				await AsyncStorage.setItem('token', token)
@@ -97,12 +67,22 @@ const styles = StyleSheet.create({
 	scrollViewContent: {
 		flex: 1,
 		paddingHorizontal: 30,
+		backgroundColor: colors.white,
 	},
 	headline: {
-		marginTop: 0,
+		marginVertical: 10,
+		fontWeight: '500',
+		fontSize: 32,
+		alignSelf: 'center',
+		color: '#323C47',
 	},
 	caption: {
-		marginBottom: 10,
+		alignSelf: 'center',
+		marginBottom: 30,
+		fontSize: 16,
+		fontWeight: '500',
+		color: colors.subtext,
+		textAlign: 'center',
 	},
 	button: {
 		marginTop: 20,
@@ -111,12 +91,12 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 	},
 	codeInputContainer: {
-		paddingBottom: 50
+		paddingBottom: 60,
 	},
 	codeInput: {
 		height: 60,
 		borderRadius: 2,
 		fontSize: 18,
-		color: colors.text
-	}
+		color: colors.text,
+	},
 })
