@@ -26,6 +26,28 @@ export const VERIFY_EMAIL_MUTATION = `
   }
 `
 
+export const FORGOT_PASSWORD = gql`
+	mutation($username: String!) {
+		forgotPassword(username: $username) {
+			sessionCode
+			email
+		}
+	}
+`
+
+export const CONFIRM_FORGOT_PASSWORD = gql`
+	mutation($username: String!, $sessionCode: String!, $verificationCode: String!, $newPassword: String!) {
+		confirmForgotPassword(
+			username: $username
+			sessionCode: $sessionCode
+			verificationCode: $verificationCode
+			newPassword: $newPassword
+		) {
+			token
+		}
+	}
+`
+
 export const WHO_AM_I = gql`
 	query {
 		whoami {
