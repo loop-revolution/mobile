@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { Headline, Caption, Button, TextInput, Text, HelperText } from 'react-native-paper'
+import { Headline, Caption, TextInput, Text, HelperText } from 'react-native-paper'
 import { useForm, Controller } from 'react-hook-form'
 import { useMutation } from 'urql'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -10,6 +10,8 @@ import { globalStyles } from '../../utils/styles'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { getRules, InputType } from '../../utils/validation'
 import { UserContext } from '../../context/userContext'
+import CodeInput from 'react-native-confirmation-code-input';
+import colors from '../../utils/colors'
 
 type VerifyEmailResult = { confirmEmail: { token: string } }
 type VerifyEmailRequest = { username: string; sessionCode: string; verificationCode: string }
@@ -44,12 +46,14 @@ export const VerifyEmail = ({ route, navigation }: { route: any; navigation: any
 		)
 	}
 
-	const onSubmit = (data: VerifyEmailRequest) => {
-		const { sessionCode, username } = route.params
-		data.username = username
-		data.sessionCode = sessionCode
+	const onSubmit = (code: string) => {
+		const request: VerifyEmailRequest = {
+			username: route.params?.username,
+			sessionCode: route.params?.sessionCode,
+			verificationCode: code
+		}
 		setLoading(true)
-		verifyEmail(data).then(async ({ data }) => {
+		verifyEmail(request).then(async ({ data }) => {
 			setLoading(false)
 			if (data != undefined) {
 				const token = data.confirmEmail.token
@@ -66,17 +70,21 @@ export const VerifyEmail = ({ route, navigation }: { route: any; navigation: any
 				<Headline style={styles.headline}>Verify Email</Headline>
 				<Caption style={styles.caption}>Please enter verificaton code sent to your email</Caption>
 
-				{textInput(InputType.verificationCode, errors.verificationCode)}
-
-				<Button
-					onPress={handleSubmit(onSubmit)}
-					contentStyle={globalStyles.buttonContentStyle}
-					mode='contained'
-					loading={isLoading}
-					labelStyle={{ color: 'white' }}
-				>
-					Verify
-				</Button>
+				<View style={styles.codeInputContainer}>
+					<CodeInput
+						keyboardType='number-pad'
+						autoFocus={true}
+						codeLength={6}
+						activeColor={colors.primary}
+						inactiveColor={colors.border}
+						ignoreCase={true}
+						inputPosition='full-width'
+						size={50}
+						cellBorderWidth={2}
+						codeInputStyle={styles.codeInput}
+						onFulfill={(code: string) => onSubmit(code)}
+					/>
+				</View>
 				{verifyEmailResult.error && (
 					<Text style={globalStyles.error}>{verifyEmailResult.error.message.replace(/\[\w+\]/g, '')}</Text>
 				)}
@@ -102,4 +110,13 @@ const styles = StyleSheet.create({
 	inputText: {
 		marginBottom: 20,
 	},
+	codeInputContainer: {
+		paddingBottom: 50
+	},
+	codeInput: {
+		height: 60,
+		borderRadius: 2,
+		fontSize: 18,
+		color: colors.text
+	}
 })

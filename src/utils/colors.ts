@@ -9,4 +9,5 @@ export default {
 	white: '#fff',
 	starring: '#FFCA7A',
 	separator: '#DDDDDD',
+	border: '#CFD7E1'
 }
