@@ -33,6 +33,7 @@ export const WHO_AM_I = gql`
 			username
 			displayName
 			credits
+			email
 			root {
 				id
 			}
@@ -100,15 +101,21 @@ export const USER_SEARCH = gql`
 			id
 			displayName
 			username
+			email
 		}
 	}
 `
 
 export const BLOCK_SEARCH = gql`
-	query($query: String!) {
-		searchBlocks(query: $query) {
-			blockId
-			name
+	query($query: String!, $filters: BlockSearchFilters, $sortBy: BlockSortType) {
+		searchBlocks(query: $query, filters: $filters, sortBy: $sortBy) {
+			id
+			color
+			icon
+			crumbs {
+				blockId
+				name
+			}
 		}
 	}
 `
@@ -183,6 +190,7 @@ export const USER_PROFILE = gql`
 			username
 			displayName
 			credits
+			email
 			featured {
 				id
 				pageDisplay
@@ -233,6 +241,24 @@ export const UPDATE_PASSWORD = gql`
 	mutation($newPassword: String!, $password: String!) {
 		updatePassword(newPassword: $newPassword, password: $password) {
 			id
+		}
+	}
+`
+
+export const UPDATE_EMAIL = gql`
+	mutation($newEmail: String!) {
+		updateEmail(newEmail: $newEmail) {
+			sessionCode
+		}
+	}
+`
+
+export const CONFIRM_UPDATE_EMAIL = gql`
+	mutation($sessionCode: String!, $verificationCode: String!) {
+		confirmUpdateEmail(sessionCode: $sessionCode, verificationCode: $verificationCode) {
+			id
+			email
+			username
 		}
 	}
 `
