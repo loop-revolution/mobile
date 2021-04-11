@@ -1,28 +1,41 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { View, StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import { Button, HelperText, Snackbar, TextInput, Title } from 'react-native-paper'
+import { Button, HelperText, Snackbar, TextInput, Title, Text } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { User } from '../../api/types'
 import { globalStyles } from '../../utils/styles'
 import lodash from 'lodash'
 import { getRules, InputType } from '../../utils/validation'
+import { useMutation } from 'urql'
+import { CONFIRM_UPDATE_EMAIL, UPDATE_EMAIL } from '../../api/gql'
+import routes from '../../navigation/routes'
+import { UserContext } from '../../context/userContext'
 
-// type UpdateEmailResult = { user: User }
-// type UpdateEmailRequest = { newEmail: string }
+type UpdateEmailResult = { updateEmail: { sessionCode: string } }
+type UpdateEmailRequest = { newEmail: string }
 
-export const ChangeEmail = ({ route }: { route: any }) => {
-	const [isLoading] = useState(false)
+type ConfirmUpdateEmailResult = { confirmUpdateEmail: User }
+type ConfirmUpdateEmailRequest = { sessionCode: string; verificationCode: string }
+
+export const ChangeEmail = ({ route, navigation }: { route: any; navigation: any }) => {
+	const [isLoading, setIsLoading] = useState(false)
 	const [snackbarVisible, setSnackbarVisible] = useState(false)
 	const { control, handleSubmit, errors } = useForm()
 	const [showVerificationCode, setShowVerificationCode] = useState(false)
-	const [disabledEmailFeild, SetDisabledEmailField] = useState(false)
+	const [disabledEmailFeild, setDisabledEmailField] = useState(false)
+	const [disabledSubmitButton, setDisabledSubmitButton] = useState(true)
+	const [sessionCode, setSessionCode] = useState('')
 
-	// TODO: Add update email Mutation
-	// const [updateEmailResponse, updateEmail] = useMutation<UpdateEmailResult, UpdateEmailRequest>(UPDATE_EMAIL)
+	const [updateEmailResponse, updateEmail] = useMutation<UpdateEmailResult, UpdateEmailRequest>(UPDATE_EMAIL)
+	const [confirmUpdateEmailResult, confirmUpdateEmail] = useMutation<
+		ConfirmUpdateEmailResult,
+		ConfirmUpdateEmailRequest
+	>(CONFIRM_UPDATE_EMAIL)
 
 	const user: User = route.params?.user
+	const currentUser = useContext(UserContext)
 
 	const textInput = (type: InputType, errors: any, defaultValue: string = '', disabled: boolean = false) => {
 		return (
@@ -33,7 +46,10 @@ export const ChangeEmail = ({ route }: { route: any }) => {
 						<TextInput
 							mode='outlined'
 							label={lodash.startCase(type)}
-							onChangeText={value => onChange(value)}
+							onChangeText={value => {
+								onChange(value)
+								setDisabledSubmitButton(value === user.email)
+							}}
 							value={value}
 							disabled={disabled}
 							error={errors}
@@ -53,9 +69,32 @@ export const ChangeEmail = ({ route }: { route: any }) => {
 	}
 
 	const onSubmit = (formData: any) => {
-		console.log(formData)
-		SetDisabledEmailField(true)
-		setShowVerificationCode(true)
+		setIsLoading(true)
+		if (formData.email) {
+			const request: UpdateEmailRequest = { newEmail: formData.email }
+			updateEmail(request).then(({ data }) => {
+				setIsLoading(false)
+				if (data != undefined) {
+					const code = data.updateEmail.sessionCode
+					setSessionCode(code)
+					setDisabledEmailField(true)
+					setShowVerificationCode(true)
+				}
+			})
+		}
+		if (formData.verificationCode) {
+			const request: ConfirmUpdateEmailRequest = {
+				sessionCode: sessionCode,
+				verificationCode: formData.verificationCode,
+			}
+			confirmUpdateEmail(request).then(({ data }) => {
+				setIsLoading(false)
+				if (data != undefined) {
+					currentUser.user = data.confirmUpdateEmail
+					navigation.navigate(routes.EDIT_PROFILE, { user: data.confirmUpdateEmail })
+				}
+			})
+		}
 	}
 
 	return (
@@ -70,15 +109,19 @@ export const ChangeEmail = ({ route }: { route: any }) => {
 						onPress={handleSubmit(onSubmit)}
 						style={styles.button}
 						contentStyle={globalStyles.buttonContentStyle}
+						disabled={disabledSubmitButton}
 						mode='contained'
 						loading={isLoading}
 						labelStyle={{ color: 'white' }}
 					>
 						Update
 					</Button>
-					{/* {updateEmailResponse.error && (
+					{updateEmailResponse.error && (
 						<Text style={globalStyles.error}>{updateEmailResponse.error.message.replace(/\[\w+\]/g, '')}</Text>
-					)} */}
+					)}
+					{confirmUpdateEmailResult.error && (
+						<Text style={globalStyles.error}>{confirmUpdateEmailResult.error.message.replace(/\[\w+\]/g, '')}</Text>
+					)}
 				</SafeAreaView>
 			</ScrollView>
 			<Snackbar visible={snackbarVisible} onDismiss={() => setSnackbarVisible(false)}>

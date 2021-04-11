@@ -20,10 +20,25 @@ export type Block = {
 	starCount: number
 }
 
+export type BlockResults = {
+	id: number
+	color: string
+	icon: string
+	crumbs: BlockCrumbs
+}
+
+export enum BlockSortType {
+	DEFAULT = 'DEFAULT',
+	STAR_COUNT = 'STAR_COUNT',
+	UPDATED = 'UPDATED',
+	CREATED = 'CREATED',
+}
+
 export type User = {
 	id: number
 	username: string
 	displayName: string
+	email: string
 	credits: number
 	root: Block
 	featured: Block
