@@ -90,6 +90,16 @@ export const Login = ({ navigation }: { navigation: any }) => {
 						Sign Up
 					</Button>
 				</View>
+				<View style={styles.signupContainer}>
+					<Button
+						labelStyle={styles.buttonLable}
+						onPress={() => {
+							navigation.push(routes.FORGOT_PASSWORD)
+						}}
+					>
+						Forgot Password?
+					</Button>
+				</View>
 				{loginResult.error && (
 					<Text style={styles.serverError}>{loginResult.error.message.replace(/\[\w+\]/g, '')}</Text>
 				)}
@@ -123,5 +133,8 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		flexDirection: 'row',
+	},
+	buttonLable: {
+		textTransform: 'capitalize',
 	},
 })
