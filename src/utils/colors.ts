@@ -1,5 +1,5 @@
 export default {
-	primary: '#466EFD',
+	primary: '#5570FF',
 	accent: '#EE6546',
 	text: '#393939',
 	subtext: '#898989',
@@ -9,4 +9,5 @@ export default {
 	white: '#fff',
 	starring: '#FFCA7A',
 	separator: '#DDDDDD',
+	border: '#CFD7E1',
 }

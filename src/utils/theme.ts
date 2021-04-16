@@ -10,6 +10,7 @@ export const DefaultPaperTheme = {
 		accent: colors.accent,
 		text: colors.text,
 		error: colors.error,
+		background: colors.white,
 	},
 }
 
