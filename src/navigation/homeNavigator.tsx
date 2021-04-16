@@ -17,6 +17,7 @@ import { ChangeDisplayName } from '../screens/profile/changeDisplayName'
 import { ChangeUsername } from '../screens/profile/changeUsername'
 import { BlockFilters } from '../screens/search/blockFilters'
 import { Create } from '../screens/create'
+import { BlockComments } from '../components/blockMenu/blockComments'
 
 const Stack = createStackNavigator()
 
@@ -93,6 +94,7 @@ export const HomeNavigator = ({ navigation }: { navigation: any }) => {
 				options={{ headerTitle: 'Change Username' }}
 			/>
 			<Stack.Screen name={routes.BLOCK_PERMISSIONS} component={Permissions} options={{ headerTitle: 'Permissions' }} />
+			<Stack.Screen name={routes.BLOCK_COMMENTS} component={BlockComments} options={{ headerTitle: 'Comments' }} />
 			<Stack.Screen name={routes.BLOCK_FILTERS} component={BlockFilters} options={{ headerTitle: 'Filters' }} />
 			<Stack.Screen name={routes.CREATE} component={Create} options={{ headerTitle: 'Blocks' }} />
 		</Stack.Navigator>

@@ -19,7 +19,7 @@ const styles = (color = colors.text) =>
 			color: color,
 		},
 		text: {
-			padding: 10,
+			marginVertical: 10,
 			color: color,
 			fontSize: 13,
 			fontWeight: '400',

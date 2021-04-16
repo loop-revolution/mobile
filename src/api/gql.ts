@@ -110,6 +110,7 @@ export const GET_BLOCK = gql`
 	query($id: Int!) {
 		blockById(id: $id) {
 			pageDisplay
+			commentsCount
 			breadcrumb {
 				name
 				blockId
@@ -117,6 +118,32 @@ export const GET_BLOCK = gql`
 		}
 	}
 `
+
+export const GET_BLOCK_COMMENTS = gql`
+	query($id: Int!) {
+		blockById(id: $id) {
+			comments {
+				id
+				createdAt
+				starred
+				starCount
+				author {
+					displayName
+					username
+				}
+				block {
+					id
+					type
+					starred
+					pageDisplay
+					embedDisplay
+					commentsCount
+				}
+			}
+		}
+	}
+`
+
 export const USER_SEARCH = gql`
 	query($query: String!) {
 		searchUsers(query: $query) {

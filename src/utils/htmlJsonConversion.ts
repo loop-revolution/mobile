@@ -17,6 +17,9 @@ export const htmlToJsonCoverstion = (html: string): TextComponent[] => {
 	const components: TextComponent[] = []
 	const args: TextArgs = resetArgs({ text: '' })
 	const json = parse(html)
+	if (json.length == 0) {
+		return components
+	}
 	parseChildren(json[0].children, components, args)
 	return components
 }

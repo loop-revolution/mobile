@@ -88,7 +88,7 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 
 const styles = StyleSheet.create({
 	scrollViewContent: {
-		margin: 5,
+		margin: 10,
 	},
 	subheading: {
 		textAlign: 'center',
