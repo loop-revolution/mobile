@@ -209,6 +209,13 @@ export const SET_STARRED = gql`
 		}
 	}
 `
+export const SET_COMMENT_STARRED = gql`
+	mutation($commentId: Int!, $starred: Boolean!) {
+		setCommentStarred(commentId: $commentId, starred: $starred) {
+			id
+		}
+	}
+`
 
 export const SET_NOTIFS = gql`
 	mutation($blockId: Int!, $enabled: Boolean!) {

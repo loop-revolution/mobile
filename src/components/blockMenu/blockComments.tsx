@@ -8,7 +8,7 @@ import { FlatList } from 'react-native-gesture-handler'
 import { ActivityIndicator, Avatar, Button, Caption, Divider, Subheading } from 'react-native-paper'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useMutation, useQuery } from 'urql'
-import { GET_BLOCK_COMMENTS, SET_STARRED, CREATE_BLOCK, CREATE_COMMENT } from '../../api/gql'
+import { GET_BLOCK_COMMENTS, SET_COMMENT_STARRED, CREATE_BLOCK, CREATE_COMMENT } from '../../api/gql'
 import { Comment } from '../../api/types'
 import routes from '../../navigation/routes'
 import colors from '../../utils/colors'
@@ -28,8 +28,8 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 	type CreateBlockRequest = { type: string; input: string }
 	type CreateCommentResult = { createComment: Comment }
 	type CreateCommentRequest = { blockId: number; contentId: number }
-	type StarredResult = { setStarred: { id: number; starred: boolean } }
-	type StarredRequest = { blockId: number; starred: boolean }
+	type CommentStarredResult = { setCommentStarred: { id: number } }
+	type CommentStarredRequest = { commentId: number; starred: boolean }
 
 	const headerHeight = useHeaderHeight()
 	const safeAreaInsets = useSafeAreaInsets()
@@ -39,7 +39,7 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 
 	const [, createBlockMut] = useMutation<CreateBlockResult, CreateBlockRequest>(CREATE_BLOCK)
 	const [, createCommentMut] = useMutation<CreateCommentResult, CreateCommentRequest>(CREATE_COMMENT)
-	const [, setStarred] = useMutation<StarredResult, StarredRequest>(SET_STARRED)
+	const [, setCommentStarred] = useMutation<CommentStarredResult, CommentStarredRequest>(SET_COMMENT_STARRED)
 	const [blockResponse] = useQuery<BlockResult, BlockRequest>({
 		query: GET_BLOCK_COMMENTS,
 		variables: { id: blockId },
@@ -103,8 +103,8 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 		const color = textToColor(displayName)
 
 		const handleStarring = (item: Comment) => {
-			const request: StarredRequest = { blockId: item.block.id, starred: !item.block.starred }
-			setStarred(request)
+			const request: CommentStarredRequest = { commentId: item.id, starred: !item.starred }
+			setCommentStarred(request)
 		}
 
 		const renderItemTitle = (item: Comment) => {
@@ -119,7 +119,7 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 					<View style={styles().itemRightView}>
 						<MaterialCommunityIcons
 							onPress={() => handleStarring(item)}
-							name={item.block.starred ? 'star' : 'star-outline'}
+							name={item.starred ? 'star' : 'star-outline'}
 							color={colors.starring}
 							size={22}
 						/>
