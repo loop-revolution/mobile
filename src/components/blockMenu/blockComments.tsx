@@ -219,6 +219,7 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 						<RichTextEditor
 							ref={richTextEditorRef}
 							style={styles().commentInput}
+							fontSize={12}
 							value={value}
 							setValue={setValue}
 							editable={true}

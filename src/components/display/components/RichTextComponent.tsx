@@ -49,11 +49,21 @@ export const RichTextEditor = forwardRef(
 			editable,
 			onEnter,
 			style,
-		}: { value: string; setValue: (newVal: string) => void; editable?: boolean; onEnter?: Function; style?: any },
+			fontSize = 14,
+		}: {
+			value: string
+			setValue: (newVal: string) => void
+			editable?: boolean
+			onEnter?: Function
+			style?: any
+			fontSize?: number
+		},
 		ref,
 	) => {
 		const richText = useRef(null)
 		const [isFocused, setFocused] = useState<boolean>(false)
+
+		const contentCSSText = `font-size: ${fontSize}px; color: ${colors.text}; padding-left: 0px;`
 
 		useImperativeHandle(ref, () => ({
 			reload() {
@@ -84,7 +94,7 @@ export const RichTextEditor = forwardRef(
 						}
 					}}
 					initialContentHTML={value}
-					editorStyle={{ backgroundColor: 'transparent' }}
+					editorStyle={{ backgroundColor: 'transparent', contentCSSText }}
 					style={[{ backgroundColor: 'transparent' }, style]}
 					placeholder='Start typing...'
 				/>
