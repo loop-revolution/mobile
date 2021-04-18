@@ -53,22 +53,10 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 		})
 	}, [navigation])
 
-	let blockComments: Array<Comment> = blockResponse.data?.blockById?.comments
+	const blockComments: Array<Comment> = blockResponse.data?.blockById?.comments
 	if (!blockComments) {
 		return <ActivityIndicator {...null} style={globalStyles.flex1} color={colors.primary} />
 	}
-
-	//Hide empty comments
-	blockComments = blockComments.filter(item => {
-		if (item.block.type === 'text' || item.block.type === 'data') {
-			const displayObject: DisplayObject = item.block?.pageDisplay && JSON.parse(item.block.pageDisplay)
-			const display = displayObject.display
-			if (display.cid === 'richtext') {
-				return display.args.content.length !== 0
-			}
-		}
-		return true
-	})
 
 	const onEnter = async () => {
 		const components = htmlToJsonCoverstion(value)
@@ -152,11 +140,13 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 
 		const renderDescription = (item: Comment) => {
 			let display: ComponentObject
+			let isEmpty: boolean = false
 			if (item.block.type === 'text' || item.block.type === 'data') {
 				const displayObject: DisplayObject = item.block?.pageDisplay && JSON.parse(item.block.pageDisplay)
 				display = displayObject.display
 				if (display.cid === 'richtext') {
 					display.args.editable = false
+					isEmpty = display.args.content?.length == 0
 				}
 			} else {
 				display = item.block?.embedDisplay && JSON.parse(item.block.embedDisplay)
@@ -164,7 +154,7 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 
 			return (
 				<View>
-					<ComponentDelegate component={display} />
+					{isEmpty ? <Caption>Empty comment</Caption> : <ComponentDelegate component={display} />}
 					{item.block.commentsCount > 0 && (
 						<Button
 							style={styles().repliesButton}
