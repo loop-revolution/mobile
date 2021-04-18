@@ -131,7 +131,7 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 							menu.star_button.count,
 							menu.star_button.starred ? 'star' : 'star-outline',
 						)}
-					{renderItem('message', handleComments, menu.comment_count, 'message')}
+					{renderItem('Comments', handleComments, menu.comment_count, 'message')}
 					{renderItem(
 						menu.notifications_enabled ? 'Disable Notification' : 'Enable Notification',
 						handleNotifs,

@@ -37,8 +37,10 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 	const richTextEditorRef = useRef(null)
 	const { showActionSheetWithOptions } = useActionSheet()
 
-	const [, createBlockMut] = useMutation<CreateBlockResult, CreateBlockRequest>(CREATE_BLOCK)
-	const [, createCommentMut] = useMutation<CreateCommentResult, CreateCommentRequest>(CREATE_COMMENT)
+	const [createBlockResponse, createBlockMut] = useMutation<CreateBlockResult, CreateBlockRequest>(CREATE_BLOCK)
+	const [createCommentResponse, createCommentMut] = useMutation<CreateCommentResult, CreateCommentRequest>(
+		CREATE_COMMENT,
+	)
 	const [, setCommentStarred] = useMutation<CommentStarredResult, CommentStarredRequest>(SET_COMMENT_STARRED)
 	const [blockResponse] = useQuery<BlockResult, BlockRequest>({
 		query: GET_BLOCK_COMMENTS,
@@ -47,14 +49,26 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 
 	React.useLayoutEffect(() => {
 		navigation.setOptions({
-			headerTitle: () => comment ? 'Thread' : 'Comments',
+			headerTitle: () => (comment ? 'Thread' : 'Comments'),
 		})
 	}, [navigation])
 
-	const blockComments: Array<Comment> = blockResponse.data?.blockById?.comments
+	let blockComments: Array<Comment> = blockResponse.data?.blockById?.comments
 	if (!blockComments) {
 		return <ActivityIndicator {...null} style={globalStyles.flex1} color={colors.primary} />
 	}
+
+	//Hide empty comments
+	blockComments = blockComments.filter(item => {
+		if (item.block.type === 'text' || item.block.type === 'data') {
+			const displayObject: DisplayObject = item.block?.pageDisplay && JSON.parse(item.block.pageDisplay)
+			const display = displayObject.display
+			if (display.cid === 'richtext') {
+				return display.args.content.length !== 0
+			}
+		}
+		return true
+	})
 
 	const onEnter = async () => {
 		const components = htmlToJsonCoverstion(value)
@@ -198,9 +212,7 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 		>
 			<SafeAreaView style={[styles().container, { marginTop: -safeAreaInsets.top }]}>
 				<View style={styles().container}>
-					<View style={styles().commentPreviewContainer}>
-						{comment && renderCommentListItem({ item: comment })}
-					</View>
+					<View style={styles().commentPreviewContainer}>{comment && renderCommentListItem({ item: comment })}</View>
 					{blockComments && blockComments.length > 0 ? (
 						<FlatList
 							style={styles().flatList}
@@ -213,21 +225,24 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 					)}
 				</View>
 				<View style={styles().commentInputContainer}>
-					<RichTextEditor
-						ref={richTextEditorRef}
-						style={styles().commentInput}
-						value={value}
-						setValue={setValue}
-						editable={true}
-						onEnter={onEnter}
-					/>
-					{/* <MaterialCommunityIcons
-						style={styles().sendButton}
-						onPress={() => {}}
-						name={'send'}
-						color={colors.text}
-						size={22}
-					/> */}
+					<View style={globalStyles.flex1}>
+						<RichTextEditor
+							ref={richTextEditorRef}
+							style={styles().commentInput}
+							value={value}
+							setValue={setValue}
+							editable={true}
+							onEnter={onEnter}
+						/>
+					</View>
+					<Button
+						onPress={onEnter}
+						contentStyle={globalStyles.buttonContentStyle}
+						disabled={createBlockResponse.fetching || createCommentResponse.fetching}
+						labelStyle={{ color: 'white' }}
+					>
+						{<MaterialCommunityIcons style={styles().sendButton} name={'send'} color={colors.text} size={22} />}
+					</Button>
 				</View>
 			</SafeAreaView>
 		</KeyboardAvoidingView>
@@ -296,13 +311,14 @@ const styles = (color = colors.primary) =>
 			marginHorizontal: 15,
 		},
 		commentInputContainer: {
-			// flexDirection: 'row',
+			flexDirection: 'row',
 			backgroundColor: colors.white,
-			shadowOpacity: 1,
-			elevation: 20,
-			shadowColor: colors.border,
-			borderTopColor: colors.border,
-			borderTopWidth: 1,
+			shadowOffset: { width: 0, height: -20 },
+			shadowOpacity: 0.1,
+			shadowRadius: 10,
+			elevation: 10,
+			shadowColor: '#000000',
+			zIndex: 1,
 		},
 		commentInput: {
 			minHeight: 60,
@@ -311,7 +327,8 @@ const styles = (color = colors.primary) =>
 		},
 		sendButton: {
 			paddingHorizontal: 20,
-			alignSelf: 'center',
+			alignSelf: 'flex-start',
+			marginTop: 20,
 		},
 		commentPreviewContainer: {
 			backgroundColor: '#F5F5F5',
@@ -320,6 +337,6 @@ const styles = (color = colors.primary) =>
 			shadowRadius: 10,
 			elevation: 10,
 			shadowColor: '#000000',
-			zIndex: 1
-		}
+			zIndex: 1,
+		},
 	})
