@@ -20,7 +20,7 @@ import { RichTextEditor } from '../display/components/RichTextComponent'
 
 export const BlockComments = ({ route, navigation }: { route: any; navigation: any }) => {
 	const blockId: number = route.params?.blockId
-	const title: string = route.params?.title
+	const comment: Comment = route.params?.comment
 
 	type BlockResult = { blockById: { comments: Array<Comment> } }
 	type BlockRequest = { id: number }
@@ -47,7 +47,7 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 
 	React.useLayoutEffect(() => {
 		navigation.setOptions({
-			headerTitle: () => title ?? 'Comments',
+			headerTitle: () => comment ? 'Thread' : 'Comments',
 		})
 	}, [navigation])
 
@@ -91,7 +91,7 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 				if (index === 0) {
 					navigation.push(routes.BLOCK_COMMENTS, {
 						blockId: item.block.id,
-						title: 'Thread',
+						comment: item,
 					})
 				}
 			},
@@ -158,7 +158,7 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 							onPress={() => {
 								navigation.push(routes.BLOCK_COMMENTS, {
 									blockId: item.block.id,
-									title: 'Thread',
+									comment: item,
 								})
 							}}
 							mode='text'
@@ -196,8 +196,11 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 			style={styles().container}
 			keyboardVerticalOffset={headerHeight - safeAreaInsets.bottom}
 		>
-			<SafeAreaView style={styles().container}>
+			<SafeAreaView style={[styles().container, { marginTop: -safeAreaInsets.top }]}>
 				<View style={styles().container}>
+					<View style={styles().commentPreviewContainer}>
+						{comment && renderCommentListItem({ item: comment })}
+					</View>
 					{blockComments && blockComments.length > 0 ? (
 						<FlatList
 							style={styles().flatList}
@@ -296,7 +299,7 @@ const styles = (color = colors.primary) =>
 			// flexDirection: 'row',
 			backgroundColor: colors.white,
 			shadowOpacity: 1,
-			elevation: 5,
+			elevation: 20,
 			shadowColor: colors.border,
 			borderTopColor: colors.border,
 			borderTopWidth: 1,
@@ -310,4 +313,13 @@ const styles = (color = colors.primary) =>
 			paddingHorizontal: 20,
 			alignSelf: 'center',
 		},
+		commentPreviewContainer: {
+			backgroundColor: '#F5F5F5',
+			shadowOffset: { width: 0, height: 20 },
+			shadowOpacity: 0.25,
+			shadowRadius: 10,
+			elevation: 10,
+			shadowColor: '#000000',
+			zIndex: 1
+		}
 	})
