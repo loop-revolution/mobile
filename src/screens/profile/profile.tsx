@@ -50,7 +50,7 @@ export const Profile = ({ route, navigation }: { route: any; navigation: any }) 
 			return (
 				<>
 					<Text style={styles.featuredBlockTitle}>Featured Block</Text>
-					<Button mode='contained' uppercase={false} style={styles.addButton} onPress={() => console.log('Pressed')}>
+					<Button mode='contained' uppercase={false} style={styles.addButton} onPress={() => {}}>
 						Add
 					</Button>
 				</>

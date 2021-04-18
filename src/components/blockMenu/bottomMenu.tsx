@@ -64,8 +64,6 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 		navigation.navigate(routes.BLOCK_COMMENTS, { blockId: menu.block_id })
 	}
 
-	console.log('menu.block_id: ', menu.block_id)
-
 	const handleNotifs = () => {
 		const request: NotifsRequest = { blockId: menu.block_id, enabled: !menu.notifications_enabled }
 		setNotifs(request)

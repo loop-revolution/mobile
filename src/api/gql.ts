@@ -144,6 +144,20 @@ export const GET_BLOCK_COMMENTS = gql`
 	}
 `
 
+export const CREATE_COMMENT = gql`
+	mutation($blockId: Int!, $contentId: Int!) {
+		createComment(blockId: $blockId, contentId: $contentId) {
+			id
+			createdAt
+			starCount
+			author {
+				displayName
+				username
+			}
+		}
+	}
+`
+
 export const USER_SEARCH = gql`
 	query($query: String!) {
 		searchUsers(query: $query) {

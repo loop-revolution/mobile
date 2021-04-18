@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { forwardRef, useImperativeHandle, useRef } from 'react'
 import { RichTextArgs } from 'display-api'
 import { useCallback, useEffect, useState } from 'react'
 import { blockMethod, setMethodVariable } from '../method'
@@ -9,9 +9,8 @@ import colors from '../../../utils/colors'
 import { jsonToHtmlConversion, htmlToJsonCoverstion } from '../../../utils/htmlJsonConversion'
 
 export const RichTextComponent = ({ content, editable = false, name, save, on_enter }: RichTextArgs) => {
-	const richText = useRef(null)
+
 	const [value, setValue] = useState<string>(jsonToHtmlConversion(content))
-	const [isFocused, setFocused] = useState<boolean>(false)
 
 	useEffect(() => {
 		const saveTimeout = setTimeout(() => {
@@ -32,8 +31,25 @@ export const RichTextComponent = ({ content, editable = false, name, save, on_en
 		[name],
 	)
 
+	const onEnter = () => {
+		on_enter && blockMethod(on_enter)
+	}
+
+	return <RichTextEditor value={value} setValue={setHtml} editable={editable} onEnter={onEnter} />
+}
+
+export const RichTextEditor = forwardRef(({ value, setValue, editable, onEnter, style }: { value: string, setValue: (newVal: string) => void, editable?: boolean, onEnter?: Function, style?: any }, ref) => {
+	const richText = useRef(null)
+	const [isFocused, setFocused] = useState<boolean>(false)
+
+	useImperativeHandle(ref, () => ({
+		reload() {
+			richText && richText?.current?.setContentHTML('')
+		}
+	}))
+
 	return (
-		<View style={globalStyles.flex1}>
+		<>
 			<RichEditor
 				disabled={!editable}
 				ref={richText}
@@ -45,18 +61,18 @@ export const RichTextComponent = ({ content, editable = false, name, save, on_en
 					setFocused(false)
 				}}
 				onChange={html => {
-					setHtml(html)
+					setValue(html)
 				}}
 				onKeyDown={event => {
 					if (event.key === 'Enter') {
 						richText.current?.blurContentEditor()
-						on_enter && blockMethod(on_enter)
+						onEnter && onEnter()
 						return
 					}
 				}}
 				initialContentHTML={value}
 				editorStyle={{ backgroundColor: 'transparent' }}
-				style={[{ backgroundColor: 'transparent' }]}
+				style={[{ backgroundColor: 'transparent'}, style]}
 				placeholder='Start typing...'
 			/>
 			{isFocused && (
@@ -79,9 +95,10 @@ export const RichTextComponent = ({ content, editable = false, name, save, on_en
 					/>
 				</View>
 			)}
-		</View>
+		</>
 	)
-}
+
+})
 
 const styles = StyleSheet.create({
 	richBar: {
