@@ -2,10 +2,9 @@ import { useActionSheet } from '@expo/react-native-action-sheet'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useHeaderHeight } from '@react-navigation/stack'
 import { ComponentObject, DisplayObject } from 'display-api'
-import React, { useCallback, useRef, useState } from 'react'
-import { View, StyleSheet, Text, KeyboardAvoidingView, Platform, Keyboard, Button as Btn } from 'react-native'
-import { FlatList, ScrollView, TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler'
-import { KeyboardAwareFlatList, KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import React, { useRef, useState } from 'react'
+import { View, StyleSheet, Text, KeyboardAvoidingView, Platform } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import { ActivityIndicator, Avatar, Button, Caption, Divider, Subheading } from 'react-native-paper'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useMutation, useQuery } from 'urql'
@@ -19,8 +18,7 @@ import { formatDate, getInitials, textToColor } from '../../utils/utils'
 import { ComponentDelegate } from '../display/ComponentDelegate'
 import { RichTextEditor } from '../display/components/RichTextComponent'
 
-export const BlockComments = ({ route, navigation }: { route: any, navigation: any }) => {
-
+export const BlockComments = ({ route, navigation }: { route: any; navigation: any }) => {
 	const blockId: number = route.params?.blockId
 	const title: string = route.params?.title
 
@@ -35,7 +33,7 @@ export const BlockComments = ({ route, navigation }: { route: any, navigation: a
 
 	const headerHeight = useHeaderHeight()
 	const safeAreaInsets = useSafeAreaInsets()
-	const [value, setValue] = useState<string>("")
+	const [value, setValue] = useState<string>('')
 	const richTextEditorRef = useRef(null)
 	const { showActionSheetWithOptions } = useActionSheet()
 
@@ -62,20 +60,19 @@ export const BlockComments = ({ route, navigation }: { route: any, navigation: a
 		const components = htmlToJsonCoverstion(value)
 		const content = { content: components }
 		const input = JSON.stringify(content)
-		const type = "text"
+		const type = 'text'
 		createBlockMut({
 			type,
 			input,
-		}).then((res) => {
+		}).then(res => {
 			const contentId = res.data?.createBlock?.id
 			if (contentId) {
-				createCommentMut({ blockId, contentId })
-					.then((res) => {
-						if (res.data?.createComment?.id) {
-							setValue('')
-							richTextEditorRef?.current?.reload()
-						}
-					})
+				createCommentMut({ blockId, contentId }).then(res => {
+					if (res.data?.createComment?.id) {
+						setValue('')
+						richTextEditorRef?.current?.reload()
+					}
+				})
 			}
 		})
 	}
@@ -94,7 +91,7 @@ export const BlockComments = ({ route, navigation }: { route: any, navigation: a
 				if (index === 0) {
 					navigation.push(routes.BLOCK_COMMENTS, {
 						blockId: item.block.id,
-						title: 'Thread'
+						title: 'Thread',
 					})
 				}
 			},
@@ -127,7 +124,13 @@ export const BlockComments = ({ route, navigation }: { route: any, navigation: a
 							size={22}
 						/>
 						<Caption style={styles().starCount}>{item.starredCount}</Caption>
-						<MaterialCommunityIcons onPress={() => showOptions(item)} style={styles().menuIcon} name='dots-horizontal' color={colors.subtext} size={25} />
+						<MaterialCommunityIcons
+							onPress={() => showOptions(item)}
+							style={styles().menuIcon}
+							name='dots-horizontal'
+							color={colors.subtext}
+							size={25}
+						/>
 					</View>
 				</View>
 			)
@@ -155,7 +158,7 @@ export const BlockComments = ({ route, navigation }: { route: any, navigation: a
 							onPress={() => {
 								navigation.push(routes.BLOCK_COMMENTS, {
 									blockId: item.block.id,
-									title: 'Thread'
+									title: 'Thread',
 								})
 							}}
 							mode='text'
@@ -189,7 +192,7 @@ export const BlockComments = ({ route, navigation }: { route: any, navigation: a
 
 	return (
 		<KeyboardAvoidingView
-			behavior={Platform.OS === "ios" ? "padding" : null}
+			behavior={Platform.OS === 'ios' ? 'padding' : null}
 			style={styles().container}
 			keyboardVerticalOffset={headerHeight - safeAreaInsets.bottom}
 		>
@@ -206,16 +209,15 @@ export const BlockComments = ({ route, navigation }: { route: any, navigation: a
 						<Subheading style={styles().subheading}>No comments found!</Subheading>
 					)}
 				</View>
-				<View
-					style={styles().commentInputContainer}
-				>
+				<View style={styles().commentInputContainer}>
 					<RichTextEditor
 						ref={richTextEditorRef}
 						style={styles().commentInput}
 						value={value}
 						setValue={setValue}
 						editable={true}
-						onEnter={onEnter} />
+						onEnter={onEnter}
+					/>
 					{/* <MaterialCommunityIcons
 						style={styles().sendButton}
 						onPress={() => {}}
@@ -236,7 +238,7 @@ const styles = (color = colors.primary) =>
 		},
 		container: {
 			flex: 1,
-			backgroundColor: colors.white
+			backgroundColor: colors.white,
 		},
 		flatList: {
 			backgroundColor: colors.white,
@@ -302,10 +304,10 @@ const styles = (color = colors.primary) =>
 		commentInput: {
 			minHeight: 60,
 			paddingTop: 8,
-			backgroundColor: colors.white
+			backgroundColor: colors.white,
 		},
 		sendButton: {
 			paddingHorizontal: 20,
-			alignSelf: 'center'
-		}
+			alignSelf: 'center',
+		},
 	})
