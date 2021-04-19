@@ -93,9 +93,10 @@ const styles = (color = colors.primary) =>
 			paddingBottom: 0,
 		},
 		cardContent: {
-			padding: 5,
-			paddingLeft: 5,
-			paddingRight: 5,
+			paddingTop: 5,
+			paddingLeft: 10,
+			paddingRight: 10,
+			paddingBottom: 10,
 		},
 		title: {
 			fontSize: 14,

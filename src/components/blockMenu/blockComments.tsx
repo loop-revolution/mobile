@@ -219,7 +219,6 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 						<RichTextEditor
 							ref={richTextEditorRef}
 							style={styles().commentInput}
-							fontSize={12}
 							value={value}
 							setValue={setValue}
 							editable={true}
@@ -315,6 +314,7 @@ const styles = (color = colors.primary) =>
 			minHeight: 60,
 			paddingTop: 8,
 			backgroundColor: colors.white,
+			paddingLeft: 10,
 		},
 		sendButton: {
 			paddingHorizontal: 20,

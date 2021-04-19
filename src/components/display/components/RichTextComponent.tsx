@@ -49,21 +49,23 @@ export const RichTextEditor = forwardRef(
 			editable,
 			onEnter,
 			style,
-			fontSize = 14,
 		}: {
 			value: string
 			setValue: (newVal: string) => void
 			editable?: boolean
 			onEnter?: Function
 			style?: any
-			fontSize?: number
 		},
 		ref,
 	) => {
 		const richText = useRef(null)
 		const [isFocused, setFocused] = useState<boolean>(false)
 
-		const contentCSSText = `font-size: ${fontSize}px; color: ${colors.text}; padding-left: 0px;`
+		const contentCSSText = `
+			font-size: ${style?.fontSize ?? 14}px; 
+			color: ${style?.color ?? colors.text}; 
+			padding-left: ${style?.paddingLeft ?? 0}px;
+		`
 
 		useImperativeHandle(ref, () => ({
 			reload() {
