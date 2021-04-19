@@ -77,8 +77,7 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
 const styles = (color = colors.primary) =>
 	StyleSheet.create({
 		cardContainer: {
-			marginHorizontal: 5,
-			marginVertical: 5,
+			marginTop: 5,
 			elevation: 0,
 			borderColor: '#D7DADE',
 			borderWidth: 1,
@@ -90,11 +89,14 @@ const styles = (color = colors.primary) =>
 			borderBottomColor: '#EBEAF5',
 			borderBottomWidth: 1,
 			minHeight: 50,
+			paddingTop: 0,
+			paddingBottom: 0,
 		},
 		cardContent: {
-			padding: 5,
-			paddingLeft: 5,
-			paddingRight: 5,
+			paddingTop: 5,
+			paddingLeft: 10,
+			paddingRight: 10,
+			paddingBottom: 10,
 		},
 		title: {
 			fontSize: 14,

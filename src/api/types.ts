@@ -18,6 +18,17 @@ export type Block = {
 	breadcrumb: BlockCrumbs
 	starred: boolean
 	starCount: number
+	commentsCount: number
+	type: string
+}
+
+export type Comment = {
+	id: number
+	author: User
+	starred: boolean
+	starredCount: number
+	block: Block
+	createdAt: string
 }
 
 export type BlockResults = {

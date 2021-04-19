@@ -19,9 +19,9 @@ const styles = (color = colors.text) =>
 			color: color,
 		},
 		text: {
-			padding: 10,
+			marginVertical: 8,
 			color: color,
-			fontSize: 13,
+			fontSize: 14,
 			fontWeight: '400',
 			lineHeight: 18,
 		},

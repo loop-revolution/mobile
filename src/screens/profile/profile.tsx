@@ -1,5 +1,4 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { ButtonArgs } from 'display-api'
 import React, { useContext, useEffect } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -8,7 +7,6 @@ import { useMutation, useQuery } from 'urql'
 import { SET_STARRED, USER_PROFILE } from '../../api/gql'
 import { Block, User } from '../../api/types'
 import { ComponentDelegate } from '../../components/display/ComponentDelegate'
-import { StickyToggleButtonComponent } from '../../components/display/components/StickyToggleButtonComponent'
 import { UserContext } from '../../context/userContext'
 import routes from '../../navigation/routes'
 import colors from '../../utils/colors'
@@ -52,7 +50,7 @@ export const Profile = ({ route, navigation }: { route: any; navigation: any }) 
 			return (
 				<>
 					<Text style={styles.featuredBlockTitle}>Featured Block</Text>
-					<Button mode='contained' uppercase={false} style={styles.addButton} onPress={() => console.log('Pressed')}>
+					<Button mode='contained' uppercase={false} style={styles.addButton} onPress={() => {}}>
 						Add
 					</Button>
 				</>
@@ -97,12 +95,6 @@ export const Profile = ({ route, navigation }: { route: any; navigation: any }) 
 		setStarred(request)
 	}
 
-	const buttonArgs: ButtonArgs = {
-		text: 'Test',
-		variant: 'Solid',
-		color_scheme: 'orange',
-	}
-
 	return (
 		<View style={globalStyles.flex1}>
 			<ScrollView bounces={false}>
@@ -134,7 +126,6 @@ export const Profile = ({ route, navigation }: { route: any; navigation: any }) 
 					</Card.Content>
 				</Card>
 				{renderFeaturedBlock()}
-				<StickyToggleButtonComponent button={buttonArgs} />
 			</ScrollView>
 		</View>
 	)

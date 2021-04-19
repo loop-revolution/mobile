@@ -59,6 +59,11 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 		setStarred(request)
 	}
 
+	const handleComments = () => {
+		handleClose()
+		navigation.navigate(routes.BLOCK_COMMENTS, { blockId: menu.block_id })
+	}
+
 	const handleNotifs = () => {
 		const request: NotifsRequest = { blockId: menu.block_id, enabled: !menu.notifications_enabled }
 		setNotifs(request)
@@ -126,6 +131,7 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 							menu.star_button.count,
 							menu.star_button.starred ? 'star' : 'star-outline',
 						)}
+					{renderItem('Comments', handleComments, menu.comment_count, 'message')}
 					{renderItem(
 						menu.notifications_enabled ? 'Disable Notification' : 'Enable Notification',
 						handleNotifs,

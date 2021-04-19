@@ -110,6 +110,7 @@ export const GET_BLOCK = gql`
 	query($id: Int!) {
 		blockById(id: $id) {
 			pageDisplay
+			commentsCount
 			breadcrumb {
 				name
 				blockId
@@ -117,6 +118,46 @@ export const GET_BLOCK = gql`
 		}
 	}
 `
+
+export const GET_BLOCK_COMMENTS = gql`
+	query($id: Int!) {
+		blockById(id: $id) {
+			comments {
+				id
+				createdAt
+				starred
+				starCount
+				author {
+					displayName
+					username
+				}
+				block {
+					id
+					type
+					starred
+					pageDisplay
+					embedDisplay
+					commentsCount
+				}
+			}
+		}
+	}
+`
+
+export const CREATE_COMMENT = gql`
+	mutation($blockId: Int!, $contentId: Int!) {
+		createComment(blockId: $blockId, contentId: $contentId) {
+			id
+			createdAt
+			starCount
+			author {
+				displayName
+				username
+			}
+		}
+	}
+`
+
 export const USER_SEARCH = gql`
 	query($query: String!) {
 		searchUsers(query: $query) {
@@ -165,6 +206,13 @@ export const SET_STARRED = gql`
 		setStarred(blockId: $blockId, starred: $starred) {
 			id
 			starred
+		}
+	}
+`
+export const SET_COMMENT_STARRED = gql`
+	mutation($commentId: Int!, $starred: Boolean!) {
+		setCommentStarred(commentId: $commentId, starred: $starred) {
+			id
 		}
 	}
 `

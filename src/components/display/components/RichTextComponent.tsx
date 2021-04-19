@@ -1,22 +1,20 @@
-import React, { useRef } from 'react'
+import React, { forwardRef, useImperativeHandle, useRef } from 'react'
 import { RichTextArgs } from 'display-api'
 import { useCallback, useEffect, useState } from 'react'
 import { blockMethod, setMethodVariable } from '../method'
 import { View, StyleSheet } from 'react-native'
-import { globalStyles } from '../../../utils/styles'
 import { actions, RichEditor, RichToolbar } from 'react-native-pell-rich-editor'
 import colors from '../../../utils/colors'
 import { jsonToHtmlConversion, htmlToJsonCoverstion } from '../../../utils/htmlJsonConversion'
+import { MaterialCommunityIcons, FontAwesome5, Ionicons } from '@expo/vector-icons'
 
 export const RichTextComponent = ({ content, editable = false, name, save, on_enter }: RichTextArgs) => {
-	const richText = useRef(null)
 	const [value, setValue] = useState<string>(jsonToHtmlConversion(content))
-	const [isFocused, setFocused] = useState<boolean>(false)
 
 	useEffect(() => {
 		const saveTimeout = setTimeout(() => {
 			const components = htmlToJsonCoverstion(value)
-			if (save && components !== content) {
+			if (save && components != content) {
 				save && blockMethod(save)
 			}
 		}, 1000)
@@ -32,60 +30,136 @@ export const RichTextComponent = ({ content, editable = false, name, save, on_en
 		[name],
 	)
 
-	return (
-		<View style={globalStyles.flex1}>
-			<RichEditor
-				disabled={!editable}
-				ref={richText}
-				scrollEnabled={false}
-				onFocus={() => {
-					setFocused(true)
-				}}
-				onBlur={() => {
-					setFocused(false)
-				}}
-				onChange={html => {
-					setHtml(html)
-				}}
-				onKeyDown={event => {
-					if (event.key === 'Enter') {
-						richText.current?.blurContentEditor()
-						on_enter && blockMethod(on_enter)
-						return
-					}
-				}}
-				initialContentHTML={value}
-				editorStyle={{ backgroundColor: 'transparent' }}
-				style={[{ backgroundColor: 'transparent' }]}
-				placeholder='Start typing...'
-			/>
-			{isFocused && (
-				<View>
-					<RichToolbar
-						style={styles.richBar}
-						selectedIconTint={colors.accent}
-						disabledIconTint={'#bfbfbf'}
-						editor={richText}
-						actions={[
-							actions.keyboard,
-							actions.setBold,
-							actions.setItalic,
-							actions.setUnderline,
-							actions.setStrikethrough,
-							actions.removeFormat,
-							actions.undo,
-							actions.redo,
-						]}
-					/>
-				</View>
-			)}
-		</View>
-	)
+	useEffect(() => {
+		setHtml(value)
+	}, [])
+
+	const onEnter = () => {
+		on_enter && blockMethod(on_enter)
+	}
+
+	return <RichTextEditor value={value} setValue={setHtml} editable={editable} onEnter={onEnter} />
 }
+
+export const RichTextEditor = forwardRef(
+	(
+		{
+			value,
+			setValue,
+			editable,
+			onEnter,
+			style,
+		}: {
+			value: string
+			setValue: (newVal: string) => void
+			editable?: boolean
+			onEnter?: Function
+			style?: any
+		},
+		ref,
+	) => {
+		const richText = useRef(null)
+		const [isFocused, setFocused] = useState<boolean>(false)
+
+		const contentCSSText = `
+			font-size: ${style?.fontSize ?? 14}px; 
+			color: ${style?.color ?? colors.text}; 
+			padding-left: ${style?.paddingLeft ?? 0}px;
+		`
+
+		useImperativeHandle(ref, () => ({
+			reload() {
+				richText && richText?.current?.setContentHTML('')
+			},
+		}))
+
+		return (
+			<>
+				<RichEditor
+					disabled={!editable}
+					ref={richText}
+					scrollEnabled={false}
+					onFocus={() => {
+						setFocused(true)
+					}}
+					onBlur={() => {
+						setFocused(false)
+					}}
+					onChange={html => {
+						setValue(html)
+					}}
+					onKeyDown={event => {
+						if (event.key === 'Enter') {
+							richText.current?.blurContentEditor()
+							onEnter && onEnter()
+							return
+						}
+					}}
+					initialContentHTML={value}
+					editorStyle={{ backgroundColor: 'transparent', contentCSSText }}
+					style={[{ backgroundColor: 'transparent' }, style]}
+					placeholder='Start typing...'
+				/>
+				{isFocused && (
+					<View>
+						<RichToolbar
+							style={styles.richBar}
+							selectedIconTint={colors.accent}
+							disabledIconTint={'#bfbfbf'}
+							unselectedButtonStyle={styles.toolbarButton}
+							selectedButtonStyle={styles.toolbarButton}
+							disabledButtonStyle={styles.toolbarButton}
+							editor={richText}
+							actions={[
+								actions.keyboard,
+								actions.setBold,
+								actions.setItalic,
+								actions.setUnderline,
+								actions.setStrikethrough,
+								actions.undo,
+								actions.redo,
+								actions.removeFormat,
+							]}
+							iconMap={{
+								[actions.keyboard]: ({ tintColor }: { tintColor: string }) => (
+									<MaterialCommunityIcons color={tintColor} size={26} name='keyboard-outline' />
+								),
+								[actions.setBold]: ({ tintColor }: { tintColor: string }) => (
+									<FontAwesome5 color={tintColor} size={16} name='bold' />
+								),
+								[actions.setItalic]: ({ tintColor }: { tintColor: string }) => (
+									<FontAwesome5 color={tintColor} size={16} name='italic' />
+								),
+								[actions.setUnderline]: ({ tintColor }: { tintColor: string }) => (
+									<FontAwesome5 color={tintColor} size={16} name='underline' />
+								),
+								[actions.setStrikethrough]: ({ tintColor }: { tintColor: string }) => (
+									<FontAwesome5 color={tintColor} size={16} name='strikethrough' />
+								),
+								[actions.undo]: ({ tintColor }: { tintColor: string }) => (
+									<FontAwesome5 color={tintColor} size={16} name='undo' />
+								),
+								[actions.redo]: ({ tintColor }: { tintColor: string }) => (
+									<FontAwesome5 color={tintColor} size={16} name='redo' />
+								),
+								[actions.removeFormat]: ({ tintColor }: { tintColor: string }) => (
+									<Ionicons color={tintColor} size={26} name='close' />
+								),
+							}}
+						/>
+					</View>
+				)}
+			</>
+		)
+	},
+)
 
 const styles = StyleSheet.create({
 	richBar: {
-		borderColor: colors.navigationPrimary,
-		borderTopWidth: StyleSheet.hairlineWidth,
+		backgroundColor: 'transparent',
+		alignItems: 'flex-start',
+	},
+	toolbarButton: {
+		marginHorizontal: 5,
 	},
 })
