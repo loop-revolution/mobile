@@ -376,3 +376,22 @@ export const SET_PERMISSIONS = gql`
 		}
 	}
 `
+
+export const ALL_UPDATES = gql`
+	query {
+		allUpdates {
+			id
+			display
+			createdAt
+			seen
+		}
+	}
+`
+
+export const SET_UPDATE_SEEN = gql`
+	mutation($seen: Boolean!, $updateId: Int!) {
+		setUpdateSeen(seen: $seen, updateId: $updateId) {
+			id
+		}
+	}
+`

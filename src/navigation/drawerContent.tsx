@@ -53,6 +53,15 @@ export function DrawerContent(props: DrawerContentComponentProps) {
 					<Divider style={styles.separator} />
 					<DrawerItem
 						icon={() => <Image source={Images.help} />}
+						label="What's New?"
+						labelStyle={styles.optionLabel}
+						onPress={() => {
+							props.navigation.navigate(routes.WHATS_NEW)
+						}}
+					/>
+					<Divider style={styles.separator} />
+					<DrawerItem
+						icon={() => <Image source={Images.help} />}
 						label='Help & Feedback'
 						labelStyle={styles.optionLabel}
 						onPress={() => {}}
