@@ -1,25 +1,24 @@
 import { ComponentObject } from 'display-api'
 import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { View, FlatList, StyleSheet, Text, RefreshControl } from 'react-native'
-import { ActivityIndicator, Caption, Divider } from 'react-native-paper'
-import { useMutation, useQuery } from 'urql'
-import { ALL_UPDATES, SET_UPDATE_SEEN } from '../api/gql'
+import { ActivityIndicator, Divider } from 'react-native-paper'
+import { useQuery } from 'urql'
+import { ALL_UPDATES } from '../api/gql'
 import { ComponentDelegate } from '../components/display/ComponentDelegate'
 import { BadgeComponent } from '../components/display/components/BadgeComponent'
 import colors from '../utils/colors'
 import { globalStyles } from '../utils/styles'
 
 export const WhatsNew = () => {
-
 	type Update = {
-		id: number,
-		display: string,
-		createdAt: string,
+		id: number
+		display: string
+		createdAt: string
 		seen: boolean
 	}
 	type UpdatesResult = { allUpdates: Array<Update> }
-	type SetUpdateRequest = { seen: boolean, updateId: number }
+	//type SetUpdateRequest = { seen: boolean, updateId: number }
 
 	const [updatesResponse, getUpdates] = useQuery<UpdatesResult>({
 		query: ALL_UPDATES,
@@ -33,7 +32,7 @@ export const WhatsNew = () => {
 
 	const renderUpdateItem = ({ item }: { item: Update }) => {
 		const display: ComponentObject = JSON.parse(item.display)
-		const date = (item.createdAt && moment(item.createdAt).format("MM/DD/YYYY"))
+		const date = item.createdAt && moment(item.createdAt).format('MM/DD/YYYY')
 		return (
 			<>
 				<View style={styles.update}>
@@ -62,7 +61,9 @@ export const WhatsNew = () => {
 					refreshControl={<RefreshControl refreshing={updatesResponse.fetching} onRefresh={onRefresh} />}
 					keyExtractor={item => item.id.toString()}
 				/>
-			) : <Text style={styles.error}>There are no new updates</Text>}
+			) : (
+				<Text style={styles.error}>There are no new updates</Text>
+			)}
 		</View>
 	)
 }
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		marginBottom: 10
+		marginBottom: 10,
 	},
 	update: {
 		padding: 15,

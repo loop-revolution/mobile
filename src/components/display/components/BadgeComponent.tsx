@@ -34,12 +34,12 @@ const styles = (color = colors.primary) =>
 		textStyle: {
 			color: colors.white,
 			fontSize: 10,
-			marginVertical: 0
+			marginVertical: 0,
 		},
 		outlineTextStyle: {
 			color: color,
 			fontSize: 10,
-			marginVertical: 0
+			marginVertical: 0,
 		},
 		solidChip: {
 			backgroundColor: color,
