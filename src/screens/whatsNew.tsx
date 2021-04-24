@@ -2,15 +2,16 @@ import { ComponentObject } from 'display-api'
 import moment from 'moment'
 import React from 'react'
 import { View, FlatList, StyleSheet, Text, RefreshControl } from 'react-native'
-import { ActivityIndicator, Divider } from 'react-native-paper'
-import { useQuery } from 'urql'
-import { ALL_UPDATES } from '../api/gql'
+import { ActivityIndicator, Appbar, Divider } from 'react-native-paper'
+import { useMutation, useQuery } from 'urql'
+import { ALL_UPDATES, SET_LATEST_SEEN } from '../api/gql'
 import { ComponentDelegate } from '../components/display/ComponentDelegate'
 import { BadgeComponent } from '../components/display/components/BadgeComponent'
+import routes from '../navigation/routes'
 import colors from '../utils/colors'
 import { globalStyles } from '../utils/styles'
 
-export const WhatsNew = () => {
+export const WhatsNew = ({route, navigation}: {route: any, navigation: any}) => {
 	type Update = {
 		id: number
 		display: string
@@ -18,14 +19,37 @@ export const WhatsNew = () => {
 		seen: boolean
 	}
 	type UpdatesResult = { allUpdates: Array<Update> }
-	//type SetUpdateRequest = { seen: boolean, updateId: number }
 
 	const [updatesResponse, getUpdates] = useQuery<UpdatesResult>({
 		query: ALL_UPDATES,
 	})
 
+	type SetLatestSeenResult = { setLatestSeen: { id: number } }
+	type SetLatestSeenRequest = { latestUpdateId: number }
+
+
+	const [, setLatestSeen] = useMutation<SetLatestSeenResult, SetLatestSeenRequest>(SET_LATEST_SEEN)
+
 	const updates = updatesResponse.data?.allUpdates
 
+	React.useLayoutEffect(() => {
+		navigation.setOptions({
+			headerLeft: () => {
+				return (
+					<Appbar.BackAction
+						onPress={() => {
+							const latestUpdateId = updates && updates.length > 0 ? updates[0].id : null
+							latestUpdateId && setLatestSeen({latestUpdateId})
+							navigation.navigate(routes.HOME)
+						}}
+					/>
+				)
+			},
+		})
+	}, [navigation, route])
+
+
+	
 	const onRefresh = () => {
 		getUpdates({ requestPolicy: 'network-only' })
 	}

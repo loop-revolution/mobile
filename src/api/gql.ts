@@ -388,9 +388,9 @@ export const ALL_UPDATES = gql`
 	}
 `
 
-export const SET_UPDATE_SEEN = gql`
-	mutation($seen: Boolean!, $updateId: Int!) {
-		setUpdateSeen(seen: $seen, updateId: $updateId) {
+export const SET_LATEST_SEEN = gql`
+	mutation($latestUpdateId: Int!) {
+		setLatestSeen(latestUpdateId: $latestUpdateId) {
 			id
 		}
 	}
