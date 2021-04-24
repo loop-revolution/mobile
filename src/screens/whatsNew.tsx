@@ -11,7 +11,7 @@ import routes from '../navigation/routes'
 import colors from '../utils/colors'
 import { globalStyles } from '../utils/styles'
 
-export const WhatsNew = ({route, navigation}: {route: any, navigation: any}) => {
+export const WhatsNew = ({ route, navigation }: { route: any; navigation: any }) => {
 	type Update = {
 		id: number
 		display: string
@@ -27,7 +27,6 @@ export const WhatsNew = ({route, navigation}: {route: any, navigation: any}) => 
 	type SetLatestSeenResult = { setLatestSeen: { id: number } }
 	type SetLatestSeenRequest = { latestUpdateId: number }
 
-
 	const [, setLatestSeen] = useMutation<SetLatestSeenResult, SetLatestSeenRequest>(SET_LATEST_SEEN)
 
 	const updates = updatesResponse.data?.allUpdates
@@ -39,7 +38,7 @@ export const WhatsNew = ({route, navigation}: {route: any, navigation: any}) => 
 					<Appbar.BackAction
 						onPress={() => {
 							const latestUpdateId = updates && updates.length > 0 ? updates[0].id : null
-							latestUpdateId && setLatestSeen({latestUpdateId})
+							latestUpdateId && setLatestSeen({ latestUpdateId })
 							navigation.navigate(routes.HOME)
 						}}
 					/>
@@ -48,8 +47,6 @@ export const WhatsNew = ({route, navigation}: {route: any, navigation: any}) => 
 		})
 	}, [navigation, route])
 
-
-	
 	const onRefresh = () => {
 		getUpdates({ requestPolicy: 'network-only' })
 	}
