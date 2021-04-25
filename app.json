@@ -8,6 +8,16 @@
       "ios",
       "android"
     ],
+    "postPublish": [
+      {
+        "file": "sentry-expo/upload-sourcemaps",
+        "config": {
+          "organization": "loop-revolution",
+          "project": "react-native",
+          "authToken": "b7bf4b64abd64e58bc7f062297af7dab836ba2583a31404489d49ff2fad4fc81"
+        }
+      }
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
