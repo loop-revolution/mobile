@@ -18,6 +18,7 @@ import { ChangeUsername } from '../screens/profile/changeUsername'
 import { BlockFilters } from '../screens/search/blockFilters'
 import { Create } from '../screens/create'
 import { BlockComments } from '../components/blockMenu/blockComments'
+import { WhatsNew } from '../screens/whatsNew'
 
 const Stack = createStackNavigator()
 
@@ -97,6 +98,7 @@ export const HomeNavigator = ({ navigation }: { navigation: any }) => {
 			<Stack.Screen name={routes.BLOCK_COMMENTS} component={BlockComments} options={{ headerTitle: 'Comments' }} />
 			<Stack.Screen name={routes.BLOCK_FILTERS} component={BlockFilters} options={{ headerTitle: 'Filters' }} />
 			<Stack.Screen name={routes.CREATE} component={Create} options={{ headerTitle: 'Blocks' }} />
+			<Stack.Screen name={routes.WHATS_NEW} component={WhatsNew} options={{ headerTitle: "What's New" }} />
 		</Stack.Navigator>
 	)
 }
