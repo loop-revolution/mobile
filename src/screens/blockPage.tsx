@@ -9,7 +9,7 @@ import colors from '../utils/colors'
 import { ScrollView } from 'react-native-gesture-handler'
 import { ComponentDelegate } from '../components/display/ComponentDelegate'
 import { BreadcrumbHeader } from '../components/breadcrumbHeader'
-import { Block } from '../api/types'
+import { Block, Crumb } from '../api/types'
 import { BreadcrumbList } from '../components/breadcrumbList'
 import { UserContext } from '../context/userContext'
 import { BottomMenu } from '../components/blockMenu/bottomMenu'
@@ -35,9 +35,10 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 	}
 
 	React.useLayoutEffect(() => {
+		const lastBreadcrumb: Crumb = block?.breadcrumb?.length > 0 && block.breadcrumb[block.breadcrumb.length - 1]
 		navigation.setOptions({
 			headerTitle: (props: any) => (
-				<BreadcrumbHeader {...props} navigation={navigation} route={route} title={display?.meta?.page?.header} />
+				<BreadcrumbHeader {...props} navigation={navigation} route={route} title={lastBreadcrumb?.name} />
 			),
 			headerRight: () => {
 				if (display?.meta?.page?.menu) {
@@ -54,14 +55,14 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 				}
 			},
 		})
-	}, [navigation, display])
+	}, [navigation, block])
 
 	return (
 		<View style={globalStyles.flex1}>
 			<ScrollView contentContainerStyle={[styles.scrollViewContent]}>
 				{display ? (
 					<View>
-						{display.meta?.page?.header ? <Title>{display.meta?.page?.header}</Title> : null}
+						{display.meta?.page?.header && <Title>{display.meta?.page?.header}</Title>}
 						<ComponentDelegate component={display.display} />
 						{display.meta?.page?.menu && <BottomMenu ref={menuRef} menu={display.meta?.page?.menu} />}
 					</View>

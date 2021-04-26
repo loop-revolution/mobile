@@ -214,7 +214,7 @@ export const Permissions = ({ route, navigation }: { route: any; navigation: any
 								type: 'User',
 								action_text: 'Select User',
 							}
-							navigation.navigate(routes.SEARCH, {
+							navigation.push(routes.SEARCH, {
 								searchComponent: searchComponent,
 								manualSelectionRoute: routes.BLOCK_PERMISSIONS,
 							})

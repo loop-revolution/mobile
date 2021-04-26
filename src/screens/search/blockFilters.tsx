@@ -8,10 +8,10 @@ import { useNavigation } from '@react-navigation/core'
 import routes from '../../navigation/routes'
 import { useActionSheet } from '@expo/react-native-action-sheet'
 
-export const BlockFilters = ({ route }: { route: any }) => {
-	const navigation = useNavigation()
+export const BlockFilters = ({ route, navigation }: { route: any, navigation: any }) => {
 	const { showActionSheetWithOptions } = useActionSheet()
 
+	console.log("route.params?.filterObject: ", route.params?.filterObject)
 	let filterObject = route.params?.filterObject
 	const setFilterObject: Function = route.params?.setFilterObject
 
@@ -62,7 +62,7 @@ export const BlockFilters = ({ route }: { route: any }) => {
 				showSortingOptions()
 				return
 			case 'owner':
-				navigation.navigate(routes.SEARCH, {
+				navigation.push(routes.SEARCH, {
 					searchComponent: { cid: 'search', type: 'User', action_text: 'Search Owner' },
 					manualSelectionRoute: routes.BLOCK_FILTERS,
 				})

@@ -7,6 +7,10 @@ import Images from '../utils/images'
 import { Search } from '../screens/search/search'
 import { BlockPage } from '../screens/blockPage'
 import { GlobalNotifications } from '../screens/globalNotifications'
+import { HomeNavigator } from './homeNavigator'
+import { SearchNavigator } from './searchNavigator'
+import { CreateNavigator } from './createNavigator'
+import { NotifcationNavigator } from './notificationNavigator'
 
 const Tab = createMaterialBottomTabNavigator()
 
@@ -26,14 +30,14 @@ export const TabNavigator = () => {
 		>
 			<Tab.Screen
 				name='Home'
-				component={BlockPage}
+				component={HomeNavigator}
 				options={{
 					tabBarIcon: ({ color }: { color: string }) => <Image source={Images.tabHome} style={{ tintColor: color }} />,
 				}}
 			/>
 			<Tab.Screen
 				name='Search'
-				component={Search}
+				component={SearchNavigator}
 				options={{
 					tabBarIcon: ({ color }: { color: string }) => (
 						<Image source={Images.tabSearch} style={{ tintColor: color }} />
@@ -42,14 +46,14 @@ export const TabNavigator = () => {
 			/>
 			<Tab.Screen
 				name='Create'
-				component={Create}
+				component={CreateNavigator}
 				options={{
 					tabBarIcon: ({ color }: { color: string }) => <Image source={Images.tabAdd} style={{ tintColor: color }} />,
 				}}
 			/>
 			<Tab.Screen
 				name='Notifications'
-				component={GlobalNotifications}
+				component={NotifcationNavigator}
 				options={{
 					tabBarIcon: ({ color }: { color: string }) => (
 						<Image source={Images.tabNotification} style={{ tintColor: color }} />
