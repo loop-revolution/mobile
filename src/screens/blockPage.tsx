@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, RefreshControl } from 'react-native'
 import React, { useContext, useEffect, useRef } from 'react'
 import { useQuery } from 'urql'
 import { GET_BLOCK } from '../api/gql'
@@ -62,7 +62,10 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 
 	return (
 		<View style={styles.container}>
-			<ScrollView>
+			<ScrollView
+				refreshControl={<RefreshControl refreshing={blockResponse.fetching} onRefresh={() => {
+					getBlock({ requestPolicy: 'network-only' })
+				}} />}>
 				{display ? (
 					<View>
 						{display.meta?.page?.header && <Title>{display.meta?.page?.header}</Title>}
@@ -91,15 +94,15 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 }
 
 const styles = StyleSheet.create({
-		container: {
-			margin: 0,
-			flex: 1
-		},
-		subheading: {
-			textAlign: 'center',
-		},
-		richBar: {
-			borderColor: colors.navigationPrimary,
-			borderTopWidth: StyleSheet.hairlineWidth,
-		},
-	})
+	container: {
+		margin: 0,
+		flex: 1
+	},
+	subheading: {
+		textAlign: 'center',
+	},
+	richBar: {
+		borderColor: colors.navigationPrimary,
+		borderTopWidth: StyleSheet.hairlineWidth,
+	},
+})
