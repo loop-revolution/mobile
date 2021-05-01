@@ -8,6 +8,7 @@ import routes from '../../../navigation/routes'
 import { redirectTo } from '../../../utils/helper'
 import colors from '../../../utils/colors'
 import { getComponentIcon } from '../../../utils/utils'
+import { blockMethod, setMethodVariable } from '../method'
 
 export const ButtonComponent = ({
 	text,
@@ -22,11 +23,16 @@ export const ButtonComponent = ({
 }: ButtonArgs & { onChange?: () => void }) => {
 	const navigation = useNavigation()
 
-	const onPress = () => {
+	const onPress = async () => {
 		if (interact?.search) {
 			navigation.navigate(routes.SEARCH, { searchComponent: interact?.search })
 		} else if (interact?.redirect) {
 			redirectTo(interact?.redirect?.app_path, navigation)
+		} else if (interact?.method) {
+			const response = await blockMethod(interact?.method)
+			if (response.error) {
+				//TODO: Handle error based on usage.
+			}
 		}
 		onChange && onChange()
 	}
