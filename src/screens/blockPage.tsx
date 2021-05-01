@@ -67,7 +67,7 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 					getBlock({ requestPolicy: 'network-only' })
 				}} />}>
 				{display ? (
-					<View>
+					<View style={styles.innerView}>
 						{display.meta?.page?.header && <Title>{display.meta?.page?.header}</Title>}
 						<ComponentDelegate component={display.display} />
 						{display.meta?.page?.menu && <BottomMenu ref={menuRef} menu={display.meta?.page?.menu} />}
@@ -95,11 +95,14 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 
 const styles = StyleSheet.create({
 	container: {
-		margin: 0,
 		flex: 1
+	},
+	innerView: {
+		padding: 10,
 	},
 	subheading: {
 		textAlign: 'center',
+		margin: 10
 	},
 	richBar: {
 		borderColor: colors.navigationPrimary,

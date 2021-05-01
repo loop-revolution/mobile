@@ -6,8 +6,8 @@ import { View, StyleSheet } from 'react-native'
 // eslint-disable-next-line react/prop-types
 export const StackComponent = ({ direction = 'Vertical', items, align_x, align_y }: StackArgs) => {
 	// eslint-disable-next-line react/prop-types
-	const content = items.map(({ component }: { component: any }) => (
-		<ComponentDelegate component={component} key={JSON.stringify(component)} />
+	const content = items.map(({ component }: { component: any }, index: number) => (
+		<ComponentDelegate component={component} key={index?.toString()} />
 	))
 	switch (direction) {
 		case 'Horizontal':

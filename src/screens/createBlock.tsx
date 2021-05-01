@@ -1,5 +1,5 @@
 import { CreationObject } from 'display-api'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { View, StyleSheet, Text } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { ActivityIndicator, Button } from 'react-native-paper'
@@ -8,6 +8,8 @@ import { useMutation, useQuery } from 'urql'
 import { BLOCK_CREATION_DISPLAY, CREATE_BLOCK } from '../api/gql'
 import { ComponentDelegate } from '../components/display/ComponentDelegate'
 import { populateTemplate } from '../components/display/method'
+import { UserContext } from '../context/userContext'
+import routes from '../navigation/routes'
 import colors from '../utils/colors'
 import { globalStyles } from '../utils/styles'
 
@@ -17,6 +19,8 @@ export const CreateBlock = ({ route, navigation }: { route: any; navigation: any
 
 	type CreateBlockRequest = { type: string; input: string }
 	type CreateBlockResult = { createBlock: { id: number } }
+
+	const { user } = useContext(UserContext)
 
 	const [isLoading, setLoading] = useState(false)
 	const type = route.params.name
@@ -30,7 +34,14 @@ export const CreateBlock = ({ route, navigation }: { route: any; navigation: any
 		: null
 
 	const [createBlockResult, createBlock] = useMutation<CreateBlockResult, CreateBlockRequest>(CREATE_BLOCK)
+	
 	if (createBlockResult.data?.createBlock?.id) {
+		// Navigate to block page if it's not the root block else home
+		if (user?.root?.id) {
+			navigation.navigate(routes.BLOCK_PAGE, {blockId: createBlockResult.data?.createBlock?.id})
+		} else {
+			navigation.navigate(routes.HOME)
+		}
 		navigation.pop()
 	} else if (createBlockResult.error) {
 		setLoading(false)
