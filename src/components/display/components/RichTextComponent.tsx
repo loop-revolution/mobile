@@ -38,7 +38,7 @@ export const RichTextComponent = ({ content, editable = false, name, save, on_en
 		on_enter && blockMethod(on_enter)
 	}
 
-	let editorStyle= null
+	let editorStyle = null
 	if (bordered) {
 		editorStyle = { bordered: true, paddingLeft: 10 }
 	}

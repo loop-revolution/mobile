@@ -93,7 +93,7 @@ const styles = (color = colors.primary) =>
 			paddingBottom: 0,
 		},
 		cardContent: {
-			paddingTop: 5,
+			paddingTop: 10,
 			paddingLeft: 10,
 			paddingRight: 10,
 			paddingBottom: 10,
