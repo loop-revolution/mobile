@@ -2,23 +2,31 @@ import React from 'react'
 import { StackArgs } from 'display-api'
 import { ComponentDelegate } from '../ComponentDelegate'
 import { View, StyleSheet } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
 
 // eslint-disable-next-line react/prop-types
-export const StackComponent = ({ direction = 'Vertical', items }: StackArgs) => {
+export const StackComponent = ({ direction = 'Vertical', items, align_x, align_y }: StackArgs) => {
 	// eslint-disable-next-line react/prop-types
 	const content = items.map(({ component }: { component: any }) => (
 		<ComponentDelegate component={component} key={JSON.stringify(component)} />
 	))
-
 	switch (direction) {
 		case 'Horizontal':
-			return <ScrollView style={styles.horizontal}>{content}</ScrollView>
+			return <View style={[styles.horizontal, { justifyContent: flexLang(align_y) }]}>{content}</View>
 		case 'Fit':
-			return <ScrollView style={styles.fit}>{content}</ScrollView>
+			return <View style={[styles.fit, { justifyContent: flexLang(align_x) }]}>{content}</View>
 		default:
-			return <View style={styles.vertical}>{content}</View>
+			return <View style={[styles.vertical, { justifyContent: flexLang(align_x) }]}>{content}</View>
 	}
+}
+
+function flexLang(s?: string) {
+	if (s == "Middle") {
+		return "center"
+	}
+	if (s == "Bottom" || s == "Right") {
+		return "flex-end"
+	}
+	return "flex-start"
 }
 
 const styles = StyleSheet.create({
@@ -27,6 +35,8 @@ const styles = StyleSheet.create({
 	},
 	vertical: {
 		flexDirection: 'column',
+		width: "auto",
+		minWidth: 50,
 	},
 	fit: {
 		flexDirection: 'column',

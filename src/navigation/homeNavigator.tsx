@@ -2,7 +2,6 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { getFocusedRouteNameFromRoute, useTheme } from '@react-navigation/native'
 import routes from './routes'
-import { TabNavigator } from './tabNavigator'
 import { Appbar } from 'react-native-paper'
 import { globalStyles } from '../utils/styles'
 import { CreateBlock } from '../screens/createBlock'
@@ -39,9 +38,15 @@ export const HomeNavigator = ({ navigation }: { navigation: any }) => {
 					const isCustomTitle = typeof options.headerTitle === 'function'
 					return (
 						<Appbar.Header theme={theme}>
-							{previous ? options.headerLeft ? options.headerLeft() :
-                                <Appbar.BackAction onPress={navigation.goBack} /> :
-                                <Appbar.Action icon='menu' onPress={openDrawer} /> }
+							{previous ? (
+								options.headerLeft ? (
+									options.headerLeft()
+								) : (
+									<Appbar.BackAction onPress={navigation.goBack} />
+								)
+							) : (
+								<Appbar.Action icon='menu' onPress={openDrawer} />
+							)}
 							<Appbar.Content
 								title={isCustomTitle ? options.headerTitle() : options.headerTitle}
 								titleStyle={globalStyles.navBarTitle}
@@ -72,10 +77,22 @@ export const HomeNavigator = ({ navigation }: { navigation: any }) => {
 			<Stack.Screen name={routes.BLOCK_PAGE} component={BlockPage} />
 			<Stack.Screen name={routes.PROFILE} component={Profile} options={{ headerTitle: 'Profile' }} />
 			<Stack.Screen name={routes.EDIT_PROFILE} component={EditProfile} options={{ headerTitle: 'Edit Profile' }} />
-			<Stack.Screen name={routes.CHANGE_PASSWORD} component={ChangePassword} options={{ headerTitle: 'Change Password' }} />
+			<Stack.Screen
+				name={routes.CHANGE_PASSWORD}
+				component={ChangePassword}
+				options={{ headerTitle: 'Change Password' }}
+			/>
 			<Stack.Screen name={routes.CHANGE_EMAIL} component={ChangeEmail} options={{ headerTitle: 'Change Email' }} />
-			<Stack.Screen name={routes.CHANGE_DISPLAY_NAME} component={ChangeDisplayName} options={{ headerTitle: 'Change Display Name' }} />
-			<Stack.Screen name={routes.CHANGE_USER_NAME} component={ChangeUsername} options={{ headerTitle: 'Change Username' }} />
+			<Stack.Screen
+				name={routes.CHANGE_DISPLAY_NAME}
+				component={ChangeDisplayName}
+				options={{ headerTitle: 'Change Display Name' }}
+			/>
+			<Stack.Screen
+				name={routes.CHANGE_USER_NAME}
+				component={ChangeUsername}
+				options={{ headerTitle: 'Change Username' }}
+			/>
 			<Stack.Screen name={routes.BLOCK_PERMISSIONS} component={Permissions} options={{ headerTitle: 'Permissions' }} />
 			<Stack.Screen name={routes.BLOCK_COMMENTS} component={BlockComments} options={{ headerTitle: 'Comments' }} />
 			<Stack.Screen name={routes.BLOCK_FILTERS} component={BlockFilters} options={{ headerTitle: 'Filters' }} />

@@ -8,7 +8,7 @@ import colors from '../../../utils/colors'
 import { jsonToHtmlConversion, htmlToJsonCoverstion } from '../../../utils/htmlJsonConversion'
 import { MaterialCommunityIcons, FontAwesome5, Ionicons } from '@expo/vector-icons'
 
-export const RichTextComponent = ({ content, editable = false, name, save, on_enter }: RichTextArgs) => {
+export const RichTextComponent = ({ content, editable = false, name, save, on_enter, bordered }: RichTextArgs) => {
 	const [value, setValue] = useState<string>(jsonToHtmlConversion(content))
 
 	useEffect(() => {
@@ -38,7 +38,18 @@ export const RichTextComponent = ({ content, editable = false, name, save, on_en
 		on_enter && blockMethod(on_enter)
 	}
 
-	return <RichTextEditor value={value} setValue={setHtml} editable={editable} onEnter={onEnter} />
+	let editorStyle= null
+	if (bordered) {
+		editorStyle = { bordered: true, paddingLeft: 10 }
+	}
+
+	return <RichTextEditor
+		value={value}
+		setValue={setHtml}
+		editable={editable}
+		onEnter={onEnter}
+		editorStyle={editorStyle}
+	/>
 }
 
 export const RichTextEditor = forwardRef(
@@ -49,12 +60,14 @@ export const RichTextEditor = forwardRef(
 			editable,
 			onEnter,
 			style,
+			editorStyle,
 		}: {
 			value: string
 			setValue: (newVal: string) => void
 			editable?: boolean
 			onEnter?: Function
-			style?: any
+			style?: any,
+			editorStyle?: any
 		},
 		ref,
 	) => {
@@ -62,9 +75,11 @@ export const RichTextEditor = forwardRef(
 		const [isFocused, setFocused] = useState<boolean>(false)
 
 		const contentCSSText = `
-			font-size: ${style?.fontSize ?? 14}px; 
-			color: ${style?.color ?? colors.text}; 
-			padding-left: ${style?.paddingLeft ?? 0}px;
+			font-size: ${editorStyle?.fontSize ?? 14}px; 
+			color: ${editorStyle?.color ?? colors.text}; 
+			padding-left: ${editorStyle?.paddingLeft ?? 0}px;
+			margin-left: ${editorStyle?.marginLeft ?? 0}px;
+			border: ${editorStyle?.bordered ? "1px solid rgb(226, 232, 240);" : '0px;'}
 		`
 
 		useImperativeHandle(ref, () => ({

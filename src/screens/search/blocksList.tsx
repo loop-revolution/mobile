@@ -18,6 +18,7 @@ export const BlocksList = ({
 	loading: boolean
 	selectBlock?: Function
 }) => {
+	console.log("selectBlock: ", selectBlock)
 	const navigation = useNavigation()
 
 	const renderBlocksItem = ({ item }: { item: BlockResults }) => {
@@ -35,7 +36,7 @@ export const BlocksList = ({
 					titleStyle={styles.title}
 					onPress={() => {
 						selectBlock
-							? selectBlock(lastItem.blockId.toString())
+							? selectBlock(lastItem)
 							: navigation.navigate(routes.BLOCK_PAGE, { blockId: lastItem.blockId })
 					}}
 					left={() => <MaterialCommunityIcons color={color} name={'folder-outline'} size={25} />}

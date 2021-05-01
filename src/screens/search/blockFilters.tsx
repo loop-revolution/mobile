@@ -4,14 +4,13 @@ import { FlatList } from 'react-native-gesture-handler'
 import { Text, Divider, TouchableRipple, Switch, Button } from 'react-native-paper'
 import colors from '../../utils/colors'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/core'
 import routes from '../../navigation/routes'
 import { useActionSheet } from '@expo/react-native-action-sheet'
 
-export const BlockFilters = ({ route, navigation }: { route: any, navigation: any }) => {
+export const BlockFilters = ({ route, navigation }: { route: any; navigation: any }) => {
 	const { showActionSheetWithOptions } = useActionSheet()
 
-	console.log("route.params?.filterObject: ", route.params?.filterObject)
+	console.log('route.params?.filterObject: ', route.params?.filterObject)
 	let filterObject = route.params?.filterObject
 	const setFilterObject: Function = route.params?.setFilterObject
 

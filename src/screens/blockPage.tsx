@@ -1,5 +1,5 @@
 import { View, StyleSheet } from 'react-native'
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { useQuery } from 'urql'
 import { GET_BLOCK } from '../api/gql'
 import { DisplayObject } from 'display-api'
@@ -18,14 +18,17 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 	type BlockResult = { blockById: Block }
 	type BlockRequest = { id: number }
 	const { user } = useContext(UserContext)
+	const menuRef = useRef(null)
 
 	const blockId: number = route.params?.blockId ? Number(route.params.blockId) : user?.root?.id
-	const [blockResponse] = useQuery<BlockResult, BlockRequest>({
+	const [blockResponse, getBlock] = useQuery<BlockResult, BlockRequest>({
 		query: GET_BLOCK,
 		variables: { id: blockId },
 	})
 
-	const menuRef = useRef(null)
+	useEffect(() => {
+		getBlock()
+	}, [])
 
 	let display: DisplayObject
 	const block = blockResponse.data?.blockById
@@ -58,8 +61,8 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 	}, [navigation, block])
 
 	return (
-		<View style={globalStyles.flex1}>
-			<ScrollView contentContainerStyle={[styles.scrollViewContent]}>
+		<View style={styles.container}>
+			<ScrollView>
 				{display ? (
 					<View>
 						{display.meta?.page?.header && <Title>{display.meta?.page?.header}</Title>}
@@ -88,14 +91,15 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 }
 
 const styles = StyleSheet.create({
-	scrollViewContent: {
-		margin: 10,
-	},
-	subheading: {
-		textAlign: 'center',
-	},
-	richBar: {
-		borderColor: colors.navigationPrimary,
-		borderTopWidth: StyleSheet.hairlineWidth,
-	},
-})
+		container: {
+			margin: 0,
+			flex: 1
+		},
+		subheading: {
+			textAlign: 'center',
+		},
+		richBar: {
+			borderColor: colors.navigationPrimary,
+			borderTopWidth: StyleSheet.hairlineWidth,
+		},
+	})

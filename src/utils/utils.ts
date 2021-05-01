@@ -5,7 +5,7 @@ export const getComponentIcon = (icon: string) => {
 		case 'Folder':
 			return 'folder-outline'
 		case 'TaskComplete':
-			return 'check'
+			return 'check-circle-outline'
 		case 'Message':
 			return 'message'
 		case 'Box':
@@ -16,6 +16,10 @@ export const getComponentIcon = (icon: string) => {
 			return 'rss'
 		case 'Plus':
 			return 'plus'
+		case 'ThumbsUp': 
+			return 'thumb-up'
+		case 'ThumbsDown': 
+			return 'thumb-down'
 		default:
 			return 'cube'
 	}

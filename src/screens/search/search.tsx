@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import { Button, Searchbar, Text } from 'react-native-paper'
 import { useQuery } from 'urql'
 import { BLOCK_SEARCH, USER_SEARCH } from '../../api/gql'
-import { User, BlockResults, BlockSortType } from '../../api/types'
+import { User, BlockResults, BlockSortType, Block, Crumb } from '../../api/types'
 import colors from '../../utils/colors'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
 import { UsersList } from './usersList'
@@ -101,7 +101,25 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 		}
 	}, [])
 
-	// This will be called when the user or block
+
+	// This will be called when the block
+	// is selected from the search component
+	const onSelectBlockAction = async (blockCrumb: Crumb) => {
+		console.log(searchComponent?.then)
+		console.log(blockCrumb)
+		if (searchComponent?.then) {
+			searchComponent?.name && setMethodVariable(searchComponent?.name, blockCrumb.blockId.toString())
+			const response = await blockMethod(searchComponent?.then?.method)
+			if (response.error) {
+				//TODO: handle error
+				navigation.pop()
+			} else {
+				navigation.pop()
+			}
+		}
+	}
+
+	// This will be called when the user
 	// is selected from the search component
 	const onSelectAction = async (user: User) => {
 		if (searchComponent?.then) {
@@ -182,7 +200,7 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 				<BlocksList
 					blocks={blockResult.data?.searchBlocks}
 					loading={blockResult.fetching}
-					selectBlock={searchComponent?.then ? onSelectAction : undefined}
+					selectBlock={searchComponent?.then ? onSelectBlockAction : undefined}
 				/>
 			) : searchComponent?.type === 'User' ? (
 				<UsersList users={userResult.data?.searchUsers} loading={userResult.fetching} selectUser={onSelectAction} />
