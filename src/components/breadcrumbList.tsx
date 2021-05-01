@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { BlockCrumbs, Crumb } from '../api/types'
 import { Card, Modal } from 'react-native-paper'
@@ -45,8 +45,7 @@ export const BreadcrumbList = ({
 			onDismiss={() => {
 				navigation.setParams({ isBlockListExpanded: !isVisible })
 			}}
-			contentContainerStyle={styles.modal}
-		>
+			style={styles.modal} >
 			{breadcrumb ? (
 				<FlatList data={breadcrumb} renderItem={renderBreadcrumbItem} keyExtractor={item => item.blockId.toString()} />
 			) : null}
@@ -65,11 +64,13 @@ const styles = StyleSheet.create({
 		minHeight: 60,
 	},
 	modal: {
-		backgroundColor: colors.white,
-		position: 'absolute',
-		left: 0,
-		right: 0,
-		top: 0,
+		justifyContent: 'flex-start', 
+		marginTop: 0,
+		// backgroundColor: colors.white,
+		// position: 'absolute',
+		// left: 0,
+		// right: 0,
+		// top: 0,
 	},
 	selected: {
 		borderWidth: 1,
