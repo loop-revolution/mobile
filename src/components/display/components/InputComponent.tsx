@@ -23,13 +23,14 @@ export const InputComponent = ({
 	const [value, setValue] = useState<string>(initial_value)
 	const [frequency, setFrequency] = useState<string | null>('Days')
 	const [error, setError] = useState<string>(null)
-	const [isFocused, setFocused] = useState<boolean>(false)
 	const [isLoading, setLoading] = useState(false)
+	const [inputShown, setInputShown] = useState(mask == undefined ? true : false)
 
 	const [date, setDate] = useState(new Date())
 	const [time, setTime] = useState(new Date())
 	const [showDate, setShowDate] = useState(false)
 	const [showTime, setShowTime] = useState(false)
+	
 
 	const onChange = (value: string) => {
 		setValue(value)
@@ -42,11 +43,14 @@ export const InputComponent = ({
 		setLoading(false)
 		if (response.error) {
 			setError(response.error.message.replace(/\[\w+\]/g, ''))
+		} else {
+			setInputShown(false)
 		}
 	}
 
 	const onCancel = () => {
 		setValue(initial_value)
+		setInputShown(false)
 	}
 
 	const inputStyle: Array<any> = [styles.input]
@@ -57,6 +61,21 @@ export const InputComponent = ({
 	}
 
 	const textInput = () => {
+		if (mask && !inputShown) {
+			return (
+				<Text
+					onPress={() => setInputShown(true)}
+					numberOfLines={3}
+					style={{
+						fontWeight: mask.preset === "Heading" ? "bold" : "normal",
+						fontSize: mask.preset === "Heading" ? 20 : undefined,
+						color: mask.color ?? colors.text
+					}}
+				>
+					{mask.text || label || "Data" }
+				</Text>
+			)
+		}
 		return (
 			<TextInput
 				mode='outlined'
@@ -68,13 +87,9 @@ export const InputComponent = ({
 				onChangeText={value => onChange(value)}
 				value={value}
 				keyboardType={type === 'Number' ? 'numeric' : 'default'}
-				theme={!isFocused && mask ? { colors: { placeholder: 'transparent', background: 'transparent' } } : undefined}
 				autoCapitalize='none'
 				onFocus={() => {
-					setFocused(true)
-				}}
-				onBlur={() => {
-					setFocused(false)
+					setInputShown(true)
 				}}
 			/>
 		)
@@ -195,10 +210,10 @@ export const InputComponent = ({
 			{type === 'Date'
 				? datePicker()
 				: type === 'Time'
-				? timePicker()
-				: type === 'Frequency'
-				? frequencyInput()
-				: textInput()}
+					? timePicker()
+					: type === 'Frequency'
+						? frequencyInput()
+						: textInput()}
 			{confirm_cancel?.enabled && value !== initial_value && (
 				<View style={styles.buttonsContainer}>
 					<Button

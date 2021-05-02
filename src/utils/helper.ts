@@ -28,13 +28,8 @@ export async function registerForPushNotificationsAsync() {
 
 export function redirectTo(appPath: string, navigation: any) {
 	const url = appPath.replace(/^\/|\/$/g, '')
-
-	console.log('url: ', url)
-
 	const segments = url.split('/')
-
-	console.log(segments)
-
+	
 	if (segments.length > 1) {
 		if (segments[0] === 'b') {
 			navigation.navigate(routes.BLOCK_PAGE, { blockId: segments[1] })

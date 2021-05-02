@@ -60,9 +60,6 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 		})
 	}, [navigation, block])
 
-	if (display) {
-		console.log(display.display)
-	}
 	return (
 		<View style={styles.container}>
 			<ScrollView
@@ -77,8 +74,16 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 			>
 				{display ? (
 					<View style={styles.innerView}>
+						{/* Page header */}
 						{display.meta?.page?.header && <Title>{display.meta?.page?.header}</Title>}
+						
+						{/* Custom header component */}
+						{display.meta?.page?.header_component && <ComponentDelegate component={display.meta?.page?.header_component} />}
+						
+						{/* Component body */}
 						<ComponentDelegate component={display.display} />
+						
+						{/* Menu */}
 						{display.meta?.page?.menu && <BottomMenu ref={menuRef} menu={display.meta?.page?.menu} />}
 					</View>
 				) : user && !blockId ? (

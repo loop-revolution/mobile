@@ -10,7 +10,6 @@ import { useActionSheet } from '@expo/react-native-action-sheet'
 export const BlockFilters = ({ route, navigation }: { route: any; navigation: any }) => {
 	const { showActionSheetWithOptions } = useActionSheet()
 
-	console.log('route.params?.filterObject: ', route.params?.filterObject)
 	let filterObject = route.params?.filterObject
 	const setFilterObject: Function = route.params?.setFilterObject
 

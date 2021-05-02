@@ -95,6 +95,7 @@ const styles = (color = colors.primary) =>
 			paddingLeft: 10,
 			paddingRight: 10,
 			paddingBottom: 10,
+			flex: 1,
 		},
 		title: {
 			fontSize: 14,

@@ -104,8 +104,6 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 	// This will be called when the block
 	// is selected from the search component
 	const onSelectBlockAction = async (blockCrumb: Crumb) => {
-		console.log(searchComponent?.then)
-		console.log(blockCrumb)
 		if (searchComponent?.then) {
 			searchComponent?.name && setMethodVariable(searchComponent?.name, blockCrumb.blockId.toString())
 			const response = await blockMethod(searchComponent?.then?.method)

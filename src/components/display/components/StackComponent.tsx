@@ -11,11 +11,11 @@ export const StackComponent = ({ direction = 'Vertical', items, align_x, align_y
 	))
 	switch (direction) {
 		case 'Horizontal':
-			return <View style={[styles.horizontal, { justifyContent: flexLang(align_y) }]}>{content}</View>
+			return <View style={[styles.horizontal, { alignItems: flexLang(align_y) }]}>{content}</View>
 		case 'Fit':
-			return <View style={[styles.fit, { justifyContent: flexLang(align_x) }]}>{content}</View>
+			return <View style={[styles.fit, { alignItems: flexLang(align_y) }]}>{content}</View>
 		default:
-			return <View style={[styles.vertical]}>{content}</View>
+			return <View style={[styles.vertical,{ alignItems: flexLang(align_x) }]}>{content}</View>
 	}
 }
 
@@ -26,7 +26,7 @@ function flexLang(s?: string) {
 	if (s == 'Bottom' || s == 'Right') {
 		return 'flex-end'
 	}
-	return 'space-between'
+	return 'stretch'
 }
 
 const styles = StyleSheet.create({
@@ -36,8 +36,11 @@ const styles = StyleSheet.create({
 	},
 	vertical: {
 		width: 'auto',
+		flex: 1
 	},
 	fit: {
-		flexDirection: 'column',
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		justifyContent: 'flex-start',
 	},
 })

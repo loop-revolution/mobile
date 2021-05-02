@@ -18,7 +18,6 @@ export const BlocksList = ({
 	loading: boolean
 	selectBlock?: Function
 }) => {
-	console.log('selectBlock: ', selectBlock)
 	const navigation = useNavigation()
 
 	const renderBlocksItem = ({ item }: { item: BlockResults }) => {
