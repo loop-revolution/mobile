@@ -20,13 +20,13 @@ export const StackComponent = ({ direction = 'Vertical', items, align_x, align_y
 }
 
 function flexLang(s?: string) {
-	if (s == "Middle") {
-		return "center"
+	if (s == 'Middle') {
+		return 'center'
 	}
-	if (s == "Bottom" || s == "Right") {
-		return "flex-end"
+	if (s == 'Bottom' || s == 'Right') {
+		return 'flex-end'
 	}
-	return "space-between"
+	return 'space-between'
 }
 
 const styles = StyleSheet.create({
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	vertical: {
-		width: "auto"
+		width: 'auto',
 	},
 	fit: {
 		flexDirection: 'column',

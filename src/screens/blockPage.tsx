@@ -60,12 +60,21 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 		})
 	}, [navigation, block])
 
+	if (display) {
+		console.log(display.display)
+	}
 	return (
 		<View style={styles.container}>
 			<ScrollView
-				refreshControl={<RefreshControl refreshing={blockResponse.fetching} onRefresh={() => {
-					getBlock({ requestPolicy: 'network-only' })
-				}} />}>
+				refreshControl={
+					<RefreshControl
+						refreshing={blockResponse.fetching}
+						onRefresh={() => {
+							getBlock({ requestPolicy: 'network-only' })
+						}}
+					/>
+				}
+			>
 				{display ? (
 					<View style={styles.innerView}>
 						{display.meta?.page?.header && <Title>{display.meta?.page?.header}</Title>}
@@ -95,14 +104,14 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1
+		flex: 1,
 	},
 	innerView: {
 		padding: 10,
 	},
 	subheading: {
 		textAlign: 'center',
-		margin: 10
+		margin: 10,
 	},
 	richBar: {
 		borderColor: colors.navigationPrimary,

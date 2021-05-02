@@ -8,7 +8,7 @@ import routes from '../../../navigation/routes'
 import { redirectTo } from '../../../utils/helper'
 import colors from '../../../utils/colors'
 import { getComponentIcon } from '../../../utils/utils'
-import { blockMethod, setMethodVariable } from '../method'
+import { blockMethod } from '../method'
 
 export const ButtonComponent = ({
 	text,

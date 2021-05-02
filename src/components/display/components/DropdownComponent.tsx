@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { DropdownArgs } from 'display-api'
-import { StyleSheet } from 'react-native'
-import colors from '../../../utils/colors'
 import { blockMethod, setMethodVariable } from '../method'
 import { getComponentIcon } from '../../../utils/utils'
 import { Button } from 'react-native-paper'
@@ -22,13 +20,13 @@ export const DropdownComponent = ({
 	const [selectedIndex, setSelectedIndex] = React.useState(initial ?? 0)
 
 	const isOutlined = variant === 'Outline'
-	let dropdownOption = options.map(function (option) {
+	const dropdownOption = options.map(function(option) {
 		return option.text
 	})
 	dropdownOption.push('Cancel')
 
-	const dropdownOptionIcons = options.map(function (option) {
-		return option.icon && <MaterialCommunityIcons name={getComponentIcon(option.icon)}/>
+	const dropdownOptionIcons = options.map(function(option) {
+		return option.icon && <MaterialCommunityIcons name={getComponentIcon(option.icon)} />
 	})
 
 	const showOptions = () => {
@@ -63,12 +61,13 @@ export const DropdownComponent = ({
 		<Button
 			disabled={disabled}
 			onPress={() => {
-				showOptions() 
+				showOptions()
 			}}
-			mode={isOutlined ? 'outlined': 'contained'} 
+			mode={isOutlined ? 'outlined' : 'contained'}
 			color={color_scheme}
-			contentStyle={{flexDirection:'row-reverse'}}
-			icon={'chevron-down'}>
+			contentStyle={{ flexDirection: 'row-reverse' }}
+			icon={'chevron-down'}
+		>
 			{dropdownOption[selectedIndex]}
 		</Button>
 	)

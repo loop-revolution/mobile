@@ -28,7 +28,9 @@ export async function registerForPushNotificationsAsync() {
 
 export function redirectTo(appPath: string, navigation: any) {
 	const url = appPath.replace(/^\/|\/$/g, '')
-	
+
+	console.log('url: ', url)
+
 	const segments = url.split('/')
 
 	console.log(segments)

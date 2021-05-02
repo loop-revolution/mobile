@@ -4,14 +4,17 @@ import { Text, Title } from 'react-native-paper'
 import { StyleSheet } from 'react-native'
 import colors from '../../../utils/colors'
 
-export const TextComponent = ({ text, color, preset, bold, underline, italic, strikethrough }: TextArgs, { isLink = false }: { isLink?: boolean }) => {
+export const TextComponent = (
+	{ text, color, preset, bold, underline, italic, strikethrough }: TextArgs,
+	{ isLink = false }: { isLink?: boolean },
+) => {
 	color = color || colors.text
 
 	if (preset === 'Heading') {
 		return <Title style={[styles(color).headline, isLink ? styles().link : null]}>{text}</Title>
 	}
 
-	let componentStyle = {}
+	const componentStyle = {}
 
 	if (bold) {
 		componentStyle.fontWeight = 'bold'
@@ -29,7 +32,7 @@ export const TextComponent = ({ text, color, preset, bold, underline, italic, st
 	if (isLink && underline !== false) {
 		componentStyle.textDecorationLine = 'underline'
 	}
-	
+
 	return <Text style={[styles(color).text, componentStyle]}>{text}</Text>
 }
 

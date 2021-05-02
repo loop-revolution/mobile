@@ -25,7 +25,7 @@ export const EditProfile = ({ route, navigation }: { route: any; navigation: any
 	type ItemData = { title: string; subtitle: string; onPress: any }
 	const renderItem = ({ title, subtitle, onPress }: ItemData, index: number) => {
 		return (
-			<TouchableRipple key={title+index?.toString()} onPress={onPress}>
+			<TouchableRipple key={title + index?.toString()} onPress={onPress}>
 				<>
 					<View key={title} style={styles.itemContainer}>
 						<Text style={styles.itemTitle}>{title}</Text>

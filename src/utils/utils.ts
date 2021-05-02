@@ -16,10 +16,10 @@ export const getComponentIcon = (icon: string) => {
 			return 'rss'
 		case 'Plus':
 			return 'plus'
-		case 'ThumbsUp': 
-			return 'thumb-up'
-		case 'ThumbsDown': 
-			return 'thumb-down'
+		case 'ThumbsUp':
+			return 'thumb-up-outline'
+		case 'ThumbsDown':
+			return 'thumb-down-outline'
 		default:
 			return 'cube'
 	}

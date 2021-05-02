@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text } from 'react-native'
 import React from 'react'
 import { ProgressArgs } from 'display-api'
 import ProgressCircle from 'react-native-progress-circle'
@@ -8,7 +8,7 @@ export const ProgressBarComponent = ({ value, max = 100, inner_label, thickness 
 	const max_score = max ? max : 100
 	const percentage = value ? (100 * value) / max_score : 0
 	const borderThickness = thickness ? parseInt(thickness) : 5
-	const progressColor = color ? (color.includes("#") ? color : `${color}`) : colors.primary
+	const progressColor = color ? (color.includes('#') ? color : `${color}`) : colors.primary
 
 	return (
 		<ProgressCircle

@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import { Button, Searchbar, Text } from 'react-native-paper'
 import { useQuery } from 'urql'
 import { BLOCK_SEARCH, USER_SEARCH } from '../../api/gql'
-import { User, BlockResults, BlockSortType, Block, Crumb } from '../../api/types'
+import { User, BlockResults, BlockSortType, Crumb } from '../../api/types'
 import colors from '../../utils/colors'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
 import { UsersList } from './usersList'
@@ -100,7 +100,6 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 			onCancel()
 		}
 	}, [])
-
 
 	// This will be called when the block
 	// is selected from the search component

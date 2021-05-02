@@ -34,11 +34,11 @@ export const CreateBlock = ({ route, navigation }: { route: any; navigation: any
 		: null
 
 	const [createBlockResult, createBlock] = useMutation<CreateBlockResult, CreateBlockRequest>(CREATE_BLOCK)
-	
+
 	if (createBlockResult.data?.createBlock?.id) {
 		// Navigate to block page if it's not the root block else home
 		if (user?.root?.id) {
-			navigation.navigate(routes.BLOCK_PAGE, {blockId: createBlockResult.data?.createBlock?.id})
+			navigation.navigate(routes.BLOCK_PAGE, { blockId: createBlockResult.data?.createBlock?.id })
 		} else {
 			navigation.navigate(routes.HOME)
 		}

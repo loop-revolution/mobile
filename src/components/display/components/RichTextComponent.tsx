@@ -43,13 +43,9 @@ export const RichTextComponent = ({ content, editable = false, name, save, on_en
 		editorStyle = { bordered: true, paddingLeft: 10 }
 	}
 
-	return <RichTextEditor
-		value={value}
-		setValue={setHtml}
-		editable={editable}
-		onEnter={onEnter}
-		editorStyle={editorStyle}
-	/>
+	return (
+		<RichTextEditor value={value} setValue={setHtml} editable={editable} onEnter={onEnter} editorStyle={editorStyle} />
+	)
 }
 
 export const RichTextEditor = forwardRef(
@@ -66,7 +62,7 @@ export const RichTextEditor = forwardRef(
 			setValue: (newVal: string) => void
 			editable?: boolean
 			onEnter?: Function
-			style?: any,
+			style?: any
 			editorStyle?: any
 		},
 		ref,
@@ -79,7 +75,7 @@ export const RichTextEditor = forwardRef(
 			color: ${editorStyle?.color ?? colors.text}; 
 			padding-left: ${editorStyle?.paddingLeft ?? 0}px;
 			margin-left: ${editorStyle?.marginLeft ?? 0}px;
-			border: ${editorStyle?.bordered ? "1px solid rgb(226, 232, 240);" : '0px;'}
+			border: ${editorStyle?.bordered ? '1px solid rgb(226, 232, 240);' : '0px;'}
 		`
 
 		useImperativeHandle(ref, () => ({

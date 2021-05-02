@@ -79,8 +79,6 @@ const styles = (color = colors.primary) =>
 		cardContainer: {
 			marginTop: 5,
 			elevation: 0,
-			borderColor: '#D7DADE',
-			borderWidth: 1,
 			borderLeftColor: color,
 			borderLeftWidth: 5,
 			borderRadius: 5,
