@@ -17,6 +17,7 @@ import routes from '../../navigation/routes'
 import { redirectTo } from '../../utils/helper'
 import { ActionObject } from 'display-api'
 import { getComponentIcon } from '../../utils/utils'
+import { blockMethod } from '../display/method'
 
 export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) => {
 	type StarredResult = { setStarred: { id: number; starred: boolean } }
@@ -34,7 +35,6 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 	const snapPoints = useMemo(() => ['0%', '80%'], [])
 
 	const handleSheetChange = useCallback(index => {
-		console.log('handleSheetChange', index)
 	}, [])
 
 	useImperativeHandle(ref, () => ({
@@ -74,12 +74,17 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 		navigation.navigate(routes.BLOCK_PERMISSIONS, { menu })
 	}
 
-	const onPressCustomItem = (interact: ActionObject) => {
+	const onPressCustomItem = async (interact: ActionObject) => {
 		handleClose()
 		if (interact?.search) {
 			navigation.navigate(routes.SEARCH, { searchComponent: interact?.search })
 		} else if (interact?.redirect) {
 			redirectTo(interact.redirect?.app_path, navigation)
+		} else if (interact?.method) {
+			const response = await blockMethod(interact?.method)
+			if (response.error) {
+				//TODO: Handle error based on usage.
+			}
 		}
 	}
 

@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
 	},
 	vertical: {
 		width: 'auto',
-		flex: 1
 	},
 	fit: {
 		flexDirection: 'row',

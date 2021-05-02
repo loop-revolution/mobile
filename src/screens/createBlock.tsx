@@ -3,7 +3,6 @@ import React, { useContext, useState } from 'react'
 import { View, StyleSheet, Text } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { ActivityIndicator, Button } from 'react-native-paper'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { useMutation, useQuery } from 'urql'
 import { BLOCK_CREATION_DISPLAY, CREATE_BLOCK } from '../api/gql'
 import { ComponentDelegate } from '../components/display/ComponentDelegate'
@@ -59,29 +58,27 @@ export const CreateBlock = ({ route, navigation }: { route: any; navigation: any
 
 	return (
 		<ScrollView contentContainerStyle={[styles.scrollViewContent]}>
-			<SafeAreaView>
-				{creationObject ? (
-					<View>
-						<ComponentDelegate component={creationObject.header_component} />
-						<ComponentDelegate component={creationObject.main_component} />
-						<Button
-							onPress={() => createAction()}
-							loading={isLoading}
-							style={styles.button}
-							contentStyle={globalStyles.buttonContentStyle}
-							mode='contained'
-							labelStyle={{ color: 'white' }}
-						>
-							Create Block
+			{creationObject ? (
+				<View>
+					<ComponentDelegate component={creationObject.header_component} />
+					<ComponentDelegate component={creationObject.main_component} />
+					<Button
+						onPress={() => createAction()}
+						loading={isLoading}
+						style={styles.button}
+						contentStyle={globalStyles.buttonContentStyle}
+						mode='contained'
+						labelStyle={{ color: 'white' }}
+					>
+						Create Block
 						</Button>
-						{createBlockResult.error && (
-							<Text style={globalStyles.error}>{createBlockResult.error.message.replace(/\[\w+\]/g, '')}</Text>
-						)}
-					</View>
-				) : (
-					<ActivityIndicator {...null} style={globalStyles.flex1} color={colors.primary} />
-				)}
-			</SafeAreaView>
+					{createBlockResult.error && (
+						<Text style={globalStyles.error}>{createBlockResult.error.message.replace(/\[\w+\]/g, '')}</Text>
+					)}
+				</View>
+			) : (
+				<ActivityIndicator {...null} style={globalStyles.flex1} color={colors.primary} />
+			)}
 		</ScrollView>
 	)
 }
@@ -90,6 +87,7 @@ const styles = StyleSheet.create({
 	scrollViewContent: {
 		flex: 1,
 		paddingHorizontal: 30,
+		marginTop: 30,
 	},
 	headline: {
 		marginTop: 0,

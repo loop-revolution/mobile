@@ -136,7 +136,6 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 	}
 
 	const onCancel = async () => {
-		console.log('Cancel called')
 		if (searchComponent?.cancel) {
 			const response = await blockMethod(searchComponent?.cancel?.method)
 			if (response.error) {

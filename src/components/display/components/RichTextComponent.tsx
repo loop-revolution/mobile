@@ -85,7 +85,7 @@ export const RichTextEditor = forwardRef(
 		}))
 
 		return (
-			<>
+			<View style={{ flex: 1 }}>
 				<RichEditor
 					disabled={!editable}
 					ref={richText}
@@ -160,7 +160,7 @@ export const RichTextEditor = forwardRef(
 						/>
 					</View>
 				)}
-			</>
+			</View>
 		)
 	},
 )
