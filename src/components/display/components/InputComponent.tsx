@@ -30,7 +30,6 @@ export const InputComponent = ({
 	const [time, setTime] = useState(new Date())
 	const [showDate, setShowDate] = useState(false)
 	const [showTime, setShowTime] = useState(false)
-	
 
 	const onChange = (value: string) => {
 		setValue(value)
@@ -67,12 +66,12 @@ export const InputComponent = ({
 					onPress={() => setInputShown(true)}
 					numberOfLines={3}
 					style={{
-						fontWeight: mask.preset === "Heading" ? "bold" : "normal",
-						fontSize: mask.preset === "Heading" ? 20 : undefined,
-						color: mask.color ?? colors.text
+						fontWeight: mask.preset === 'Heading' ? 'bold' : 'normal',
+						fontSize: mask.preset === 'Heading' ? 20 : undefined,
+						color: mask.color ?? colors.text,
 					}}
 				>
-					{mask.text || label || "Data" }
+					{mask.text || label || 'Data'}
 				</Text>
 			)
 		}
@@ -210,10 +209,10 @@ export const InputComponent = ({
 			{type === 'Date'
 				? datePicker()
 				: type === 'Time'
-					? timePicker()
-					: type === 'Frequency'
-						? frequencyInput()
-						: textInput()}
+				? timePicker()
+				: type === 'Frequency'
+				? frequencyInput()
+				: textInput()}
 			{confirm_cancel?.enabled && value !== initial_value && (
 				<View style={styles.buttonsContainer}>
 					<Button

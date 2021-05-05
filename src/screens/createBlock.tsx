@@ -71,7 +71,7 @@ export const CreateBlock = ({ route, navigation }: { route: any; navigation: any
 						labelStyle={{ color: 'white' }}
 					>
 						Create Block
-						</Button>
+					</Button>
 					{createBlockResult.error && (
 						<Text style={globalStyles.error}>{createBlockResult.error.message.replace(/\[\w+\]/g, '')}</Text>
 					)}

@@ -76,13 +76,15 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 					<View style={styles.innerView}>
 						{/* Page header */}
 						{display.meta?.page?.header && <Title>{display.meta?.page?.header}</Title>}
-						
+
 						{/* Custom header component */}
-						{display.meta?.page?.header_component && <ComponentDelegate component={display.meta?.page?.header_component} />}
-						
+						{display.meta?.page?.header_component && (
+							<ComponentDelegate component={display.meta?.page?.header_component} />
+						)}
+
 						{/* Component body */}
 						<ComponentDelegate component={display.display} />
-						
+
 						{/* Menu */}
 						{display.meta?.page?.menu && <BottomMenu ref={menuRef} menu={display.meta?.page?.menu} />}
 					</View>

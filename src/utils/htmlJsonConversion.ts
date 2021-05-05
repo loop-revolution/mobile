@@ -63,7 +63,7 @@ const resetArgs = (args: TextArgs) => {
 }
 
 const parseChildren = (children: Array<any>, components: TextComponent[], args: TextArgs) => {
-	children.forEach(obj => {
+	children?.forEach(obj => {
 		if (obj.type == 'text') {
 			const newArgs: TextArgs = Object.assign({}, args)
 			newArgs.text = obj.content

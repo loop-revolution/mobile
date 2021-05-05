@@ -6,7 +6,6 @@ import React, { useRef, useState } from 'react'
 import { View, StyleSheet, Text, KeyboardAvoidingView, Platform } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { ActivityIndicator, Avatar, Button, Caption, Divider, Subheading } from 'react-native-paper'
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useMutation, useQuery } from 'urql'
 import { GET_BLOCK_COMMENTS, SET_COMMENT_STARRED, CREATE_BLOCK, CREATE_COMMENT } from '../../api/gql'
 import { Comment } from '../../api/types'
@@ -32,7 +31,6 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 	type CommentStarredRequest = { commentId: number; starred: boolean }
 
 	const headerHeight = useHeaderHeight()
-	const safeAreaInsets = useSafeAreaInsets()
 	const [value, setValue] = useState<string>('')
 	const richTextEditorRef = useRef(null)
 	const { showActionSheetWithOptions } = useActionSheet()
@@ -45,6 +43,7 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 	const [blockResponse] = useQuery<BlockResult, BlockRequest>({
 		query: GET_BLOCK_COMMENTS,
 		variables: { id: blockId },
+		requestPolicy: 'network-only',
 	})
 
 	React.useLayoutEffect(() => {
@@ -196,45 +195,43 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 
 	return (
 		<KeyboardAvoidingView
-			behavior={Platform.OS === 'ios' ? 'padding' : null}
+			behavior={Platform.OS === 'ios' ? 'height' : null}
 			style={styles().container}
-			keyboardVerticalOffset={headerHeight - safeAreaInsets.bottom}
+			keyboardVerticalOffset={headerHeight}
 		>
-			<SafeAreaView style={[styles().container, { marginTop: -safeAreaInsets.top }]}>
-				<View style={styles().container}>
-					<View style={styles().commentPreviewContainer}>{comment && renderCommentListItem({ item: comment })}</View>
-					{blockComments && blockComments.length > 0 ? (
-						<FlatList
-							style={styles().flatList}
-							data={blockComments}
-							renderItem={renderCommentListItem}
-							keyExtractor={item => item.id.toString()}
-						/>
-					) : (
-						<Subheading style={styles().subheading}>No comments found!</Subheading>
-					)}
-				</View>
-				<View style={styles().commentInputContainer}>
-					<View style={globalStyles.flex1}>
-						<RichTextEditor
-							ref={richTextEditorRef}
-							style={styles().commentInput}
-							value={value}
-							setValue={setValue}
-							editable={true}
-							onEnter={onEnter}
-						/>
-					</View>
-					<Button
-						onPress={onEnter}
-						contentStyle={globalStyles.buttonContentStyle}
-						disabled={createBlockResponse.fetching || createCommentResponse.fetching}
-						labelStyle={{ color: 'white' }}
-					>
-						{<MaterialCommunityIcons style={styles().sendButton} name={'send'} color={colors.text} size={22} />}
-					</Button>
-				</View>
-			</SafeAreaView>
+			<View style={styles().container}>
+				<View style={styles().commentPreviewContainer}>{comment && renderCommentListItem({ item: comment })}</View>
+				{blockComments && blockComments.length > 0 ? (
+					<FlatList
+						style={styles().flatList}
+						data={blockComments}
+						renderItem={renderCommentListItem}
+						keyExtractor={item => item.id.toString()}
+					/>
+				) : (
+					<Subheading style={styles().subheading}>No comments found!</Subheading>
+				)}
+			</View>
+			<View style={styles().commentInputContainer}>
+				{/* <View style={globalStyles.flex1}> */}
+				<RichTextEditor
+					ref={richTextEditorRef}
+					style={styles().commentInput}
+					value={value}
+					setValue={setValue}
+					editable={true}
+					onEnter={onEnter}
+				/>
+				{/* </View> */}
+				<Button
+					onPress={onEnter}
+					contentStyle={globalStyles.buttonContentStyle}
+					disabled={createBlockResponse.fetching || createCommentResponse.fetching || value == ''}
+					labelStyle={{ color: 'white' }}
+				>
+					{<MaterialCommunityIcons style={styles().sendButton} name={'send'} color={colors.text} size={22} />}
+				</Button>
+			</View>
 		</KeyboardAvoidingView>
 	)
 }

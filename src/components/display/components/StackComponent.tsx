@@ -15,7 +15,7 @@ export const StackComponent = ({ direction = 'Vertical', items, align_x, align_y
 		case 'Fit':
 			return <View style={[styles.fit, { alignItems: flexLang(align_y) }]}>{content}</View>
 		default:
-			return <View style={[styles.vertical,{ alignItems: flexLang(align_x) }]}>{content}</View>
+			return <View style={[styles.vertical, { alignItems: flexLang(align_x) }]}>{content}</View>
 	}
 }
 
