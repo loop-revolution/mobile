@@ -7,8 +7,11 @@ export const jsonToHtmlConversion = (components: TextComponent[]): string => {
 	}
 
 	let html = ''
-	components.map(component => {
-		html = `${html}${buildHtmlTag(component.args)}`
+	const newComponents = [...components]
+
+	newComponents.map(component => {
+		const textArgs = Object.assign({}, component.args)
+		html = `${html}${buildHtmlTag(textArgs)}`
 	})
 	return `<div>${html}</div>`
 }
@@ -35,7 +38,7 @@ const buildHtmlTag = (args: TextArgs) => {
 	}
 	if (args.italic) {
 		args.italic = false
-		return `<em>${buildHtmlTag(args)}</em>`
+		return `<i>${buildHtmlTag(args)}</i>`
 	}
 	if (args.underline) {
 		args.underline = false
@@ -43,7 +46,7 @@ const buildHtmlTag = (args: TextArgs) => {
 	}
 	if (args.strikethrough) {
 		args.strikethrough = false
-		return `<del>${buildHtmlTag(args)}</del>`
+		return `<strike>${buildHtmlTag(args)}</strike>`
 	}
 	if (args.monospace) {
 		args.monospace = false
@@ -74,9 +77,9 @@ const parseChildren = (children: Array<any>, components: TextComponent[], args: 
 		if (obj.type == 'element') {
 			if (obj.tagName == 'b') args.bold = true
 			if (obj.tagName == 'u') args.underline = true
-			if (obj.tagName == 'em') args.italic = true
+			if (obj.tagName == 'i') args.italic = true
 			if (obj.tagName == 'code') args.monospace = true
-			if (obj.tagName == 'del') args.strikethrough = true
+			if (obj.tagName == 'strike') args.strikethrough = true
 		}
 		obj.children && parseChildren(obj.children, components, args)
 	})
