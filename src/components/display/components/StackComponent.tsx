@@ -7,7 +7,9 @@ import { View, StyleSheet } from 'react-native'
 export const StackComponent = ({ direction = 'Vertical', items, align_x, align_y }: StackArgs) => {
 	// eslint-disable-next-line react/prop-types
 	const content = items.map(({ component }: { component: any }, index: number) => (
-		<View style={{marginRight:5}}><ComponentDelegate component={component} key={index?.toString()} /></View>
+		<View key={index?.toString()} style={{ marginHorizontal: 2 }}>
+			<ComponentDelegate component={component} />
+		</View>
 	))
 	switch (direction) {
 		case 'Horizontal':
@@ -40,6 +42,6 @@ const styles = StyleSheet.create({
 	fit: {
 		flexDirection: 'row',
 		flexWrap: 'wrap',
-		justifyContent: 'space-between'
+		justifyContent: 'space-between',
 	},
 })
