@@ -5,18 +5,21 @@ import ProgressCircle from 'react-native-progress-circle'
 import colors from '../../../utils/colors'
 
 export const ProgressBarComponent = ({ value, max = 100, inner_label, thickness = '5', color }: ProgressArgs) => {
-	const percentage = (100 * value) / max
+	const max_score = max ? max : 100
+	const percentage = value ? (100 * value) / max_score : 0
+	const borderThickness = thickness ? parseInt(thickness) : 5
+	const progressColor = color ? (color.includes('#') ? color : `${color}`) : colors.primary
 
 	return (
 		<ProgressCircle
 			percent={percentage}
 			radius={40}
-			borderWidth={parseInt(thickness)}
-			color={color}
+			borderWidth={borderThickness}
+			color={progressColor}
 			shadowColor='#E8E8E8'
 		>
-			<Text style={styles(color).text}>{inner_label}</Text>
-			<Text style={styles(color).percentageText}>{percentage}</Text>
+			<Text style={styles(progressColor).text}>{inner_label}</Text>
+			<Text style={styles(progressColor).percentageText}>{percentage}</Text>
 		</ProgressCircle>
 	)
 }

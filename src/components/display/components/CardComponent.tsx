@@ -79,8 +79,6 @@ const styles = (color = colors.primary) =>
 		cardContainer: {
 			marginTop: 5,
 			elevation: 0,
-			borderColor: '#D7DADE',
-			borderWidth: 1,
 			borderLeftColor: color,
 			borderLeftWidth: 5,
 			borderRadius: 5,
@@ -93,10 +91,11 @@ const styles = (color = colors.primary) =>
 			paddingBottom: 0,
 		},
 		cardContent: {
-			paddingTop: 5,
+			paddingTop: 10,
 			paddingLeft: 10,
 			paddingRight: 10,
 			paddingBottom: 10,
+			flex: 1,
 		},
 		title: {
 			fontSize: 14,

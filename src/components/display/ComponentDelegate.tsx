@@ -14,6 +14,7 @@ import { ProgressBarComponent } from './components/ProgressBarComponent'
 import { ActionPopoverComponent } from './components/ActionPopoverComponent'
 import { DisplayListComponent } from './components/DisplayListComponent'
 import { RichTextComponent } from './components/RichTextComponent'
+import { IconComponent } from './components/IconComponent'
 import { StickyToggleButtonComponent } from './components/StickyToggleButtonComponent'
 
 export const ComponentDelegate = ({ component }: { component: ComponentObject }) => {
@@ -46,6 +47,8 @@ export const ComponentDelegate = ({ component }: { component: ComponentObject })
 			return <RichTextComponent {...component.args} />
 		case 'stickytogglebutton':
 			return <StickyToggleButtonComponent {...component.args} />
+		case 'icon':
+			return <IconComponent {...component.args} />
 		default:
 			return <Text>No Component Found</Text>
 	}

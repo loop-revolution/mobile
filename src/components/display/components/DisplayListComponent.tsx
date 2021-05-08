@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useMemo, useRef } from 'react'
+import React, { useRef } from 'react'
 import { DisplayListArgs, DisplayListItem } from 'display-api'
 import { ComponentDelegate } from '../ComponentDelegate'
 import { IconButton } from 'react-native-paper'
@@ -8,8 +8,9 @@ import { BottomMenu } from '../../blockMenu/bottomMenu'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 
 export const DisplayListComponent = ({ items }: DisplayListArgs) => {
-	const menuRefs = useMemo(() => Array.from({ length: items.length }, () => useRef(null)), [items])
+	const menuRefs = useRef([])
 
+	menuRefs.current = items.map((ref, index) => (menuRefs.current[index] = React.createRef()))
 	const renderItem = ({ item, index }: { item: DisplayListItem; index: number }) => {
 		return (
 			<>
@@ -20,12 +21,12 @@ export const DisplayListComponent = ({ items }: DisplayListArgs) => {
 						color={colors.primary}
 						icon='dots-horizontal'
 						onPress={() => {
-							menuRefs[index].current?.handleOpen()
+							menuRefs.current[index].current?.handleOpen()
 						}}
 					/>
 					<ComponentDelegate component={item.component} />
 				</View>
-				{item.menu && <BottomMenu ref={menuRefs[index]} menu={item.menu} />}
+				{item.menu && <BottomMenu ref={menuRefs.current[index]} menu={item.menu} />}
 			</>
 		)
 	}

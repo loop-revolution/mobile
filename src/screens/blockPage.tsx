@@ -1,5 +1,5 @@
-import { View, StyleSheet } from 'react-native'
-import React, { useContext, useRef } from 'react'
+import { View, StyleSheet, RefreshControl } from 'react-native'
+import React, { useContext, useEffect, useRef } from 'react'
 import { useQuery } from 'urql'
 import { GET_BLOCK } from '../api/gql'
 import { DisplayObject } from 'display-api'
@@ -9,7 +9,7 @@ import colors from '../utils/colors'
 import { ScrollView } from 'react-native-gesture-handler'
 import { ComponentDelegate } from '../components/display/ComponentDelegate'
 import { BreadcrumbHeader } from '../components/breadcrumbHeader'
-import { Block } from '../api/types'
+import { Block, Crumb } from '../api/types'
 import { BreadcrumbList } from '../components/breadcrumbList'
 import { UserContext } from '../context/userContext'
 import { BottomMenu } from '../components/blockMenu/bottomMenu'
@@ -18,14 +18,17 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 	type BlockResult = { blockById: Block }
 	type BlockRequest = { id: number }
 	const { user } = useContext(UserContext)
+	const menuRef = useRef(null)
 
 	const blockId: number = route.params?.blockId ? Number(route.params.blockId) : user?.root?.id
-	const [blockResponse] = useQuery<BlockResult, BlockRequest>({
+	const [blockResponse, getBlock] = useQuery<BlockResult, BlockRequest>({
 		query: GET_BLOCK,
 		variables: { id: blockId },
 	})
 
-	const menuRef = useRef(null)
+	useEffect(() => {
+		getBlock()
+	}, [])
 
 	let display: DisplayObject
 	const block = blockResponse.data?.blockById
@@ -35,9 +38,10 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 	}
 
 	React.useLayoutEffect(() => {
+		const lastBreadcrumb: Crumb = block?.breadcrumb?.length > 0 && block.breadcrumb[block.breadcrumb.length - 1]
 		navigation.setOptions({
 			headerTitle: (props: any) => (
-				<BreadcrumbHeader {...props} navigation={navigation} route={route} title={display?.meta?.page?.header} />
+				<BreadcrumbHeader {...props} navigation={navigation} route={route} title={lastBreadcrumb?.name} />
 			),
 			headerRight: () => {
 				if (display?.meta?.page?.menu) {
@@ -54,15 +58,34 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 				}
 			},
 		})
-	}, [navigation, display])
+	}, [navigation, block])
 
 	return (
-		<View style={globalStyles.flex1}>
-			<ScrollView contentContainerStyle={[styles.scrollViewContent]}>
+		<View style={styles.container}>
+			<ScrollView
+				refreshControl={
+					<RefreshControl
+						refreshing={blockResponse.fetching}
+						onRefresh={() => {
+							getBlock({ requestPolicy: 'network-only' })
+						}}
+					/>
+				}
+			>
 				{display ? (
-					<View>
-						{display.meta?.page?.header ? <Title>{display.meta?.page?.header}</Title> : null}
+					<View style={styles.innerView}>
+						{/* Page header */}
+						{display.meta?.page?.header && <Title>{display.meta?.page?.header}</Title>}
+
+						{/* Custom header component */}
+						{display.meta?.page?.header_component && (
+							<ComponentDelegate component={display.meta?.page?.header_component} />
+						)}
+
+						{/* Component body */}
 						<ComponentDelegate component={display.display} />
+
+						{/* Menu */}
 						{display.meta?.page?.menu && <BottomMenu ref={menuRef} menu={display.meta?.page?.menu} />}
 					</View>
 				) : user && !blockId ? (
@@ -87,11 +110,15 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 }
 
 const styles = StyleSheet.create({
-	scrollViewContent: {
-		margin: 10,
+	container: {
+		flex: 1,
+	},
+	innerView: {
+		padding: 10,
 	},
 	subheading: {
 		textAlign: 'center',
+		margin: 10,
 	},
 	richBar: {
 		borderColor: colors.navigationPrimary,

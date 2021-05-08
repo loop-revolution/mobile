@@ -1,10 +1,12 @@
 import React, { useCallback, useRef, useMemo, forwardRef, useImperativeHandle } from 'react'
 import { StyleSheet, View, Text, Share } from 'react-native'
-import BottomSheet, {
+import {
 	BottomSheetScrollView,
 	BottomSheetBackgroundProps,
 	BottomSheetBackdropProps,
 	BottomSheetBackdrop,
+	BottomSheetModal,
+	BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet'
 import { CustomMenuItem, MenuComponent } from 'display-api/lib/components/menu'
 import colors from '../../utils/colors'
@@ -17,6 +19,7 @@ import routes from '../../navigation/routes'
 import { redirectTo } from '../../utils/helper'
 import { ActionObject } from 'display-api'
 import { getComponentIcon } from '../../utils/utils'
+import { blockMethod } from '../display/method'
 
 export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) => {
 	type StarredResult = { setStarred: { id: number; starred: boolean } }
@@ -28,23 +31,23 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 	const [, setNotifs] = useMutation<NotifsResult, NotifsRequest>(SET_NOTIFS)
 
 	// hooks
-	const sheetRef = useRef<BottomSheet>(null)
+	const sheetRef = useRef<BottomSheetModal>(null)
 	const navigation = useNavigation()
 
 	const snapPoints = useMemo(() => ['0%', '80%'], [])
 
 	const handleSheetChange = useCallback(index => {
-		console.log('handleSheetChange', index)
+		console.log(index)
 	}, [])
 
 	useImperativeHandle(ref, () => ({
 		handleOpen() {
-			sheetRef.current?.snapTo(1)
+			sheetRef.current?.present()
 		},
 	}))
 
 	const handleClose = useCallback(() => {
-		sheetRef.current?.close()
+		sheetRef.current?.dismiss()
 	}, [])
 
 	const handleShare = useCallback(() => {
@@ -74,12 +77,17 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 		navigation.navigate(routes.BLOCK_PERMISSIONS, { menu })
 	}
 
-	const onPressCustomItem = (interact: ActionObject) => {
+	const onPressCustomItem = async (interact: ActionObject) => {
 		handleClose()
 		if (interact?.search) {
 			navigation.navigate(routes.SEARCH, { searchComponent: interact?.search })
 		} else if (interact?.redirect) {
 			redirectTo(interact.redirect?.app_path, navigation)
+		} else if (interact?.method) {
+			const response = await blockMethod(interact?.method)
+			if (response.error) {
+				//TODO: Handle error based on usage.
+			}
 		}
 	}
 
@@ -106,48 +114,50 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 	}
 
 	const backdropComponent = (props: BottomSheetBackdropProps) => {
-		return <BottomSheetBackdrop {...props} enableTouchThrough={true} />
+		return <BottomSheetBackdrop {...props} enableTouchThrough={true} disappearsOnIndex={1} />
 	}
 
 	return (
 		<Portal>
-			<BottomSheet
-				ref={sheetRef}
-				index={-1}
-				backgroundComponent={backgroundComponent}
-				backdropComponent={backdropComponent}
-				snapPoints={snapPoints}
-				onChange={handleSheetChange}
-			>
-				<BottomSheetScrollView>
-					{menu.custom &&
-						menu.custom.map(({ icon, text, interact, disabled }: CustomMenuItem) =>
-							renderItem(text, onPressCustomItem.bind(this, interact), null, getComponentIcon(icon), disabled),
+			<BottomSheetModalProvider>
+				<BottomSheetModal
+					ref={sheetRef}
+					index={1}
+					backgroundComponent={backgroundComponent}
+					backdropComponent={backdropComponent}
+					snapPoints={snapPoints}
+					onChange={handleSheetChange}
+				>
+					<BottomSheetScrollView>
+						{menu.custom &&
+							menu.custom.map(({ icon, text, interact, disabled }: CustomMenuItem) =>
+								renderItem(text, onPressCustomItem.bind(this, interact), null, getComponentIcon(icon), disabled),
+							)}
+						{menu.star_button &&
+							renderItem(
+								menu.star_button.starred ? 'Unstar' : 'Star',
+								handleStarring,
+								menu.star_button.count,
+								menu.star_button.starred ? 'star' : 'star-outline',
+							)}
+						{renderItem('Comments', handleComments, menu.comment_count, 'message')}
+						{renderItem(
+							menu.notifications_enabled ? 'Disable Notification' : 'Enable Notification',
+							handleNotifs,
+							null,
+							menu.notifications_enabled ? 'bell' : 'bell-off',
 						)}
-					{menu.star_button &&
-						renderItem(
-							menu.star_button.starred ? 'Unstar' : 'Star',
-							handleStarring,
-							menu.star_button.count,
-							menu.star_button.starred ? 'star' : 'star-outline',
-						)}
-					{renderItem('Comments', handleComments, menu.comment_count, 'message')}
-					{renderItem(
-						menu.notifications_enabled ? 'Disable Notification' : 'Enable Notification',
-						handleNotifs,
-						null,
-						menu.notifications_enabled ? 'bell' : 'bell-off',
-					)}
-					{menu.permissions &&
-						renderItem(
-							'Permissions',
-							handlePermissions,
-							menu.permissions?.full + menu.permissions?.edit + menu.permissions?.view,
-						)}
+						{menu.permissions &&
+							renderItem(
+								'Permissions',
+								handlePermissions,
+								menu.permissions?.full + menu.permissions?.edit + menu.permissions?.view,
+							)}
 
-					{renderItem('Share', handleShare)}
-				</BottomSheetScrollView>
-			</BottomSheet>
+						{renderItem('Share', handleShare)}
+					</BottomSheetScrollView>
+				</BottomSheetModal>
+			</BottomSheetModalProvider>
 		</Portal>
 	)
 })

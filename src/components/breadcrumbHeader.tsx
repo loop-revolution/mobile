@@ -17,7 +17,7 @@ export const BreadcrumbHeader = ({
 	navigation: any
 }) => {
 	const toggle = () => {
-		navigation.setParams({ isBlockListExpanded: !route.params.isBlockListExpanded })
+		navigation.setParams({ isBlockListExpanded: !route.params?.isBlockListExpanded })
 	}
 
 	if (!title) {
@@ -36,7 +36,7 @@ export const BreadcrumbHeader = ({
 			<MaterialCommunityIcons
 				style={styles.chevron}
 				color={colors.white}
-				name={route.params.isBlockListExpanded ? 'chevron-up' : 'chevron-down'}
+				name={route.params?.isBlockListExpanded ? 'chevron-up' : 'chevron-down'}
 				size={25}
 			/>
 		</TouchableOpacity>

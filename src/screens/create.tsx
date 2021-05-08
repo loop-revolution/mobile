@@ -164,6 +164,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		margin: 5,
 		aspectRatio: 1,
+		maxWidth: '47.5%',
 	},
 	listItem: {
 		flex: 1,

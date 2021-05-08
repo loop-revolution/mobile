@@ -5,9 +5,13 @@ import { Linking } from 'react-native'
 import { TouchableRipple } from 'react-native-paper'
 import { redirectTo } from '../../../utils/helper'
 import { TextComponent } from './TextComponent'
+import colors from '../../../utils/colors'
 
-export const LinkComponent = ({ text, app_path, url }: LinkArgs) => {
+export const LinkComponent = ({ text, app_path, url, no_style }: LinkArgs) => {
 	const navigation = useNavigation()
+
+	text.color = no_style ? text.color : colors.text
+	text.underline = !no_style
 
 	const onPress = () => {
 		if (app_path) {
@@ -17,5 +21,5 @@ export const LinkComponent = ({ text, app_path, url }: LinkArgs) => {
 		}
 	}
 
-	return <TouchableRipple onPress={onPress}>{TextComponent({ ...text.args }, { isLink: true })}</TouchableRipple>
+	return <TouchableRipple onPress={onPress}>{TextComponent({ ...text }, { isLink: true })}</TouchableRipple>
 }

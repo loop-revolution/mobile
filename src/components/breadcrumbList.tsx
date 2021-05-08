@@ -45,7 +45,7 @@ export const BreadcrumbList = ({
 			onDismiss={() => {
 				navigation.setParams({ isBlockListExpanded: !isVisible })
 			}}
-			contentContainerStyle={styles.modal}
+			style={styles.modal}
 		>
 			{breadcrumb ? (
 				<FlatList data={breadcrumb} renderItem={renderBreadcrumbItem} keyExtractor={item => item.blockId.toString()} />
@@ -65,11 +65,13 @@ const styles = StyleSheet.create({
 		minHeight: 60,
 	},
 	modal: {
-		backgroundColor: colors.white,
-		position: 'absolute',
-		left: 0,
-		right: 0,
-		top: 0,
+		justifyContent: 'flex-start',
+		marginTop: 0,
+		// backgroundColor: colors.white,
+		// position: 'absolute',
+		// left: 0,
+		// right: 0,
+		// top: 0,
 	},
 	selected: {
 		borderWidth: 1,

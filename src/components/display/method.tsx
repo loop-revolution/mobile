@@ -32,8 +32,8 @@ export const populateTemplate = (template: string) => {
 	if (vars) {
 		vars.forEach((wrappedName: string) => {
 			const name = wrappedName.replace(/[\$\[\]]/g, '') // eslint-disable-line no-useless-escape
-			const value = getMethodVariable(name) || ''
-			if (value) {
+			const value = getMethodVariable(name) ?? ''
+			if (value != undefined) {
 				input = input.replace(wrappedName, JSON.stringify(value))
 			}
 		})
@@ -50,10 +50,7 @@ type BlockMethodVars = {
 }
 
 export const blockMethod = async (method: MethodObject) => {
-	let args: string = null
-	if (method.arg_template) {
-		args = populateTemplate(method.arg_template)
-	}
+	const args = populateTemplate(method.arg_template)
 	const response = await client
 		.mutation<BlockMethodReturn, BlockMethodVars>(BLOCK_METHOD_MUTATION, {
 			type: method.type,

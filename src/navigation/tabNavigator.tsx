@@ -1,12 +1,13 @@
 import React from 'react'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import { useTheme } from 'react-native-paper'
-import { Create } from '../screens/create'
 import { Image } from 'react-native'
 import Images from '../utils/images'
-import { Search } from '../screens/search/search'
-import { BlockPage } from '../screens/blockPage'
-import { GlobalNotifications } from '../screens/globalNotifications'
+import { HomeNavigator } from './homeNavigator'
+import { SearchNavigator } from './searchNavigator'
+import { CreateNavigator } from './createNavigator'
+import { NotifcationNavigator } from './notificationNavigator'
+import routes from './routes'
 
 const Tab = createMaterialBottomTabNavigator()
 
@@ -15,7 +16,7 @@ export const TabNavigator = () => {
 
 	return (
 		<Tab.Navigator
-			initialRouteName='Home'
+			initialRouteName={routes.HOME}
 			backBehavior='initialRoute'
 			shifting={true}
 			labeled={false}
@@ -25,15 +26,15 @@ export const TabNavigator = () => {
 			sceneAnimationEnabled={false}
 		>
 			<Tab.Screen
-				name='Home'
-				component={BlockPage}
+				name={routes.HOME}
+				component={HomeNavigator}
 				options={{
 					tabBarIcon: ({ color }: { color: string }) => <Image source={Images.tabHome} style={{ tintColor: color }} />,
 				}}
 			/>
 			<Tab.Screen
 				name='Search'
-				component={Search}
+				component={SearchNavigator}
 				options={{
 					tabBarIcon: ({ color }: { color: string }) => (
 						<Image source={Images.tabSearch} style={{ tintColor: color }} />
@@ -42,14 +43,14 @@ export const TabNavigator = () => {
 			/>
 			<Tab.Screen
 				name='Create'
-				component={Create}
+				component={CreateNavigator}
 				options={{
 					tabBarIcon: ({ color }: { color: string }) => <Image source={Images.tabAdd} style={{ tintColor: color }} />,
 				}}
 			/>
 			<Tab.Screen
 				name='Notifications'
-				component={GlobalNotifications}
+				component={NotifcationNavigator}
 				options={{
 					tabBarIcon: ({ color }: { color: string }) => (
 						<Image source={Images.tabNotification} style={{ tintColor: color }} />

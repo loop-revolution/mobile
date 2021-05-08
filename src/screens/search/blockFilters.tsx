@@ -4,12 +4,10 @@ import { FlatList } from 'react-native-gesture-handler'
 import { Text, Divider, TouchableRipple, Switch, Button } from 'react-native-paper'
 import colors from '../../utils/colors'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/core'
 import routes from '../../navigation/routes'
 import { useActionSheet } from '@expo/react-native-action-sheet'
 
-export const BlockFilters = ({ route }: { route: any }) => {
-	const navigation = useNavigation()
+export const BlockFilters = ({ route, navigation }: { route: any; navigation: any }) => {
 	const { showActionSheetWithOptions } = useActionSheet()
 
 	let filterObject = route.params?.filterObject
@@ -62,7 +60,7 @@ export const BlockFilters = ({ route }: { route: any }) => {
 				showSortingOptions()
 				return
 			case 'owner':
-				navigation.navigate(routes.SEARCH, {
+				navigation.push(routes.SEARCH, {
 					searchComponent: { cid: 'search', type: 'User', action_text: 'Search Owner' },
 					manualSelectionRoute: routes.BLOCK_FILTERS,
 				})
