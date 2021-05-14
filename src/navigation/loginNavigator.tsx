@@ -2,7 +2,7 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { useTheme } from '@react-navigation/native'
 import { Appbar } from 'react-native-paper'
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import routes from './routes'
 import { Login } from '../screens/auth/login'
 import { Signup } from '../screens/auth/signup'
@@ -23,7 +23,11 @@ export const LoginNavigator = () => {
 				header: ({ previous, navigation }: { previous: any; navigation: any }) => {
 					// const { options } = scene.descriptor
 					return (
-						<Appbar.Header theme={theme} style={styles.navBar}>
+						<Appbar.Header
+							theme={theme}
+							style={styles.navBar}
+							statusBarHeight={Platform.OS === 'android' ? 0 : undefined}
+						>
 							{previous ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
 							{/* <Appbar.Content title={options.headerTitle} titleStyle={styles.navBarTitle} /> */}
 						</Appbar.Header>

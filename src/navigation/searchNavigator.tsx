@@ -16,6 +16,7 @@ import { ChangeUsername } from '../screens/profile/changeUsername'
 import { BlockFilters } from '../screens/search/blockFilters'
 import { Create } from '../screens/create'
 import { BlockComments } from '../components/blockMenu/blockComments'
+import { Platform } from 'react-native'
 
 const Stack = createStackNavigator()
 
@@ -35,7 +36,7 @@ export const SearchNavigator = ({ navigation }: { navigation: any }) => {
 					const { options } = scene.descriptor
 					const isCustomTitle = typeof options.headerTitle === 'function'
 					return (
-						<Appbar.Header theme={theme}>
+						<Appbar.Header theme={theme} statusBarHeight={Platform.OS === 'android' ? 0 : undefined}>
 							{previous ? (
 								options.headerLeft ? (
 									options.headerLeft()
