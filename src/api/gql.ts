@@ -395,3 +395,18 @@ export const SET_LATEST_SEEN = gql`
 		}
 	}
 `
+export const SET_SPECIAL_BLOCK = gql`
+	mutation($blockId: Int!, $type: String!) {
+		setSpecialBlock(blockId: $blockId, type: $type) {
+			id
+		}
+	}
+`
+
+export const REMOVE_SPECIAL_BLOCK = gql`
+	mutation($type: String!) {
+		removeSpecialBlock(type: $type) {
+			id
+		}
+	}
+`
