@@ -62,7 +62,7 @@ export const ButtonComponent = ({
 const styles = (color = colors.primary) =>
 	StyleSheet.create({
 		button: {
-			margin: 5,
+			marginVertical: 5,
 		},
 		whiteLabel: {
 			color: 'white',

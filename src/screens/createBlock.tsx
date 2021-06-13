@@ -1,7 +1,7 @@
 import { CreationObject } from 'display-api'
 import React, { useContext, useState } from 'react'
-import { View, StyleSheet, Text } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
+import { StyleSheet, Text } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { ActivityIndicator, Button } from 'react-native-paper'
 import { useMutation, useQuery } from 'urql'
 import { BLOCK_CREATION_DISPLAY, CREATE_BLOCK } from '../api/gql'
@@ -57,9 +57,9 @@ export const CreateBlock = ({ route, navigation }: { route: any; navigation: any
 	}
 
 	return (
-		<ScrollView contentContainerStyle={[styles.scrollViewContent]}>
+		<KeyboardAwareScrollView style={styles.scrollViewContent}>
 			{creationObject ? (
-				<View>
+				<>
 					<ComponentDelegate component={creationObject.header_component} />
 					<ComponentDelegate component={creationObject.main_component} />
 					<Button
@@ -75,19 +75,18 @@ export const CreateBlock = ({ route, navigation }: { route: any; navigation: any
 					{createBlockResult.error && (
 						<Text style={globalStyles.error}>{createBlockResult.error.message.replace(/\[\w+\]/g, '')}</Text>
 					)}
-				</View>
+				</>
 			) : (
 				<ActivityIndicator {...null} style={globalStyles.flex1} color={colors.primary} />
 			)}
-		</ScrollView>
+		</KeyboardAwareScrollView>
 	)
 }
 
 const styles = StyleSheet.create({
 	scrollViewContent: {
-		flex: 1,
-		paddingHorizontal: 30,
-		marginTop: 30,
+		paddingHorizontal: 20,
+		marginTop: 20,
 	},
 	headline: {
 		marginTop: 0,
@@ -96,7 +95,7 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 	},
 	button: {
-		marginTop: 20,
+		marginVertical: 20,
 	},
 	inputText: {
 		marginBottom: 20,
