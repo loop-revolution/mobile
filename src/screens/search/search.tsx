@@ -46,6 +46,7 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 		variables: { query: searchQuery },
 		pause: !searchQuery || !shouldFetch,
 	})
+
 	const [blockResult, getBlocks] = useQuery<BlockQueryResults, BlockQueryRequest>({
 		query: BLOCK_SEARCH,
 		variables: {

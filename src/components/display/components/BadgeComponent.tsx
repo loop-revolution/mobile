@@ -5,16 +5,17 @@ import { Chip } from 'react-native-paper'
 import colors from '../../../utils/colors'
 
 export const BadgeComponent = ({ text, variant, color_scheme }: BadgeArgs) => {
+	const color = color_scheme ?? colors.text
 	return (
 		<View style={styles().container}>
 			<Chip
-				textStyle={variant === 'Outline' ? styles(color_scheme).outlineTextStyle : styles().textStyle}
+				textStyle={variant === 'Outline' ? styles(color).outlineTextStyle : styles(color).textStyle}
 				style={
 					variant === 'Subtle'
-						? styles(color_scheme).subtleChip
+						? styles(color).subtleChip
 						: variant === 'Solid'
-						? styles(color_scheme).solidChip
-						: styles(color_scheme).outlineChip
+						? styles(color).solidChip
+						: styles(color).outlineChip
 				}
 				mode='outlined'
 			>
@@ -30,9 +31,10 @@ const styles = (color = colors.primary) =>
 			flexDirection: 'row',
 			alignItems: 'center',
 			justifyContent: 'flex-start',
+			flex: 1,
 		},
 		textStyle: {
-			color: colors.white,
+			color: color,
 			fontSize: 10,
 			marginVertical: 0,
 		},
