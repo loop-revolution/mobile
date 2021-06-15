@@ -10,10 +10,16 @@ import { BottomMenu } from '../../blockMenu/bottomMenu'
 import { useNavigation } from '@react-navigation/core'
 import routes from '../../../navigation/routes'
 
-export const CardComponent = ({ header, color, content }: CardArgs) => {
+export const CardComponent = ({ header, color, content, mobile_override }: CardArgs) => {
 	const [isExpanded, setExpended] = useState(false)
 	const menuRef = useRef(null)
 	const navigation = useNavigation()
+
+	if (mobile_override) {
+		header = mobile_override.header
+		color = mobile_override.color
+		content = mobile_override.content
+	}
 
 	color = color || colors.primary
 
@@ -79,9 +85,13 @@ const styles = (color = colors.primary) =>
 		cardContainer: {
 			marginTop: 5,
 			elevation: 0,
+			borderColor: '#EBEAF5',
+			borderWidth: 1,
 			borderLeftColor: color,
 			borderLeftWidth: 5,
 			borderRadius: 5,
+			minWidth: '100%',
+			maxWidth: '100%',
 		},
 		header: {
 			borderBottomColor: '#EBEAF5',

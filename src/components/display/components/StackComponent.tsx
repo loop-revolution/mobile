@@ -7,7 +7,7 @@ import { View, StyleSheet } from 'react-native'
 export const StackComponent = ({ direction = 'Vertical', items, align_x, align_y }: StackArgs) => {
 	// eslint-disable-next-line react/prop-types
 	const content = items.map(({ component }: { component: any }, index: number) => (
-		<View key={index?.toString()} style={[{ marginHorizontal: 2 }, direction === 'Horizontal' && { flex: 1 }]}>
+		<View key={index?.toString()} style={{ marginHorizontal: 2 }}>
 			<ComponentDelegate component={component} />
 		</View>
 	))
