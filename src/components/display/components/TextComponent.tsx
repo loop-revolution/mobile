@@ -1,7 +1,7 @@
 import React from 'react'
 import { TextArgs } from 'display-api'
 import { Text, Title } from 'react-native-paper'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import colors from '../../../utils/colors'
 
 export const TextComponent = (
@@ -12,9 +12,11 @@ export const TextComponent = (
 
 	if (preset === 'Heading') {
 		return (
-			<Title numberOfLines={0} style={[styles(color).headline, isLink ? styles().link : null]}>
-				{text}
-			</Title>
+			<View style={styles().container}>
+				<Title numberOfLines={0} style={[styles(color).headline, isLink ? styles().link : null]}>
+					{text}
+				</Title>
+			</View>
 		)
 	}
 
@@ -38,9 +40,11 @@ export const TextComponent = (
 	}
 
 	return (
-		<Text numberOfLines={0} style={[styles(color).text, componentStyle]}>
-			{text}
-		</Text>
+		<View style={styles().container}>
+			<Text numberOfLines={0} style={[styles(color).text, componentStyle]}>
+				{text}
+			</Text>
+		</View>
 	)
 }
 
@@ -48,6 +52,10 @@ const styles = (color = colors.text) =>
 	StyleSheet.create({
 		headline: {
 			color: color,
+		},
+		container: {
+			// flex: 1,
+			justifyContent: 'center',
 		},
 		text: {
 			marginVertical: 8,

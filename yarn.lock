@@ -4257,10 +4257,10 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
-display-api@^0.4.4:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/display-api/-/display-api-0.4.4.tgz#15f90a0764d2827415bc8d45ffa217fb94a2cd4f"
-  integrity sha512-X/BLSHaiynydJQNdzroSDyRJBlRecmHS3YfFIS0tLAglc1mVktxqoQ0dLIpb6nBSecXApuOhB637vVq/we8S0A==
+display-api@^0.4.5:
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/display-api/-/display-api-0.4.5.tgz#c0efb5a22432602a5abba9d326bbfbdf7df5f567"
+  integrity sha512-AT+kE4+5VUgJLgOLROBtO70M8sGocjs1ZiIQyRaf8Tv4mnlRNhtgRsmZjNJ8Z5Haaj2oZGsR/wYGYPmSZYI88A==
 
 doctrine@1.5.0:
   version "1.5.0"

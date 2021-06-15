@@ -46,6 +46,7 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 		variables: { query: searchQuery },
 		pause: !searchQuery || !shouldFetch,
 	})
+
 	const [blockResult, getBlocks] = useQuery<BlockQueryResults, BlockQueryRequest>({
 		query: BLOCK_SEARCH,
 		variables: {
@@ -113,6 +114,10 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 			} else {
 				navigation.pop()
 			}
+		} else if (manualSelectionRoute) {
+			// This will be called when there is a manual
+			// selectBlock action passed from the previous component
+			navigation.navigate(manualSelectionRoute, { blockCrumb })
 		}
 	}
 
@@ -196,7 +201,7 @@ export const Search = ({ route, navigation }: { route: any; navigation: any }) =
 				<BlocksList
 					blocks={blockResult.data?.searchBlocks}
 					loading={blockResult.fetching}
-					selectBlock={searchComponent?.then ? onSelectBlockAction : undefined}
+					selectBlock={onSelectBlockAction}
 				/>
 			) : searchComponent?.type === 'User' ? (
 				<UsersList users={userResult.data?.searchUsers} loading={userResult.fetching} selectUser={onSelectAction} />

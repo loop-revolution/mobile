@@ -1,10 +1,11 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { SearchComponent } from 'display-api'
 import React, { useContext, useEffect } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { ActivityIndicator, Avatar, Button, Caption, Card, Text } from 'react-native-paper'
 import { useMutation, useQuery } from 'urql'
-import { SET_STARRED, USER_PROFILE } from '../../api/gql'
+import { SET_SPECIAL_BLOCK, REMOVE_SPECIAL_BLOCK, SET_STARRED, USER_PROFILE } from '../../api/gql'
 import { Block, User } from '../../api/types'
 import { ComponentDelegate } from '../../components/display/ComponentDelegate'
 import { UserContext } from '../../context/userContext'
@@ -20,8 +21,14 @@ export const Profile = ({ route, navigation }: { route: any; navigation: any }) 
 	type UserProfileResult = { userByName: User }
 	type StarredResult = { setStarred: { id: number; starred: boolean } }
 	type StarredRequest = { blockId: number; starred: boolean }
+	type SetSpecialBlockResult = { setSpecialBlock: { id: number } }
+	type SetSpecialBlockRequest = { blockId: number; type: string }
+	type RemoveSpecialBlockResult = { removeSpecialBlock: { id: number } }
+	type RemoveSpecialBlockRequest = { type: string }
 
 	const [, setStarred] = useMutation<StarredResult, StarredRequest>(SET_STARRED)
+	const [, setSpecialBlock] = useMutation<SetSpecialBlockResult, SetSpecialBlockRequest>(SET_SPECIAL_BLOCK)
+	const [, removeSpecialBlock] = useMutation<RemoveSpecialBlockResult, RemoveSpecialBlockRequest>(REMOVE_SPECIAL_BLOCK)
 	const [profileResponse, getProfile] = useQuery<UserProfileResult, UserProfileRequest>({
 		query: USER_PROFILE,
 		variables: { username: route.params?.username },
@@ -37,6 +44,11 @@ export const Profile = ({ route, navigation }: { route: any; navigation: any }) 
 		return <ActivityIndicator {...null} style={globalStyles.flex1} color={colors.primary} />
 	}
 
+	const handleRemoveSpecialBlock = () => {
+		const request: RemoveSpecialBlockRequest = { type: 'FEATURED' }
+		removeSpecialBlock(request)
+	}
+
 	const renderFeaturedBlock = () => {
 		const featuredBlock: Block = user?.featured
 		if (featuredBlock) {
@@ -44,13 +56,37 @@ export const Profile = ({ route, navigation }: { route: any; navigation: any }) 
 				<View style={styles.blockContainer}>
 					<Text style={styles.featuredBlockTitle}>Featured Block</Text>
 					<ComponentDelegate component={JSON.parse(user?.featured?.embedDisplay)} />
+					<Button
+						style={[globalStyles.buttonContentStyle, styles.featureBlockButton]}
+						onPress={() => {
+							handleRemoveSpecialBlock()
+						}}
+					>
+						Remove
+					</Button>
 				</View>
 			)
-		} else if (currentUser.user.id === user.id) {
+		}
+		if (currentUser.user.id === user.id) {
 			return (
 				<>
 					<Text style={styles.featuredBlockTitle}>Featured Block</Text>
-					<Button mode='contained' uppercase={false} style={styles.addButton} onPress={() => {}}>
+					<Button
+						mode='contained'
+						uppercase={false}
+						style={styles.addButton}
+						onPress={() => {
+							const searchComponent: SearchComponent = {
+								cid: 'search',
+								type: 'Block',
+								action_text: 'Select Block',
+							}
+							navigation.push(routes.SEARCH, {
+								searchComponent: searchComponent,
+								manualSelectionRoute: routes.PROFILE,
+							})
+						}}
+					>
 						Add
 					</Button>
 				</>
@@ -88,6 +124,14 @@ export const Profile = ({ route, navigation }: { route: any; navigation: any }) 
 				</View>
 			</Button>
 		)
+	}
+
+	const selectedBlock = route.params?.blockCrumb
+
+	if (selectedBlock != undefined) {
+		const request: SetSpecialBlockRequest = { blockId: selectedBlock.blockId, type: 'FEATURED' }
+		setSpecialBlock(request)
+		route.params.blockCrumb = undefined
 	}
 
 	const handleStarring = () => {
@@ -178,5 +222,8 @@ const styles = StyleSheet.create({
 	starContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
+	},
+	featureBlockButton: {
+		alignSelf: 'center',
 	},
 })
