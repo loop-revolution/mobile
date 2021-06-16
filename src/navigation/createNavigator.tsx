@@ -6,6 +6,7 @@ import { Appbar } from 'react-native-paper'
 import { globalStyles } from '../utils/styles'
 import { CreateBlock } from '../screens/createBlock'
 import { Create } from '../screens/create'
+import { Platform } from 'react-native'
 
 const Stack = createStackNavigator()
 
@@ -24,7 +25,7 @@ export const CreateNavigator = ({ navigation }: { navigation: any }) => {
 				header: ({ scene, previous, navigation }: { scene: any; previous: any; navigation: any }) => {
 					const { options } = scene.descriptor
 					return (
-						<Appbar.Header theme={theme}>
+						<Appbar.Header theme={theme} statusBarHeight={Platform.OS === 'android' ? 0 : undefined}>
 							{previous ? (
 								options.headerLeft ? (
 									options.headerLeft()

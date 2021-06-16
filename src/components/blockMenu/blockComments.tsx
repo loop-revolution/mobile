@@ -223,14 +223,22 @@ export const BlockComments = ({ route, navigation }: { route: any; navigation: a
 					onEnter={onEnter}
 				/>
 				{/* </View> */}
-				<Button
-					onPress={onEnter}
-					contentStyle={globalStyles.buttonContentStyle}
-					disabled={createBlockResponse.fetching || createCommentResponse.fetching || value == ''}
-					labelStyle={{ color: 'white' }}
-				>
-					{<MaterialCommunityIcons style={styles().sendButton} name={'send'} color={colors.text} size={22} />}
-				</Button>
+				{createBlockResponse.fetching || createCommentResponse.fetching ? (
+					<ActivityIndicator
+						{...null}
+						style={[globalStyles.buttonContentStyle, { marginRight: 20 }]}
+						color={colors.text}
+					/>
+				) : (
+					<Button
+						onPress={onEnter}
+						contentStyle={globalStyles.buttonContentStyle}
+						disabled={createBlockResponse.fetching || createCommentResponse.fetching || value == ''}
+						labelStyle={{ color: 'white' }}
+					>
+						{<MaterialCommunityIcons style={styles().sendButton} name={'send'} color={colors.text} size={22} />}
+					</Button>
+				)}
 			</View>
 		</KeyboardAvoidingView>
 	)

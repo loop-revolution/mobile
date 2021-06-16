@@ -10,10 +10,17 @@ import { BottomMenu } from '../../blockMenu/bottomMenu'
 import { useNavigation } from '@react-navigation/core'
 import routes from '../../../navigation/routes'
 
-export const CardComponent = ({ header, color, content }: CardArgs) => {
+export const CardComponent = ({ header, color, content, detached_menu, mobile_override }: CardArgs) => {
 	const [isExpanded, setExpended] = useState(false)
 	const menuRef = useRef(null)
+	const detachMenuRef = useRef(null)
 	const navigation = useNavigation()
+
+	if (mobile_override) {
+		header = mobile_override.header
+		color = mobile_override.color
+		content = mobile_override.content
+	}
 
 	color = color || colors.primary
 
@@ -46,6 +53,19 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
 		</View>
 	)
 
+	const renderDetachedMenu = () => (
+		<View style={styles().detachedOptions}>
+			<IconButton
+				style={styles().rightIcon}
+				color={color}
+				icon='dots-horizontal'
+				onPress={() => {
+					detachMenuRef.current?.handleOpen()
+				}}
+			/>
+		</View>
+	)
+
 	return (
 		<Card style={styles(color).cardContainer}>
 			{header ? (
@@ -62,14 +82,17 @@ export const CardComponent = ({ header, color, content }: CardArgs) => {
 				>
 					<Card.Content style={styles().cardContent}>
 						<ComponentDelegate component={content} />
+						{detached_menu && renderDetachedMenu()}
 					</Card.Content>
 				</List.Accordion>
 			) : (
 				<Card.Content style={styles().cardContent}>
 					<ComponentDelegate component={content} />
+					{detached_menu && renderDetachedMenu()}
 				</Card.Content>
 			)}
 			{header?.menu && <BottomMenu ref={menuRef} menu={header?.menu} />}
+			{detached_menu?.menu && <BottomMenu ref={detachMenuRef} menu={detached_menu?.menu} />}
 		</Card>
 	)
 }
@@ -79,9 +102,13 @@ const styles = (color = colors.primary) =>
 		cardContainer: {
 			marginTop: 5,
 			elevation: 0,
+			borderColor: '#EBEAF5',
+			borderWidth: 1,
 			borderLeftColor: color,
 			borderLeftWidth: 5,
 			borderRadius: 5,
+			minWidth: '100%',
+			maxWidth: '100%',
 		},
 		header: {
 			borderBottomColor: '#EBEAF5',
@@ -106,5 +133,10 @@ const styles = (color = colors.primary) =>
 		},
 		rightIcon: {
 			margin: 0,
+		},
+		detachedOptions: {
+			flexDirection: 'row',
+			justifyContent: 'flex-end',
+			marginRight: 10,
 		},
 	})

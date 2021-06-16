@@ -1,4 +1,4 @@
-import { View, StyleSheet, RefreshControl } from 'react-native'
+import { View, StyleSheet, RefreshControl, ScrollView } from 'react-native'
 import React, { useContext, useEffect, useRef } from 'react'
 import { useQuery } from 'urql'
 import { GET_BLOCK } from '../api/gql'
@@ -6,7 +6,6 @@ import { DisplayObject } from 'display-api'
 import { ActivityIndicator, Title, Appbar, Subheading } from 'react-native-paper'
 import { globalStyles } from '../utils/styles'
 import colors from '../utils/colors'
-import { ScrollView } from 'react-native-gesture-handler'
 import { ComponentDelegate } from '../components/display/ComponentDelegate'
 import { BreadcrumbHeader } from '../components/breadcrumbHeader'
 import { Block, Crumb } from '../api/types'
@@ -96,7 +95,6 @@ export const BlockPage = ({ route, navigation }: { route: any; navigation: any }
 					<ActivityIndicator {...null} style={globalStyles.flex1} color={colors.primary} />
 				)}
 			</ScrollView>
-
 			{block?.breadcrumb && (
 				<BreadcrumbList
 					navigation={navigation}

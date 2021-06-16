@@ -7,10 +7,11 @@ import {
 	BottomSheetBackdrop,
 	BottomSheetModal,
 	BottomSheetModalProvider,
+	TouchableOpacity,
 } from '@gorhom/bottom-sheet'
 import { CustomMenuItem, MenuComponent } from 'display-api/lib/components/menu'
 import colors from '../../utils/colors'
-import { Divider, Portal, TouchableRipple } from 'react-native-paper'
+import { Divider, Portal } from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useMutation } from 'urql'
 import { useNavigation } from '@react-navigation/native'
@@ -93,7 +94,7 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 
 	const renderItem = useCallback(
 		(title: string, onClick: any, subtitle?: any, icon?: any, disabled: boolean = false) => (
-			<TouchableRipple onPress={onClick} disabled={disabled} style={disabled && styles.disabled}>
+			<TouchableOpacity onPress={onClick} disabled={disabled} style={disabled && styles.disabled}>
 				<>
 					<View key={title} style={styles.itemContainer}>
 						<Text style={styles.itemTitle}>{title}</Text>
@@ -104,7 +105,7 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 					</View>
 					<Divider style={styles.separator} />
 				</>
-			</TouchableRipple>
+			</TouchableOpacity>
 		),
 		[],
 	)
@@ -140,7 +141,13 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 								menu.star_button.count,
 								menu.star_button.starred ? 'star' : 'star-outline',
 							)}
-						{renderItem('Comments', handleComments, menu.comment_count, 'message')}
+
+						{renderItem(
+							'Comments',
+							handleComments,
+							menu.comment_count,
+							menu.comment_count > 0 ? 'message' : 'message-outline',
+						)}
 						{renderItem(
 							menu.notifications_enabled ? 'Disable Notification' : 'Enable Notification',
 							handleNotifs,

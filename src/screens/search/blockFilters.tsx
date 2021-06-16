@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useState } from 'react'
+import React from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import { Text, Divider, TouchableRipple, Switch, Button } from 'react-native-paper'
 import colors from '../../utils/colors'
@@ -10,22 +10,17 @@ import { useActionSheet } from '@expo/react-native-action-sheet'
 export const BlockFilters = ({ route, navigation }: { route: any; navigation: any }) => {
 	const { showActionSheetWithOptions } = useActionSheet()
 
-	let filterObject = route.params?.filterObject
+	const filterObject = route.params?.filterObject
 	const setFilterObject: Function = route.params?.setFilterObject
 
 	// set BlockType retured from create routes
 	filterObject.blockType = route.params?.blockType?.name ?? filterObject.blockType
-	setFilterObject(filterObject)
 
 	// set Owner retured from search routes
 	filterObject.owner = route.params?.user ?? filterObject.owner
-	setFilterObject(filterObject)
 
 	const sortingOptions = ['Star count', 'Last updated', 'Creation date', 'Cancel']
 	const filterObjectSortIndex = filterObject?.sortBy && sortingOptions.indexOf(filterObject?.sortBy)
-
-	const [sortIndex, setSortIndex] = useState(filterObjectSortIndex)
-	const [onlyStarred, setOnlyStarred] = useState(false)
 
 	const filters = [
 		{ key: 'sort', title: 'Sort' },
@@ -34,6 +29,17 @@ export const BlockFilters = ({ route, navigation }: { route: any; navigation: an
 		{ key: 'onlyStarred', title: 'Only Starred' },
 	]
 
+	const resetFilters = () => {
+		const newfilterObject = {
+			sortBy: undefined,
+			blockType: undefined,
+			owner: undefined,
+			starred: false,
+		}
+		navigation.setParams({ filterObject: newfilterObject, setFilterObject })
+		setFilterObject(newfilterObject)
+	}
+
 	React.useLayoutEffect(() => {
 		navigation.setOptions({
 			headerRight: () => {
@@ -41,10 +47,7 @@ export const BlockFilters = ({ route, navigation }: { route: any; navigation: an
 					<Button
 						color={colors.white}
 						onPress={() => {
-							filterObject = null
-							setFilterObject({})
-							setSortIndex(null)
-							setOnlyStarred(false)
+							resetFilters()
 						}}
 					>
 						Reset
@@ -80,10 +83,9 @@ export const BlockFilters = ({ route, navigation }: { route: any; navigation: an
 			},
 			index => {
 				if (index !== 3) {
-					setSortIndex(index)
 					const sortByValue = sortingOptions[index]
 					filterObject.sortBy = sortByValue
-					setFilterObject(filterObject)
+					navigation.setParams({ filterObject, setFilterObject })
 				}
 			},
 		)
@@ -104,17 +106,16 @@ export const BlockFilters = ({ route, navigation }: { route: any; navigation: an
 						{isSwitch ? (
 							<Switch
 								color={colors.primary}
-								value={onlyStarred}
+								value={filterObject.starred}
 								onValueChange={() => {
-									setOnlyStarred(!onlyStarred)
-									filterObject.starred = onlyStarred
-									setFilterObject(filterObject)
+									filterObject.starred = !filterObject.starred
+									navigation.setParams({ filterObject, setFilterObject })
 								}}
 							/>
 						) : (
 							<View style={styles.itemRightView}>
 								<Text style={styles.itemSubtitle}>
-									{item.key === 'sort' && sortIndex !== null && sortingOptions[sortIndex]}
+									{item.key === 'sort' && filterObjectSortIndex !== null && sortingOptions[filterObjectSortIndex]}
 									{item.key === 'owner' &&
 										filterObject.owner &&
 										(filterObject.owner?.displayName ?? filterObject.owner?.username)}
