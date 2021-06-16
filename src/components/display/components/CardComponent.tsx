@@ -10,9 +10,10 @@ import { BottomMenu } from '../../blockMenu/bottomMenu'
 import { useNavigation } from '@react-navigation/core'
 import routes from '../../../navigation/routes'
 
-export const CardComponent = ({ header, color, content, mobile_override }: CardArgs) => {
+export const CardComponent = ({ header, color, content, detached_menu, mobile_override }: CardArgs) => {
 	const [isExpanded, setExpended] = useState(false)
 	const menuRef = useRef(null)
+	const detachMenuRef = useRef(null)
 	const navigation = useNavigation()
 
 	if (mobile_override) {
@@ -52,6 +53,19 @@ export const CardComponent = ({ header, color, content, mobile_override }: CardA
 		</View>
 	)
 
+	const renderDetachedMenu = () => (
+		<View style={styles().detachedOptions}>
+			<IconButton
+				style={styles().rightIcon}
+				color={color}
+				icon='dots-horizontal'
+				onPress={() => {
+					detachMenuRef.current?.handleOpen()
+				}}
+			/>
+		</View>
+	)
+
 	return (
 		<Card style={styles(color).cardContainer}>
 			{header ? (
@@ -68,14 +82,17 @@ export const CardComponent = ({ header, color, content, mobile_override }: CardA
 				>
 					<Card.Content style={styles().cardContent}>
 						<ComponentDelegate component={content} />
+						{detached_menu && renderDetachedMenu()}
 					</Card.Content>
 				</List.Accordion>
 			) : (
 				<Card.Content style={styles().cardContent}>
 					<ComponentDelegate component={content} />
+					{detached_menu && renderDetachedMenu()}
 				</Card.Content>
 			)}
 			{header?.menu && <BottomMenu ref={menuRef} menu={header?.menu} />}
+			{detached_menu?.menu && <BottomMenu ref={detachMenuRef} menu={detached_menu?.menu} />}
 		</Card>
 	)
 }
@@ -116,5 +133,10 @@ const styles = (color = colors.primary) =>
 		},
 		rightIcon: {
 			margin: 0,
+		},
+		detachedOptions: {
+			flexDirection: 'row',
+			justifyContent: 'flex-end',
+			marginRight: 10,
 		},
 	})
