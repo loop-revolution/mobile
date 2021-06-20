@@ -20,61 +20,57 @@ export const getComponentIcon = (icon: string) => {
 			return 'thumb-up-outline'
 		case 'ThumbsDown':
 			return 'thumb-down-outline'
-		case "Anchor":
+		case 'Anchor':
 			return 'anchor'
-		case "Archive":
+		case 'Archive':
 			return 'archive'
-		case "Award":
+		case 'Award':
 			return 'medal'
-		case "Book":
+		case 'Book':
 			return 'book'
-		case "Bookmark":
+		case 'Bookmark':
 			return 'bookmark'
-		case "Briefcase":
+		case 'Briefcase':
 			return 'briefcase'
-		case "Calendar":
+		case 'Calendar':
 			return 'calendar'
-		case "Edit":
+		case 'Edit':
 			return 'pencil'
-		case "Eye":
+		case 'Eye':
 			return 'eye'
-		case "File":
+		case 'File':
 			return 'file'
-		case "FileText":
+		case 'FileText':
 			return 'note-text'
-		case "Film":
+		case 'Film':
 			return 'film'
-		case "Filter":
+		case 'Filter':
 			return 'filter'
-		case "Flag":
+		case 'Flag':
 			return 'flag'
-		case "Gift":
+		case 'Gift':
 			return 'gift'
-		case "Heart":
+		case 'Heart':
 			return 'heart'
-		case "Image":
+		case 'Image':
 			return 'image'
-		case "Info":
+		case 'Info':
 			return 'information-outline'
-		case "Key":
+		case 'Key':
 			return 'key'
-		case "Lock":
+		case 'Lock':
 			return 'lock'
-		case "Map":
+		case 'Map':
 			return 'map'
-		case "MapPin":
+		case 'MapPin':
 			return 'pin'
-		case "Minus":
+		case 'Minus':
 			return 'minus'
-		case "Send":
+		case 'Send':
 			return 'send'
-		case "ThumbsDown":
-			return 'thumb-down'
-		case "ThumbsUp":
-			return 'thumb-up'
-		case "Trash":
+		case 'Trash':
 			return 'delete-outline'
-		case "Unlock":
+		case 'Unlock':
 			return 'lock-open'
 		default:
 			return 'cube'
