@@ -152,7 +152,7 @@ export const BottomMenu = forwardRef(({ menu }: { menu: MenuComponent }, ref) =>
 							menu.notifications_enabled ? 'Disable Notification' : 'Enable Notification',
 							handleNotifs,
 							null,
-							menu.notifications_enabled ? 'bell' : 'bell-off',
+							menu.notifications_enabled ? 'bell-outline' : 'bell-off-outline',
 						)}
 						{menu.permissions &&
 							renderItem(

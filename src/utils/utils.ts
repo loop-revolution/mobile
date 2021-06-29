@@ -20,6 +20,58 @@ export const getComponentIcon = (icon: string) => {
 			return 'thumb-up-outline'
 		case 'ThumbsDown':
 			return 'thumb-down-outline'
+		case 'Anchor':
+			return 'anchor'
+		case 'Archive':
+			return 'archive'
+		case 'Award':
+			return 'medal'
+		case 'Book':
+			return 'book'
+		case 'Bookmark':
+			return 'bookmark'
+		case 'Briefcase':
+			return 'briefcase'
+		case 'Calendar':
+			return 'calendar'
+		case 'Edit':
+			return 'pencil'
+		case 'Eye':
+			return 'eye'
+		case 'File':
+			return 'file'
+		case 'FileText':
+			return 'note-text'
+		case 'Film':
+			return 'film'
+		case 'Filter':
+			return 'filter'
+		case 'Flag':
+			return 'flag'
+		case 'Gift':
+			return 'gift'
+		case 'Heart':
+			return 'heart'
+		case 'Image':
+			return 'image'
+		case 'Info':
+			return 'information-outline'
+		case 'Key':
+			return 'key'
+		case 'Lock':
+			return 'lock'
+		case 'Map':
+			return 'map'
+		case 'MapPin':
+			return 'pin'
+		case 'Minus':
+			return 'minus'
+		case 'Send':
+			return 'send'
+		case 'Trash':
+			return 'delete-outline'
+		case 'Unlock':
+			return 'lock-open'
 		default:
 			return 'cube'
 	}

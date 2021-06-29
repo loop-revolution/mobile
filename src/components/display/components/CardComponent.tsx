@@ -17,6 +17,7 @@ export const CardComponent = ({ header, color, content, detached_menu, mobile_ov
 	const navigation = useNavigation()
 
 	if (mobile_override) {
+		console.log('mobile override: ', mobile_override)
 		header = mobile_override.header
 		color = mobile_override.color
 		content = mobile_override.content
