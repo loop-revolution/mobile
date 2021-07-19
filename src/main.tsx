@@ -10,6 +10,7 @@ import { UserContext } from './context/userContext'
 import { User } from './api/types'
 import { ADD_EXPO_TOKEN, WHO_AM_I } from './api/gql'
 import { registerForPushNotificationsAsync } from './utils/helper'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export const Main = () => {
 	const [user, setStateUser] = useState<User>(null)
@@ -26,6 +27,10 @@ export const Main = () => {
 			const userResult = await client.query<UserQueryResult>(WHO_AM_I).toPromise()
 			if (userResult.data?.whoami?.username) {
 				setStateUser(userResult.data?.whoami)
+			} else {
+				await AsyncStorage.removeItem('token')
+				setStateUser(null)
+				setLoggedIn(false)
 			}
 		}
 
