@@ -49,7 +49,7 @@ export const ButtonComponent = ({
 				style={buttonStyle}
 				contentStyle={globalStyles.buttonContentStyle}
 				mode={mode}
-				icon={getComponentIcon(icon)}
+				icon={variant === 'Link' ? undefined : getComponentIcon(icon)}
 				color={color_scheme}
 				disabled={disabled || readonly}
 				labelStyle={variant === 'Outline' || variant === 'Link' ? styles(color_scheme).colorLabel : styles().whiteLabel}
